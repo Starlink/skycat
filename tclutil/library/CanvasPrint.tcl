@@ -1,5 +1,5 @@
 # E.S.O. - VLT project/ ESO Archive
-# "@(#) $Id: CanvasPrint.tcl,v 1.7 1998/10/28 17:46:36 abrighto Exp $"
+# "@(#) $Id: CanvasPrint.tcl,v 1.8 1999/03/19 20:10:25 abrighto Exp $"
 #
 # CanvasPrint.tcl - Popup dialog for printing the contents of a Tk canvas
 #
@@ -109,7 +109,7 @@ itcl::class util::CanvasPrint {
 		     -rotate [set $w_.rotate]]
 	
 	if {"$x0" == ""} {
-	    lassign [$itk_option(-canvas) box all] x0 y0 x1 y1
+	    lassign [$itk_option(-canvas) bbox all] x0 y0 x1 y1
 	}
 
 	if {$itk_option(-show_headers)} {

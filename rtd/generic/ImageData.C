@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project 
- * "@(#) $Id: ImageData.C,v 1.33 1998/12/03 22:11:15 abrighto Exp $" 
+ * "@(#) $Id: ImageData.C,v 1.36 1999/03/22 21:42:02 abrighto Exp $" 
  *
  * ImageData.C - member functions for class ImageData
  *
@@ -11,10 +11,17 @@
  * --------------  --------  ----------------------------------------
  * Allan Brighton  05/10/95  Created
  *
+ * Peter W. Draper 02/07/96  Corrected autoSetCutLevels to set cutoff
+ *                           according to number of pixels actually counted
  * Peter W. Draper 17/12/97  Modified setScale so that dispWidth and
  *                           dispHeight cannot be zero when using very
  *                           large negative scales (this happens for
  *                           extremely thin images, i.e. 5000x37).
+ *
+ * Peter W. Draper 03/02/97  Modified flip(int,int,int,int) to remove
+ *                           -1 introduced by array coordinates.
+ *                           Modified autoSetCutLevels to take account
+ *                           of blank pixels.
  *
  * Allan Brighton 12/03/98   Removed ImageData::read, use makeImage instead,
  *                           since it allows different image types through
@@ -23,8 +30,17 @@
  *                           change the public interface). This makes it easier 
  *                           to derive new image types or replace the WCS
  *                           implementation in a derived class of ImageIORep.
+ *
+ * Peter W. Draper 23/02/98  Added code to interpolate between the
+ *                           autoSetCutLevels bins, increased the
+ *                           number of bins to 2048 (from 256).
+ *
+ * Peter W. Draper 04/03/98  Added changes to support multiple display
+ *                           visuals. Renamed setXImageData to setXImage.
+ *
+ * Peter W. Draper 13/01/99  Merged my changes into SkyCat 2.2.
  */
-static const char* const rcsId="@(#) $Id: ImageData.C,v 1.33 1998/12/03 22:11:15 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: ImageData.C,v 1.36 1999/03/22 21:42:02 abrighto Exp $";
 
 
 #include <string.h>
@@ -44,6 +60,7 @@ static const char* const rcsId="@(#) $Id: ImageData.C,v 1.33 1998/12/03 22:11:15
 #include "UShortImageData.h"
 #include "LongImageData.h"
 #include "FloatImageData.h"
+#include "ImageDisplay.h"
 
 // initialize static member variables
 // Note: these are static since there is only one static color map for all images
@@ -80,9 +97,10 @@ ImageData::ImageData(const char* imageName, const ImageIO& image,
   dispHeight_(height_),
   area_(width_*height_),
   xImage_(NULL),
-  xImageWidth_(0),
-  xImageHeight_(0),
+  xImageData_(NULL),
+  xImageBytesPerLine_(0),
   xImageSize_(0),
+  xImageBytesPerPixel_(1),
   xImageMaxX_(width_-1),
   xImageMaxY_(height_-1),
   colorScaleType_(LINEAR_SCALE),
@@ -133,11 +151,12 @@ ImageData::ImageData(const ImageData& im)
   dispHeight_(im.dispHeight_),
   area_(im.area_),
   xImage_(NULL),		// will be set later
-  xImageWidth_(0),
-  xImageHeight_(0),
+  xImageData_(NULL),
+  xImageBytesPerLine_(0),
   xImageSize_(0),
   xImageMaxX_(0),
   xImageMaxY_(0),
+  xImageBytesPerPixel_(1),
   colorScaleType_(im.colorScaleType_),
   haveBlank_(im.haveBlank_),
   lowCut_(im.lowCut_),
@@ -204,18 +223,23 @@ void ImageData::setColors(int ncolors, unsigned long* colors)
  * pixels. (This class copies the rawimage to xImage, doing any necessary
  * transformations along the way.)
  */
-void ImageData::setXImageData(byte* xImage, int width, int height)
+void ImageData::setXImage(ImageDisplay* xImage)
 {
+    // save XImage info
     xImage_ = xImage;
-    xImageWidth_ = width;
-    xImageHeight_ = height;
+    xImageData_ = xImage_->data();
+    xImageBytesPerPixel_ = xImage_->depth()/8;
+    xImageBytesPerLine_ = xImage_->bytesPerLine();
 
-    double x = width, y = height;
+    // get XImage size in bytes
+    xImageSize_ = xImageBytesPerLine_ * xImage_->height() * xImageBytesPerPixel_;
+
+    // get the highest x,y indexes in the XImage
+    double x = xImage_->width();
+    double y = xImage_->height();
     undoTrans(x, y, 1);
-    xImageMaxX_ = int(x)-1;		// should be highest index in raw data
+    xImageMaxX_ = int(x)-1;
     xImageMaxY_ = int(y)-1;
-
-    xImageSize_ = width*height;
 
     update_pending_++;
 }
@@ -600,10 +624,13 @@ void ImageData::rotate(int angle)
  */
 void ImageData::flip(double& x, double& y, int width, int height)
 {
-    if (!flipY_)		// raw image has y axis reversed
-	y = ((height ? height : height_)) - y;
+    int c = (xScale_ > 1) ? 0 : 1; 
+    
+    if (!flipY_) 		// raw image has y axis reversed
+	y = ((height ? height : height_) - c) - y;
+
     if (flipX_) 
-	x = ((width ? width : width_)) - x;
+	x = ((width ? width : width_) - c) - x;
 }
 
 
@@ -613,15 +640,17 @@ void ImageData::flip(double& x, double& y, int width, int height)
  */
 void ImageData::flip(int& x0, int& y0, int& x1, int& y1)
 {
+    int c = (xScale_ > 1) ? 0 : 1; 
+
     if (!flipY_) {		// raw image has y axis reversed
-	int y = y0;
-	y0 = height_ - y1;
-	y1 = height_ - y;
+	int y = y0, h = height_ - c;
+	y0 = h - y1;
+	y1 = h - y;
     }
     if (flipX_) {
-	int x = x0;
-	x0 = width_ - x1;
-	x1 = width_ - x;
+	int x = x0, w = width_ - c;
+	x0 = w - x1;
+	x1 = w - x;
     }
 }
 
@@ -795,34 +824,6 @@ int ImageData::getIndex(double x, double y, int& ix, int& iy)
     else {
 	ix = int(x-1.0);
 	iy = int(y-1.0);
-
-	// XXX hack to fix a probable "off-by-one" bug ?
-	switch (flipX_<<2|flipY_<<1|rotate_) {
-	case 0: // none
-	    break;
-	case 1: // rotate
-	    ix--;
-	    iy--;
-	    break;
-	case 2: // flipY
-	    iy--;
-	    break;
-	case 3: // flipY + rotate
-	    ix--;
-	    break;
-	case 4: // flipX
-	    ix--;
-	    break;
-	case 5: // flipX + rotate
-	    iy--;
-	    break;
-	case 6: // flipX + flipY
-	    ix--;
-	    iy--;
-	    break;
-	case 7: // flipX + flipY + rotate
-	    break;
-	}
     }
 
     // return 0 if in range, otherwise 1
@@ -925,33 +926,59 @@ void ImageData::autoSetCutLevels(double percent)
     // xyvalues is an array of X,Y pairs where:
     // the X values are the pixel values (rounded to nearest factor)
     // the Y values are the number of pixels in a given range
-    int numValues = 256;
-    double xyvalues[256*2];
+    int numValues = 2048;
+    double xyvalues[2048*2];
 
     // get a rough distribution of the data
     getDist(numValues, xyvalues);
     
-    // set low cut value
+    // find out how many pixel we actually counted (may be significant
+    // numbers of blanks)
     int npixels = 0;
     int i;
     for (i=0 ; i<numValues; i++) {
+        npixels += (int)(xyvalues[i*2+1]);
+    }
+    if ( npixels > 0 ) {
+
+      // change to  percent to cut off and split between low and high
+      int cutoff = int((double(npixels)*(100.0-percent)/100.0)/2.0);
+      
+      // set low cut value
+      npixels = 0;
+      int nprev = 0;
+      for (i=0 ; i<numValues; i++) {
+        nprev = npixels;
+        npixels += (int)(xyvalues[i*2+1]);
+	if (npixels >= cutoff) {
+          low = xyvalues[i*2];
+          if ( i != 0 ) {
+            // Interpolate between the relevant bins.
+            double interp = (double(cutoff)-double(nprev))/(double(npixels)-double(nprev));
+            low = xyvalues[(i-1)*2] + (low-xyvalues[(i-1)*2])*interp;
+          }
+          break;
+	}
+      }
+      
+      // set high cut value
+      npixels = 0;
+      nprev = 0;
+      for (i=numValues-1 ; i>0; i--) {
+        nprev = npixels;
 	npixels += (int)(xyvalues[i*2+1]);
 	if (npixels >= cutoff) {
-	    low = xyvalues[i*2];
-	    break;
+          high = xyvalues[i*2];
+          if ( i != numValues-1 ) {
+            // Interpolate between the relevant bins.
+            double interp = (double(cutoff)-double(nprev))/(double(npixels)-double(nprev));
+            high = xyvalues[(i+1)*2] + (xyvalues[(i+1)*2]-high)*interp;
+          }
+          break;
 	}
+      }
     }
-    
-    // set high cut value
-    npixels = 0;
-    for (i=numValues-1 ; i>0; i--) {
-	npixels += (int)(xyvalues[i*2+1]);
-	if (npixels >= cutoff) {
-	    high = xyvalues[i*2];
-	    break;
-	}
-    }
-    
+
     if (high > low)
 	setCutLevels(low, high, 1);
 }
@@ -988,7 +1015,7 @@ void ImageData::updateOffset(double x, double y)
 	return;
 
     if (clear_) {		// temp clear image
-	memset(xImage_, color0_, xImageSize_);
+	xImage_->clear(color0_);
 	clear_ = 0;
 	return;
     }
@@ -1015,7 +1042,7 @@ void ImageData::updateOffset(double x, double y)
     if (dest_x || dest_y || x1-x0 < xImageMaxX_ || y1-y0 < xImageMaxY_) {
 	// if (verbose_)
 	//    printf("%s: clear ximage before update\n", name_);
-	memset(xImage_, color0_, xImageSize_);
+	xImage_->clear(color0_);
     }
 
     // copy raw to X image while doing transformations

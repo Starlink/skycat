@@ -4,7 +4,7 @@
 /*
  * E.S.O. - VLT project 
  *
- * "@(#) $Id: XImageData.h,v 1.9 1998/07/23 23:37:56 abrighto Exp $" 
+ * "@(#) $Id: XImageData.h,v 1.10 1999/03/19 20:10:02 abrighto Exp $" 
  *
  * XImageData.h - class definitions for class XImageData
  *
@@ -14,6 +14,8 @@
  * who             when      what
  * --------------  --------  ----------------------------------------
  * Allan Brighton  05/10/95  Created
+ * Peter W. Draper 04/03/98  Added llookup.
+ *                 14/07/98  Added blank pixel check for lookup.
  */
 
 #include <sys/types.h>
@@ -33,13 +35,26 @@ private:
 	return (ushort)b;
     }
 
-    byte lookup(byte b) {return	b;} // return X image pixel value for raw image value
+
+    // return X image pixel value for raw image value
+    byte lookup(byte b) {
+        if ( !haveBlank_ ) return b;
+        if ( b != blank_ ) return b;
+        return LOOKUP_BLANK;
+    } 
+    unsigned long llookup(byte b) {
+        if ( !haveBlank_ ) return b;
+        if ( b != blank_ ) return b;
+        return LOOKUP_BLANK;
+    }
+
 
 protected:
     // no conversion necessary
     void initShortConversion() { 
 	scaledLowCut_ = 0;
 	scaledHighCut_ = 255;
+        scaledBlankPixelValue_ = LOOKUP_BLANK;
     }
 
 public:

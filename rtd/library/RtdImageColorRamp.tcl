@@ -1,5 +1,5 @@
 # E.S.O. - VLT project 
-# "@(#) $Id: RtdImageColorRamp.tcl,v 1.11 1998/10/28 17:42:27 abrighto Exp $"
+# "@(#) $Id: RtdImageColorRamp.tcl,v 1.13 1999/03/22 21:41:31 abrighto Exp $"
 #
 # RtdImageColorRamp.tcl - itcl widget used to display contents of the 
 #                         colormap for an RtdImage in a generated image
@@ -9,6 +9,10 @@
 # who             when       what
 # --------------  ---------  ----------------------------------------
 # Allan Brighton  01 Jun 95  Created
+# Peter W. Draper 06 Mar 98  Added viewmaster and associated changes
+#                            to support non-pseudocolor visuals
+#                            (changes to colorramp do not get to other
+#                            images "automagically" any more. 
 
 
 itk::usual RtdImageColorRamp {}
@@ -55,9 +59,9 @@ itcl::class rtd::RtdImageColorRamp {
 	# add bindings for rotating the colormap
 	# (these will change later when more functions are available)
 	# Note: need shift of single color ? (see saoimage)
-	bind $canvas_ <1> [code $this mark %x]
+	bind $canvas_ <1> [code $this mark_for_shift %x]
 	bind $canvas_ <2> [code $this mark %x]
-	bind $canvas_ <3> "$image_ cmap reset"
+        bind $canvas_ <3> [code $this reset_colors]
 	bind $canvas_ <B1-Motion> [code $this shift_colors %x]
 	bind $canvas_ <Shift-B1-Motion> [code $this rotate_colors %x]
 	bind $canvas_ <B2-Motion> [code $this scale_itt %x]
@@ -81,12 +85,26 @@ itcl::class rtd::RtdImageColorRamp {
 	set mark_ $pos
     }
 
+    # mark the given position for later reference and set 
+    # things up for a shift operation.
+    # (The dummy rotate op causes an internal copy between cmap and itt
+    #  that initializes the shift from the current itt.)
+
+    protected method mark_for_shift {pos} {
+	set mark_ $pos
+	$image_ cmap rotate 0
+    }
+
     
     # rotate the colormap by the difference between the given
     # position and the position set with mark.
     
     protected method rotate_colors {pos} {
-	$image_ cmap rotate [expr $pos-$mark_]
+        set val [expr $pos-$mark_]
+	$image_ cmap rotate $val
+        if { $itk_option(-viewmaster) != {} } {
+           $itk_option(-viewmaster) cmap rotate $val
+        }
 	mark $pos
     }
 
@@ -94,17 +112,31 @@ itcl::class rtd::RtdImageColorRamp {
     # position and the position set with mark.
     
     protected method shift_colors {pos} {
-	$image_ cmap shift [expr $pos-$mark_]
+        set val [expr $pos-$mark_]
+	$image_ cmap shift $val
+        if { $itk_option(-viewmaster) != {} } {
+           $itk_option(-viewmaster) cmap shift $val
+        }
     }
-
 
     # scale the current ITT based on the difference between the given
     # position and the position set with mark.
     
     protected method scale_itt {pos} {
-	$image_ itt scale [expr $pos-$mark_]
+        set val [expr $pos-$mark_]
+        $image_ itt scale $val
+        if { $itk_option(-viewmaster) != {} } {
+           $itk_option(-viewmaster) itt scale $val
+        }
     }
 
+    # reset the colormap
+    method reset_colors {} {
+       $image_ cmap reset
+        if { $itk_option(-viewmaster) != {} } {
+           $itk_option(-viewmaster) cmap reset
+        }
+    }
     
     # Called after a shift or scale operation is done (button up)
     # to save the colormap state. We just do a null rotate here,
@@ -135,6 +167,11 @@ itcl::class rtd::RtdImageColorRamp {
 
     # X shared memory option
     itk_option define -usexshm useXshm UseXshm 1
+
+    # "viewmaster" image. This is also updated when colorramp
+    # changes. This allows changes to be propagated, even if using a
+    # read-only visual. 
+    itk_option define -viewmaster viewmaster ViewMaster {}
 
     # -- protected vars --
 

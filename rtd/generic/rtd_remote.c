@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project 
- * "@(#) $Id: rtdRemote.c,v 1.4 1997/04/11 10:51:09 abrighto Exp $"
+ * "@(#) $Id: rtdRemote.c,v 1.6 1999/03/19 20:09:56 abrighto Exp $"
  *
  * rtdRemote.c - client library for remote control of an RtdImage
  *               widget, communicates over a socket with a remote
@@ -12,8 +12,9 @@
  * who             when      what
  * --------------  --------  ----------------------------------------
  * Allan Brighton  05/03/96  Created
+ * Peter W. Draper 09/02/98  Removed sys_errlist and replaced with strerror.
  */
-static const char* const rcsId="@(#) $Id: rtdRemote.c,v 1.4 1997/04/11 10:51:09 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: rtdRemote.c,v 1.6 1999/03/19 20:09:56 abrighto Exp $";
 
 
 
@@ -91,7 +92,6 @@ va_dcl
     char *fmt;
     char buf[sizeof(info.errmsg)];
     extern int sys_nerr;
-    extern char *sys_errlist[];
     extern int errno;
 
     va_start(args);
@@ -101,7 +101,7 @@ va_dcl
     
     if (errno >= 0 && errno < sys_nerr) {
 	strcat(buf, ": ");
-	strcat(buf, sys_errlist[errno]);
+	strcat(buf, strerror(errno));
     }
 
     strcpy(info.errmsg, buf);
@@ -303,7 +303,7 @@ int rtdRemoteConnect(int pid, char* host, int port)
  */
 void rtdRemoteDisconnect()
 {
-    if (info.socket > 0) {
+    if (info.socket != -1) {
 	close(info.socket);
 	info.socket = -1;
     }
@@ -421,7 +421,7 @@ int rtdRemoteGetResult(int sock, char** result)
  */
 int rtdRemoteSend(char* cmd, char** result)
 {
-    if (info.socket <= 0) 
+    if (info.socket == -1) 
 	return error("no connection to the image display: rtdRemoteConnect was not called");
     
     if (rtdRemoteSendOnly(cmd) != 0)

@@ -1,7 +1,7 @@
 /*
  * E.S.O. - VLT project 
  *
- * "@(#) $Id: ShortImageData.C,v 1.7 1998/03/23 00:47:02 abrighto Exp $" 
+ * "@(#) $Id: ShortImageData.C,v 1.8 1999/03/19 20:10:09 abrighto Exp $" 
  *
  * ShortImageData.C - member functions for class ShortImageData
  *
@@ -33,7 +33,7 @@ void ShortImageData::initShortConversion()
     scaledLowCut_ = (short)lowCut_;
     scaledHighCut_ = (short)highCut_;
     if (haveBlank_)
-	scaledBlankPixelValue_ = blank_;
+      scaledBlankPixelValue_ = LOOKUP_BLANK; // PWD: use last bin
 }
 
 

@@ -4,7 +4,7 @@
 /*
  * E.S.O. - VLT project 
  *
- * "@(#) $Id: FloatImageData.h,v 1.9 1998/07/23 23:37:55 abrighto Exp $" 
+ * "@(#) $Id: FloatImageData.h,v 1.10 1999/03/19 20:10:01 abrighto Exp $" 
  *
  * FloatImageData.h - class definitions for class FloatImageData
  *
@@ -14,6 +14,7 @@
  * who             when      what
  * --------------  --------  ----------------------------------------
  * Allan Brighton  05/10/95  Created
+ * Peter W. Draper 04/03/98  Added llookup
  */
 
 #include <sys/types.h>
@@ -43,7 +44,9 @@ private:
     // Convert the given float image value to byte, scaling to short
     // first and then using the short value as an index in the color
     // lookup table.
-    byte lookup(float f) {return lookup_[ushort(scaleToShort(f))];}
+    byte lookup(float f) {return lookup_[(ushort)scaleToShort(f)];}
+    unsigned long llookup(float f) {return lookup_[(ushort)scaleToShort(f)];}
+
 
 protected:
     // initialize conversion from base type to short,

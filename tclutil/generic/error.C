@@ -1,14 +1,18 @@
 /*
  * E.S.O. - VLT project 
- * "@(#) $Id: error.C,v 1.2 1998/02/18 11:33:05 abrighto Exp $"
+ * "@(#) $Id: error.C,v 1.4 1999/03/19 20:10:43 abrighto Exp $"
  *
  * error.C - error reporting routines
  * 
  * who             when      what
  * --------------  --------  ----------------------------------------
  * Allan Brighton  05/10/95  Created
+ * Peter W. Draper 08/05/98  ifdef'd errno.h include for
+ *                           linux. Something horrible happens here 
+ *                           under RH5 and glibc.
+ *                 08/12/98  Changed for egcs compiler 
  */
-static const char* const rcsId="@(#) $Id: error.C,v 1.2 1998/02/18 11:33:05 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: error.C,v 1.4 1999/03/19 20:10:43 abrighto Exp $";
 
 
 #include <stdarg.h>
@@ -16,7 +20,9 @@ static const char* const rcsId="@(#) $Id: error.C,v 1.2 1998/02/18 11:33:05 abri
 #include <string.h>
 #include <iostream.h>
 #include <strstream.h>
+#ifndef __linux__
 #include <errno.h>
+#endif
 #include <stdio.h>
 #include "error.h"
 
@@ -63,7 +69,11 @@ int error(const char* msg1, const char* msg2, int code)
 int sys_error(const char* msg1, const char* msg2)
 {
     extern int sys_nerr;
+#ifdef __alpha
     extern char *sys_errlist[];
+#else
+    extern const char *const sys_errlist[];
+#endif
     extern int errno;
     char* s = strerror(errno);
 

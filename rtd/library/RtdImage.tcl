@@ -1,5 +1,5 @@
 # E.S.O. - VLT project 
-# "@(#) $Id: RtdImage.tcl,v 1.54 1998/12/03 22:11:09 abrighto Exp $"
+# "@(#) $Id: RtdImage.tcl,v 1.55 1999/03/19 20:09:38 abrighto Exp $"
 #
 # RtdImage.tcl - itcl widget wrapper for the rtdimage type extension
 #
@@ -390,7 +390,6 @@ itcl::class rtd::RtdImage {
 	set ch [winfo height $canvas_]
 	set dw [$image_ dispwidth]
 	set dh [$image_ dispheight]
-
 	if {$cw != 1} {
 	    if {$dw < $cw && $dw} {
 		set x [expr (($dw-$cw)/2.0)/$dw]

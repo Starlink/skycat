@@ -4,7 +4,7 @@
 
 /*
  * E.S.O. - VLT project/ESO Archive
- * $Id: LocalCatalog.h,v 1.6 1997/10/18 23:03:36 abrighto Exp $
+ * $Id: LocalCatalog.h,v 1.7 1999/03/19 20:09:17 abrighto Exp $
  *
  * LocalCatalog.h - class definitions for accessing local
  *                  catalogs stored as starbase format tab tables.
@@ -14,6 +14,9 @@
  * who             when       what
  * --------------  --------   ----------------------------------------
  * Allan Brighton  11 Jun 96  Created
+ * Peter W. Draper 21 Sep 98  Modified private data members to be
+ *                            protected. Need these for derived
+ *                            classes. 
  */
 
 #include "AstroCatalog.h"
@@ -37,7 +40,8 @@
  * where the table name and variable assignments are optional. 
  */
 class LocalCatalog : public AstroCatalog {
-private:
+  //private:
+protected:  // PWD: change here
     char* filename_;		// file name for local catalog
     time_t timestamp_;		// last update time of file, for caching
 

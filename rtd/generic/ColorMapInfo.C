@@ -1,7 +1,7 @@
 /*
  * E.S.O. - VLT project 
  *
- * "@(#) $Id: ColorMapInfo.C,v 1.4 1997/11/19 21:48:44 abrighto Exp $"
+ * "@(#) $Id: ColorMapInfo.C,v 1.5 1999/03/19 20:09:48 abrighto Exp $"
  *
  * ColorMapInfo.C - member routines for class ColorMapInfo
  * 
@@ -10,8 +10,10 @@
  * who             when      what
  * --------------  --------  ----------------------------------------
  * Allan Brighton  05/10/95  Created
+ * Peter W. Draper 14/07/98  Changed interpolate to get last colorcell 
+ *                           (so pure white/black is available in principle).
  */
-static const char* const rcsId="@(#) $Id: ColorMapInfo.C,v 1.4 1997/11/19 21:48:44 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: ColorMapInfo.C,v 1.5 1999/03/19 20:09:48 abrighto Exp $";
 
 
 #include <string.h>
@@ -126,15 +128,14 @@ void ColorMapInfo::list(ostream& os)
 void ColorMapInfo::interpolate(XColor* colorCells, int colorCount)
 {
     int index;
-
     for (int i=0; i<colorCount; i++) {
-	index = (i * (MAX_COLOR - 1))/colorCount; 
+      index = (i * (MAX_COLOR - 1))/(colorCount - 1); 
+      // PWD: now /(colorCount - 1) to get last color cell
 	colorCells[i].red = (ushort)(rgb_[index].red * 65535);
 	colorCells[i].green = (ushort)(rgb_[index].green * 65535);
 	colorCells[i].blue = (ushort)(rgb_[index].blue * 65535);
     }
 }
-
 
 /*
  * rotate the colormap given by src by the given amount, putting

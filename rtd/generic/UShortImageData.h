@@ -4,7 +4,7 @@
 /*
  * E.S.O. - VLT project 
  *
- * "@(#) $Id: UShortImageData.h,v 1.9 1998/07/23 23:37:56 abrighto Exp $" 
+ * "@(#) $Id: UShortImageData.h,v 1.10 1999/03/19 20:10:01 abrighto Exp $" 
  *
  * UShortImageData.h - class definitions for class UShortImageData
  *
@@ -14,7 +14,9 @@
  * who             when      what
  * --------------  --------  ----------------------------------------
  * Allan Brighton  05/10/95  Created
- */
+ * Peter W. Draper 04/03/98  Added llookup.
+ *                 14/07/98  Added check for blanks in lookup.
+*/
 
 #include "ImageData.h"
 
@@ -33,7 +35,16 @@ private:
     }
 
     // return X image pixel value for raw image value
-    byte lookup(ushort s) {return lookup_[s];}	
+    byte lookup(ushort s) {
+        if ( !haveBlank_ ) return lookup_[s];
+        if ( s != blank_ ) return lookup_[s];
+        return lookup_[(ushort)LOOKUP_BLANK];
+    }
+    unsigned long llookup(ushort s) {
+        if ( !haveBlank_ ) return lookup_[s];
+        if ( s != blank_ ) return lookup_[s];
+        return lookup_[(ushort)LOOKUP_BLANK];
+    }
 
 protected:
 

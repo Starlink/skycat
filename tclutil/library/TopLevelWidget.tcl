@@ -1,5 +1,5 @@
 # E.S.O. - VLT project/ ESO Archive
-# "@(#) $Id: TopLevelWidget.tcl,v 1.26 1998/11/26 22:39:09 abrighto Exp $"
+# "@(#) $Id: TopLevelWidget.tcl,v 1.28 1999/03/19 20:10:25 abrighto Exp $"
 #
 # TopLevelWidget.tcl - Itk base class for popup windows
 #
@@ -14,6 +14,9 @@
 #                 20 Jan 98. Fixed busy focus -lastfor so
 #                            that it does restore the focus,
 #                            not just get the window name. 
+#                 10 Mar 99  Added fix to split up args in
+#                            setup_menuitem. This makes the
+#                            accelerator code work.
 
 itk::usual TopLevelWidget {}
 
@@ -199,7 +202,8 @@ itcl::class util::TopLevelWidget {
 
     public method quit {} {
 	if {$itk_option(-standalone)} {
-	    destroy $w_
+	    delete object $this
+	    # destroy $w_
 	} else {
 	    wm withdraw $w_
 	}
@@ -465,17 +469,16 @@ itcl::class util::TopLevelWidget {
     protected method setup_menuitem {menu label msg args} {
 	set menu_item_help_($menu,$label) $msg
 
+        # PWD: modification here. Need to split up $args, so use largs.
 	# if -accelerator was specified, add key binding for command
-	set n [llength $args]
+        eval set largs $args
+	set n [llength $largs]
 	set key {}
-	set cmd {}
 	for {set i 0} {$i < $n} {incr i 2} {
-	    set opt [lindex $args $i]
-	    set arg [lindex $args [expr $i+1]]
+	    set opt [lindex $largs $i]
+	    set arg [lindex $largs [expr $i+1]]
 	    if {"$opt" == "-accelerator"} {
 		set key $arg
-	    } elseif {"$opt" == "-command"} {
-		set cmd $arg
 	    }
 	}
 	if {"$key" != ""} {
