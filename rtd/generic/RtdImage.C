@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project 
- * "@(#) $Id: RtdImage.C,v 1.65 1998/11/16 21:25:10 abrighto Exp $"
+ * "@(#) $Id: RtdImage.C,v 1.66 1999/02/02 21:50:33 abrighto Exp $"
  *
  * RtdImage.C - member routines for class RtdImage,
  *               implementation of the TCL rtdimage command
@@ -49,7 +49,7 @@
  *                           work again (they were lost in previous changes at
  *                           some point).
  */
-static const char* const rcsId="@(#) $Id: RtdImage.C,v 1.65 1998/11/16 21:25:10 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: RtdImage.C,v 1.66 1999/02/02 21:50:33 abrighto Exp $";
 
 #include <string.h>
 #include <ctype.h>
@@ -498,7 +498,7 @@ int Rtd_Init(Tcl_Interp* interp)
 		 "namespace ::rtd {}; "
 		 "import add rtd; "
 #endif
-	) != 0)
+	) != TCL_OK)
 	return TCL_ERROR;
 
     return TCL_OK; 
