@@ -1,5 +1,5 @@
 # E.S.O. - VLT project/ESO Archive
-# "@(#) $Id: SkyCat.tcl,v 1.73 1999/03/12 18:42:20 abrighto Exp $"
+# "@(#) $Id: SkyCat.tcl,v 1.2 2005/01/20 23:04:30 brighton Exp $"
 #
 # SkyCat.tcl - image display application class with catalog extensions
 #
@@ -21,7 +21,8 @@ Options:
  -catalog <name>          - Open a window for the given catalog on startup.
  -colorramp_height <n>    - height of colorramp window (default: 12).
  -float_panel <bool>      - put info panel in a popup window (default: 0).
- -panel_layout <layout>   - panel layout, one of: "saoimage", "reverse" or "default" .
+ -panel_layout <layout>   - panel layout, one of: "saoimage", "reverse", "default" .
+ -panel_orient <orient>   - panel orientation, one of: "horizontal", "vertical"
  -pickobjectorient <v>    - orientation for pick object win: "horizontal", "vertical"    
  -min_scale <n>           - minimum scale for magnification menu (default: -10).
  -max_scale <n>           - maximum scale for magnification menu (default: 20).
@@ -48,11 +49,11 @@ Options:
 
 set about_skycat "\
 Skycat version $skycat_version
-Copyright (C) 1996-1998 ESO - European Southern Observatory
+Copyright (C) 1996-2001 ESO - European Southern Observatory
 
 Authors: 
 
-Allan Brighton (abrighto@eso.org)
+Allan Brighton (abrighton@gemini.edu)
 Thomas Herlin (therlin@eso.org)
 Miguel Albrecht (malbrech@eso.org)
 Daniel Durand (durand@dao.nrc.ca)
@@ -60,7 +61,7 @@ Peter Biereichel (pbiereic@eso.org)
 
 Please send any comments, suggestions or bug reports to:
 
-Allan Brighton (abrighto@eso.org)
+Allan Brighton (abrighton@gemini.edu)
 "
 
 itk::usual SkyCat {}
@@ -82,6 +83,10 @@ itcl::class skycat::SkyCat {
 
     constructor {args} {
 	eval itk_initialize $args
+
+	if { "$itk_option(-panel_orient)" == "" } {
+	    config -panel_orient "vertical"
+	}
     }
 
     
@@ -89,13 +94,13 @@ itcl::class skycat::SkyCat {
     
     protected method init {} {
 	Rtd::init
+
 	load_toplevel_geometry
 	wm title $w_ "Skycat - version [skycat_version]] ($itk_option(-number))"
 	wm iconname $w_ 
 	feedback "catalog and help menu..."
 	
 	add_go_menu
-	add_view_hdu_menu_item
 	add_graphics_save_menu_item
 
 	if {$itk_option(-cat)} {
@@ -212,6 +217,10 @@ itcl::class skycat::SkyCat {
 	# add/remove some menus
 	if {$itk_option(-rtd)} {
 	    Rtd::add_realtime_menu
+	} else {
+	    # hide the realtime status
+	    [[$itk_component(image) component info] component cameraStatus] config \
+		-width 0 -height 0
 	}
     }
 
@@ -221,22 +230,6 @@ itcl::class skycat::SkyCat {
     protected method add_go_menu {} {
 	set m [add_menubutton "Go" "Go: menu with shortcuts to view images previously viewed"]
 	$m config -postcommand [code $image_ update_history_menu $this $m]
-    }
-
-
-    # Add a menu item to the View menu for selecting the current HDU
-
-    protected method add_view_hdu_menu_item {} {
-	if {[catch {[$image_ get_image] hdu count} msg]} {
-	    # might be a plugin, such as GAIA that doesn't have the HDU features...
-	    return
-	}
-	
-	set m [get_menu View]
-	$m add separator
-	add_menuitem $m command "Select FITS HDU..." \
-	    {Display the available FITS HDUs (header/data units) and select the current HDU} \
-	    -command [code $image_ display_fits_hdus]
     }
 
 
@@ -356,6 +349,7 @@ itcl::class skycat::SkyCat {
 		-regioncommand [code $this select_region] \
 		-float_panel $itk_option(-float_panel) \
 		-panel_layout $itk_option(-panel_layout) \
+		-panel_orient $itk_option(-panel_orient) \
 		-min_scale $itk_option(-min_scale) \
 		-max_scale $itk_option(-max_scale) \
 		-pickobjectorient $itk_option(-pickobjectorient)
@@ -388,8 +382,7 @@ itcl::class skycat::SkyCat {
 	set skycat_logo [image create pixmap -id skycat_logo]
 
 	set w [util::TopLevelWidget $w_.init -center 1]
-	rtd_set_cmap $w
-	#wm overrideredirect $w 1
+	#catch {rtd_set_cmap $w}
 	wm title $w " "
 	wm withdraw $w_
 	pack \
@@ -499,7 +492,7 @@ itcl::class skycat::SkyCat {
 	    set env(CATLIB_CONFIG) "file:$config_file"
 	} elseif {[info exists env(SKYCAT_CONFIG)]} {
 	    set env(CATLIB_CONFIG) $env(SKYCAT_CONFIG)
-	} 
+	}
 
 	tk appname Skycat
 	set tk_strictMotif 0
@@ -509,8 +502,52 @@ itcl::class skycat::SkyCat {
 	set argv [linsert $argv 0 -disp_image_icon 1]
 	set argc [llength $argv]
 
+	# specify a list of valid options (workaround for tcl or itcl bug (?) that
+	# crashes app if option is unknown...)
+	set optlist [list \
+		-cat \
+		-catalog \
+		-color_scale \
+		-colorramp_height \
+		-debug \
+		-default_cmap \
+		-default_itt \
+		-dhsdata \
+		-dhshost \
+		-disp_image_icon \
+		-drag_scroll \
+		-feedback \
+		-file  \
+		-float_panel \
+		-help_url \
+		-max_scale \
+		-min_scale \
+		-panel_layout \
+		-panel_orient \
+		-pickobjectorient \
+		-port \
+		-rapid_frame_command \
+		-regioncommand \
+		-remote \
+		-rtd \
+		-scrollbars \
+		-shm_data \
+		-shm_header \
+		-shorthelpwin \
+		-subsample \
+		-use_zoom_view \
+		-usexshm \
+		-verbose \
+		-with_colorramp \
+		-with_grid \
+		-with_pan_window \
+		-with_warp 1 \
+		-with_zoom_window \
+		-zoom_factor \
+		]
+
 	# start the application
-	util::TopLevelWidget::start skycat::SkyCat "-file" "$skycat_usage"
+	util::TopLevelWidget::start skycat::SkyCat "-file" "$skycat_usage" "" 1 $optlist
     }
 
 
@@ -601,6 +638,18 @@ itcl::class skycat::SkyCat {
 	}
 	$w getimage_from_args $ra $dec {} $equinox $width $height
     }
+
+
+    # This proc can be called via send from another application to display a catalog
+    # given the catalog's name (long name or short name).
+
+    public proc display_catalog {{catalog "Guide Star Catalog at ESO"}} {
+	global ::skycat_images
+	set w [lindex $skycat_images 0]
+	cat::AstroCat::open_catalog_window $catalog \
+	    $w ::skycat::SkySearch 0 [winfo toplevel $w]
+    }
+
 
 
     # This proc can be called via send from another application to display a rectangle
@@ -793,8 +842,13 @@ proc get_catalog_info {} {
 }
 
 proc display_image {ra dec width height {equinox 2000} {catalog "Digitized Sky at ESO"}} {
-    return [skycat::SkyCat::display_image $ra $dec $width $height $equinox]
+    return [skycat::SkyCat::display_image $ra $dec $width $height $equinox $catalog]
 }
+
+proc display_catalog {{catalog "Guide Star Catalog at ESO"}} {
+    return [skycat::SkyCat::display_catalog $catalog]
+}
+
 proc mark_image {ra dec width height} {
     return [skycat::SkyCat::mark_image $ra $dec $width $height]
 }

@@ -1,7 +1,7 @@
 /*
  * E.S.O. - VLT project / ESO Archive
  *
- * "@(#) $Id: Mem.C,v 1.9 1998/12/03 22:11:47 abrighto Exp $" 
+ * "@(#) $Id: Mem.C,v 1.4 2005/02/02 01:43:00 brighton Exp $" 
  *
  * Mem.C - method definitions for class Mem, for managing memory
  *         areas with or without shared memory.
@@ -10,22 +10,26 @@
  * --------------  --------  ----------------------------------------
  * Allan Brighton  07/03/96  Created
  * D.Hopkinson     21/01/97  Added constructor to use when multi-buffering shared memory.
+ * pbiereic        22/10/99  Attach to shm with SHM_RDONLY when owner=0
+ * pbiereic        10/11/99  Use _exit() in signal handler, so that the
+ *                           message queue of a possible parent process is not closed
+ * pbiereic        17/02/03  Added 'using namespace std'.
  */
-static const char* const rcsId="@(#) $Id: Mem.C,v 1.9 1998/12/03 22:11:47 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: Mem.C,v 1.4 2005/02/02 01:43:00 brighton Exp $";
 
 
-#include <string.h>
-#include <stdlib.h>
+using namespace std;
+#include <cstdlib>
+#include <cstring>
 #include <unistd.h>
-#include <stdio.h>
-#include <iostream.h>
+#include <cstdio>
+#include <iostream>
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <sys/sem.h>
 #include "error.h"
 #include "define.h"
-#include "config.h"
 #include "util.h"
 #include "Mem.h"
 #include "Mem_Map.h"
@@ -120,7 +124,11 @@ MemRep::MemRep(int sz, int own, int id, int verb)
     }
 
     // attach new shared memory segment
-    ptr = shmat(shmId, NULL, 0); 
+    if (owner)
+        ptr = shmat(shmId, NULL, 0); 
+    else
+        ptr = shmat(shmId, NULL, SHM_RDONLY); 
+
     if (ptr == NULL || ptr == (void *)-1) {
 	ptr = NULL;
 	shmId  = -1;
@@ -234,10 +242,11 @@ MemRep::MemRep(const char *filename, int flags, int prot, int share, int nbytes,
     }
    
     // get the name of the real file (if a link)
-    char realname[1024];
-    const char* fname = fileRealname(filename, realname, sizeof(realname));
-    if (fname == realname)
-	linkName = strdup(filename);  // remember the name of the link
+    //char realname[1024];
+    //const char* fname = fileRealname(filename, realname, sizeof(realname));
+    //if (fname == realname)
+    //linkName = strdup(filename);  // remember the name of the link
+    const char* fname = filename;  // allan: 9.11.00: had problems with relative links
 
     // map the file
     m_map = new Mem_Map(fname, 
@@ -323,7 +332,7 @@ MemRep::~MemRep()
 	delete m_map;
     }
     else if (ptr) {		// must be using plain memory
-	delete ptr;
+	delete (char *)ptr;
     } 
     
     ptr = NULL;
@@ -448,8 +457,9 @@ static MemRep* findMemRep(const char* filename)
     if (filename) {
 
 	// get the name of the real file
-	char realname[1024];
-	const char* pfile = fileRealname(filename, realname, sizeof(realname));
+	//char realname[1024];
+	//const char* pfile = fileRealname(filename, realname, sizeof(realname));
+	const char* pfile = filename;  // allan: 9.11.00: had problems with relative links
 
 	for (int i = 0; i < shmCount_; i++) {
 	    if (shmObjs_[i]->m_map && strcmp(shmObjs_[i]->m_map->filename(), pfile) == 0) {
@@ -651,5 +661,5 @@ void Mem::cleanup()
 void Mem_cleanup(int) 
 {
     Mem::cleanup();
-    exit(0);
+    _exit(0);
 }

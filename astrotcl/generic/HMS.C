@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project/ESO Archive 
- * $Id: HMS.C,v 1.5 1998/07/01 09:54:29 abrighto Exp $
+ * $Id: HMS.C,v 1.4 2005/02/02 01:43:04 brighton Exp $
  *
  * HMS.C - method definitions for class HMS
  * 
@@ -10,12 +10,12 @@
  * --------------  --------   ----------------------------------------
  * Allan Brighton  26 Sep 95  Created
  */
-static const char* const rcsId="@(#) $Id: HMS.C,v 1.5 1998/07/01 09:54:29 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: HMS.C,v 1.4 2005/02/02 01:43:04 brighton Exp $";
 
 
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
+#include <cstdio>
+#include <cstring>
+#include <cmath>
 #include "error.h"
 #include "HMS.h"
 
@@ -67,12 +67,20 @@ HMS::HMS(double val)
 
 /*
  * constructor - from string value, in format H:M:S.sss, hh, d.ddd, or 
- * H M S...  If hflag is 1 and the value is not in H:M:S and is not an
+ * H M S...  
+ * If hflag is 1 and the value is not in H:M:S and is not an
  * integer (has a decimal point) convert to hours by dividing by 15.
+ * If dflag is specified, it is set to 1 if the value was divided by 15.
  */
-HMS::HMS(const char* s, int hflag)
-: show_sign_(0)
+HMS::HMS(const char* s, int hflag, int* dflag)
+  : show_sign_(0)
 {
+     if (!s) {
+         val_ = sec_ = 0.;
+         hours_ = min_ = 0;
+         return;
+     }
+
     double hours = 0;
     int min = 0;
     double sec = 0.0;
@@ -86,8 +94,11 @@ HMS::HMS(const char* s, int hflag)
     } 
     else if (n == 1) {
 	if (sscanf(s, "%lf", &val) == 1) {
-	    if (hflag && strchr(s, '.'))
+	    if (hflag && strchr(s, '.')) {
 		*this = HMS(val/15.);
+		if (dflag)
+		    *dflag = 1;
+	    }
 	    else
 		*this = HMS(val);
 	}
@@ -109,20 +120,20 @@ void HMS::print(char* buf) const
     // allan: 22.4.98: make sure seconds are formatted with leading zero
     // (%02.2f doesn't do it)
     char secs[8];
-    if (show_sign_) {  // show 2 digits prec for dec, 3 for ra
-	if (sec_ < 10) {  
-	    sprintf(secs, "%02d.%02d", int(sec_), int(((sec_-int(sec_))+0.005)*100));
+    if (show_sign_) {  // show 2 digits precision for dec, 3 for ra
+	if (sec_ < 10.) {  
+	    sprintf(secs, "0%2.2f", sec_);
 	}
 	else {
-	    sprintf(secs, "%02.2f", sec_);
+	    sprintf(secs, "%2.2f", sec_);
 	}
     }
     else {
-	if (sec_ < 100) {  
-	    sprintf(secs, "%02d.%03d", int(sec_), int(((sec_-int(sec_))+0.0005)*1000));
+	if (sec_ < 10.) {  
+	    sprintf(secs, "0%2.3f", sec_);
 	}
 	else {
-	    sprintf(secs, "%02.3f", sec_);
+	    sprintf(secs, "%2.3f", sec_);
 	}
     }
 

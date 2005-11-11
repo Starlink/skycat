@@ -1,10 +1,10 @@
 /*
  * E.S.O. - VLT project 
- * "@(#) $Id: ImageData.C,v 1.36 1999/03/22 21:42:02 abrighto Exp $" 
+ * "@(#) $Id: ImageData.C,v 1.4 2005/02/02 01:43:02 brighton Exp $" 
  *
  * ImageData.C - member functions for class ImageData
  *
- * See the man page RTI(3) for a complete description of this class
+ * See the man page ImageData(3) for a complete description of this class
  * library.
  * 
  * who             when      what
@@ -39,16 +39,22 @@
  *                           visuals. Renamed setXImageData to setXImage.
  *
  * Peter W. Draper 13/01/99  Merged my changes into SkyCat 2.2.
+ * pbiereic        22/03/99  Added code for bias frame
+ * pbiereic        27/04/00  New Midas routine iqefunc.c
+ * pbiereic        25/05/00  Added method 'fillToFit'
+ * pbiereic        15/06/01  Added methods 'getYline4', 'getXline4', 'getBbox' and 'getMinMax'
+ * pbiereic        27/06/01  Added method 'noiseStatistics'
+ * pbiereic        10/07/04  Added method 'getXline4' with specified x ranges
  */
-static const char* const rcsId="@(#) $Id: ImageData.C,v 1.36 1999/03/22 21:42:02 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: ImageData.C,v 1.4 2005/02/02 01:43:02 brighton Exp $";
 
 
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <assert.h>
-#include <math.h>
-#include <iostream.h>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cassert>
+#include <cmath>
+#include <iostream>
 #include "error.h"
 #include "define.h"
 #include "FitsIO.h"
@@ -60,19 +66,22 @@ static const char* const rcsId="@(#) $Id: ImageData.C,v 1.36 1999/03/22 21:42:02
 #include "UShortImageData.h"
 #include "LongImageData.h"
 #include "FloatImageData.h"
+#include "CompoundImageData.h"
 #include "ImageDisplay.h"
 
 // initialize static member variables
-// Note: these are static since there is only one static color map for all images
-// of this class
+// Note: these are static since there is only one static color map 
+// or bias frame for all images of this class
 int ImageData::ncolors_ = 0;	         // number of available colors
 unsigned long* ImageData::colors_ = NULL; // array of color values
 unsigned long ImageData::color0_ = 0;     // reserved color for black pixels
 unsigned long ImageData::colorn_ = 0;     // reserved color for saturated pixels
 
+biasINFO* ImageData::biasInfo_ = NULL;    // ptr to description of bias frame
+
 // C routine used to get image statistics
 extern "C" {
-    iqe(float *pfm, float *pwm, int mx, int my, float *parm, float *sdev);
+    int iqe(float *pfm, float *pwm, int mx, int my, float *parm, float *sdev);
 }
 
 
@@ -87,46 +96,53 @@ extern "C" {
  */
 ImageData::ImageData(const char* imageName, const ImageIO& image, 
 		     int verbose, int lookup_size)
-: image_(image),
-  width_(image.width()),
-  height_(image.height()),
-  prevX_(0.0),
-  prevY_(0.0),
-  x0_(0), y0_(0), x1_(width_-1), y1_(height_-1),
-  dispWidth_(width_),
-  dispHeight_(height_),
-  area_(width_*height_),
-  xImage_(NULL),
-  xImageData_(NULL),
-  xImageBytesPerLine_(0),
-  xImageSize_(0),
-  xImageBytesPerPixel_(1),
-  xImageMaxX_(width_-1),
-  xImageMaxY_(height_-1),
-  colorScaleType_(LINEAR_SCALE),
-  haveBlank_(0),
-  lowCut_(0.0),
-  highCut_(0.0),
-  scaledLowCut_(0),
-  scaledHighCut_(0),
-  scaledBlankPixelValue_(0),
-  minValue_(0.0),
-  maxValue_(0.0),
-  expo_(10.0),
-  xScale_(1),
-  yScale_(1),
-  rotate_(0),
-  flipX_(0),
-  flipY_(0),
-  startX_(0),
-  startY_(0),
-  binX_(1),
-  binY_(1),
-  subsample_(1),
-  update_pending_(1),
-  verbose_(verbose),
-  lookup_(lookup_size),
-  clear_(0)
+    : image_(image),
+      width_(image.width()),
+      height_(image.height()),
+      prevX_(0.0),
+      prevY_(0.0),
+      x0_(0), y0_(0), x1_(width_-1), y1_(height_-1),
+      dispWidth_(width_),
+      dispHeight_(height_),
+      area_(width_*height_),
+      xImage_(NULL),
+      xImageData_(NULL),
+      xImageBytesPerLine_(0),
+      xImageSize_(0),
+      xImageBytesPerPixel_(1),
+      xImageMaxX_(width_-1),
+      xImageMaxY_(height_-1),
+      colorScaleType_(LINEAR_SCALE),
+      haveBlank_(0),
+      lowCut_(0.0),
+      highCut_(0.0),
+      scaledLowCut_(0),
+      scaledHighCut_(0),
+      scaledBlankPixelValue_(0),
+      minValue_(0.0),
+      maxValue_(0.0),
+      expo_(10.0),
+      xScale_(1),
+      yScale_(1),
+      rotate_(0),
+      flipX_(0),
+      flipY_(0),
+      startX_(0),
+      startY_(0),
+      binX_(1),
+      binY_(1),
+      prescanX_(0),
+      prescanY_(0),
+      overscanX_(0),
+      overscanY_(0),
+      crpix1_(0),
+      crpix2_(0),
+      subsample_(1),
+      sampmethod_(0),
+      update_pending_(1),
+      verbose_(verbose),
+      lookup_(lookup_size),
+      clear_(0)
 {
     name(imageName);
     object("");
@@ -141,46 +157,53 @@ ImageData::ImageData(const char* imageName, const ImageIO& image,
  * but shared as long as possible.
  */
 ImageData::ImageData(const ImageData& im)
-: image_(im.image_),
-  width_(im.width_),
-  height_(im.height_),
-  prevX_(0.0),
-  prevY_(0.0),
-  x0_(0), y0_(0), x1_(width_-1), y1_(height_-1),
-  dispWidth_(im.dispWidth_),
-  dispHeight_(im.dispHeight_),
-  area_(im.area_),
-  xImage_(NULL),		// will be set later
-  xImageData_(NULL),
-  xImageBytesPerLine_(0),
-  xImageSize_(0),
-  xImageMaxX_(0),
-  xImageMaxY_(0),
-  xImageBytesPerPixel_(1),
-  colorScaleType_(im.colorScaleType_),
-  haveBlank_(im.haveBlank_),
-  lowCut_(im.lowCut_),
-  highCut_(im.highCut_),
-  scaledLowCut_(im.scaledLowCut_),
-  scaledHighCut_(im.scaledHighCut_),
-  scaledBlankPixelValue_(im.scaledBlankPixelValue_),
-  minValue_(im.minValue_),
-  maxValue_(im.maxValue_),
-  expo_(im.expo_),
-  xScale_(im.xScale_),
-  yScale_(im.yScale_),
-  rotate_(im.rotate_),
-  flipX_(im.flipX_),
-  flipY_(im.flipY_),
-  startX_(im.startX_),
-  startY_(im.startY_),
-  binX_(im.binX_),
-  binY_(im.binY_),
-  subsample_(im.subsample_),
-  update_pending_(1),
-  verbose_(im.verbose_),
-  lookup_(im.lookup_),
-  clear_(0)
+    : image_(im.image_),
+      width_(im.width_),
+      height_(im.height_),
+      prevX_(0.0),
+      prevY_(0.0),
+      x0_(0), y0_(0), x1_(width_-1), y1_(height_-1),
+      dispWidth_(im.dispWidth_),
+      dispHeight_(im.dispHeight_),
+      area_(im.area_),
+      xImage_(NULL),		// will be set later
+      xImageData_(NULL),
+      xImageBytesPerLine_(0),
+      xImageSize_(0),
+      xImageMaxX_(0),
+      xImageMaxY_(0),
+      xImageBytesPerPixel_(1),
+      colorScaleType_(im.colorScaleType_),
+      haveBlank_(im.haveBlank_),
+      lowCut_(im.lowCut_),
+      highCut_(im.highCut_),
+      scaledLowCut_(im.scaledLowCut_),
+      scaledHighCut_(im.scaledHighCut_),
+      scaledBlankPixelValue_(im.scaledBlankPixelValue_),
+      minValue_(im.minValue_),
+      maxValue_(im.maxValue_),
+      expo_(im.expo_),
+      xScale_(im.xScale_),
+      yScale_(im.yScale_),
+      rotate_(im.rotate_),
+      flipX_(im.flipX_),
+      flipY_(im.flipY_),
+      startX_(im.startX_),
+      startY_(im.startY_),
+      binX_(im.binX_),
+      binY_(im.binY_),
+      prescanX_(im.prescanX_),
+      prescanY_(im.prescanY_),
+      overscanX_(im.overscanX_),
+      overscanY_(im.overscanY_),
+      crpix1_(im.crpix1_),
+      crpix2_(im.crpix2_),
+      subsample_(im.subsample_),
+      sampmethod_(im.sampmethod_),
+      update_pending_(1),
+      verbose_(im.verbose_),
+      lookup_(im.lookup_),
+      clear_(0)
 {
     name("");  // new name should be set from outside
     object(im.object_);
@@ -191,7 +214,7 @@ ImageData::ImageData(const ImageData& im)
  * Specify a new lookup table to use for this image and its size.
  * Note: only allowed if this is a copy of another image.
  */
-int ImageData::lookup(LookupTable lookup)
+int ImageData::lookupTable(LookupTable lookup)
 {
     if (lookup.size() != lookup_.size())
 	return error("warning: tried to copy lookup table with wrong size");
@@ -302,14 +325,17 @@ int ImageData::write(const char* filename, double rx0, double ry0, double rx1, d
     // Update the FITS keywords for the new image size.
     // Note: we can't use FitsIO for this, since we already have the header,
     // but the NAXIS keyword are wrong still, so fall back on wcssubs hget()
-    hlength(head, origHeaderSize);
-    hputi4(head, "NAXIS1", w);
-    hputcom(head, "NAXIS1", "Length X axis");
-    hputi4(head, "NAXIS2", h);
-    hputcom(head, "NAXIS2", "Length Y axis");
 
+    // XXX to avoid crash for real-time images
+    if (origHeaderSize > 0) {
+        hlength(head, origHeaderSize);
+        hputi4(head, "NAXIS1", w);
+	hputcom(head, "NAXIS1", "Length X axis");
+	hputi4(head, "NAXIS2", h);
+	hputcom(head, "NAXIS2", "Length Y axis");
+    }
     // update WCS keywords if needed
-    if (wcs().isWcs()) {
+    if (origHeaderSize > 0 && wcs().isWcs()) {
 	double cx = w/2.0, cy = h/2.0;
 	hputr8(head, "CRPIX1", cx);
 	hputcom(head, "CRPIX1", "Refpix of first axis");
@@ -360,17 +386,15 @@ int ImageData::write(const char* filename, double rx0, double ry0, double rx1, d
  * imio - is a reference to an ImageIO object for the image (or ptr, see above).
  * verbose - is a flag, if true, print out diagnostic messages.
  */
-ImageData* ImageData::makeImage(const char* name, const ImageIO& imio, int verbose)
+ImageData* ImageData::makeImage(const char* name, const ImageIO& imio, biasINFO* biasInfo, int verbose)
 {
     if (imio.status() != 0)
 	return NULL;
 
     ImageData* image = NULL;
 
-    // if this flag is true, use native byte order. Note that this has
-    // no effect on machines that use network byte order already (sun, hp,...),
-    // see NativeImageData.[Ch].
-    int native = imio.nativeByteOrder();
+    // if this flag is true, use native byte order.
+    int native = (BIGENDIAN == imio.usingNetBO());
 
     switch (imio.bitpix()) {
     case BYTE_IMAGE:
@@ -409,17 +433,57 @@ ImageData* ImageData::makeImage(const char* name, const ImageIO& imio, int verbo
 	error("unsupported image BITPIX value: ", buf);
     }
 
-    if (image) 
+    if (image) {
+        image->setBiasInfo(biasInfo);
 	return image->initImage();
+    }
     
     return image;
+}
+
+
+/*
+ * Make a new compound image by combining the given image extensions 
+ * in the given ImageIO object and return a pointer to a derived class
+ * of this class specialized in handling compound images, or null 
+ * if there is an error.
+ *
+ * The image extensions are combined based on the world coordinates
+ * information in each header. An error is returned if this can't be
+ * done.
+ * 
+ * We only deal with FITS image extensions here, so an error is returned
+ * if the ImageIO object is not a FITS file.
+ *
+ * name -    is an arbitrary name for the image.
+ * imio -    is a reference to an ImageIO object for the FITS file.
+ * hduList - is an array of image HDU indexes for the images to be combined
+ * numHDUs - is the number of indexes in the hduList array
+ * verbose - is a flag, if true, print out diagnostic messages.
+ */
+ImageData* ImageData::makeCompoundImage(const char* name, const ImageIO& imio, 
+					int* hduList, int numHDUs,
+					biasINFO* biasInfo, int verbose)
+{
+    ImageData* image = new CompoundImageData(name, imio, hduList, numHDUs, biasInfo, verbose);
+
+    if (image) {
+	if (image->status() != 0) {
+	    delete image;
+	    return NULL;
+	}
+
+        image->setBiasInfo(biasInfo);
+	return image->initImage();
+    }
+    return NULL;
 }
 
 
 /* 
  * Initialize a new image. Determine the min and max pixel values,
  * set the default cut levels and get some keyword values that we
- * will need later. Retruns a pointer to this image.
+ * will need later. Returns a pointer to this image.
  */
 ImageData* ImageData::initImage()
 {
@@ -436,38 +500,54 @@ ImageData* ImageData::initImage()
 	object(s); // save object name
     }
     
+    // save the values of CRPIX1 and CRPIX2 (for placing compound images)
+    image_.get("CRPIX1", crpix1_, 1.); 
+    image_.get("CRPIX2", crpix2_, 1.);
+    
     // save the values of DET.WIN.STRX and DET.WIN.STRY, needed to calculate
     // the chip coords
-    if (image_.get("HIERARCH ESO DET WIN1 STRX", startX_) != 0 
-	|| image_.get("HIERARCH ESO DET WIN1 STRY", startY_) != 0) {
-	startX_ = startY_ = 0;
-    } 
-    else {
-	// assume STRX and STRY start at (1,1), we want just the offset
-	startX_--;
-	startY_--;
-	if (startX_ < 0 || startY_ < 0)
-	    startX_ = startY_ = 0;
-    }
+    image_.get("HIERARCH ESO DET WIN1 STRX", startX_, 1);
+    image_.get("HIERARCH ESO DET WIN1 STRY", startY_, 1);
+    // assume STRX and STRY start at (1,1), however we want just the offset from (0,0)
+    startX_--;
+    startY_--;
+    if (startX_ < 0)
+	startX_ = 0;
+    if (startY_ < 0)
+	startY_ = 0;
 
     // save the values of DET.WIN.BINX and DET.WIN.BINY for detector binning
     // settings for calculating the chip coordinates
-    if (image_.get("HIERARCH ESO DET WIN1 BINX", binX_) != 0 
-	|| image_.get("HIERARCH ESO DET WIN1 BINY", binY_) != 0) {
-	binX_ = binY_ = 1;
-    }
-    else {
-	// assume BINX=1 and BINY=1 means no binning 
-	if (binX_ < 1 || binY_ < 1)
-	    binX_ = binY_ = 1;
-    }
-    
+    image_.get("HIERARCH ESO DET WIN1 BINX", binX_, 1); 
+    image_.get("HIERARCH ESO DET WIN1 BINY", binY_, 1);
+    // assume BINX=1 and BINY=1 means no binning 
+    if (binX_ < 1)
+	binX_ = 1;
+    if (binY_ < 1)
+	binY_ = 1;
+
+    // save the values of DET.WIN.BINX and DET.WIN.BINY for detector binning
+    // settings for calculating the chip coordinates
+    image_.get("HIERARCH ESO DET OUT PRSCX", prescanX_, 0);
+    image_.get("HIERARCH ESO DET OUT PRSCY", prescanY_, 0);
+    image_.get("HIERARCH ESO DET OUT OVSCX", overscanX_, 0);
+    image_.get("HIERARCH ESO DET OUT OVSCY", overscanY_, 0);
+    if (prescanX_ < 0)
+	prescanX_ = 0;
+    if (prescanY_ < 0)
+	prescanY_ = 0;
+    if (overscanX_ < 0)
+	overscanX_ = 0;
+    if (overscanY_ < 0)
+	overscanY_ = 0;
+
     // get min/max pixel and use to set default cut levels
     setDefaultCutLevels();
 
     // initialize world coordinates, if the caller did not already
-    if (! wcs().initialized()) 
+    if (! wcs().initialized()) {
 	image_.wcsinit();
+    }
 
     return this;
 }
@@ -604,7 +684,7 @@ void ImageData::setScale(int xScale, int yScale)
 
 /* 
  * rotate the image by the given angle  
- * (only 0 and 90 degrees supported now)
+ * (actually exchange the x/y axes if angle not 0)
  */
 void ImageData::rotate(int angle)
 {
@@ -765,7 +845,7 @@ void ImageData::distToCoords(double& x, double& y, int width, int height)
  * While image coordinates start at 1,1 (.5,.5), chip coordinates might
  * have a different origin and/or binning. The the member variables
  * startX_ and startY_ give the offsets of the image origin. These are
- * set from the FITS keywords HIERARCH ESO DET WIN STRX and STRY, if
+ * set from the FITS keywords HIERARCH ESO DET WIN1 STRX and STRY, if
  * found, but may also be set via member methods.
  */
 void ImageData::imageToChipCoords(double& x, double& y)
@@ -803,15 +883,6 @@ void ImageData::chipToImageCoords(double& x)
  * Convert floating point image coords to integer image array index.
  * (Image coords start at 1,1 at mag 1, array index is 0,0...)
  *
- * Note: added "switch" hack to fix a probable "off-by-one" bug somewhere
- * in the coordinate handling - not sure where. It adjusts the x,y index
- * into the raw image by 1 where needed.
- *
- * It is interesting to note that this is only needed when the image
- * scale is 1.  This might have something to do with the fact that we
- * always add or subtract 1 to images coords to make FITS coordinates
- * start at 1 at mag level 1, while at mag 2 they start at 0.5,0.5...
- *
  * Return 0 if the index is in range, 1 otherwise.
  */
 int ImageData::getIndex(double x, double y, int& ix, int& iy)
@@ -828,6 +899,7 @@ int ImageData::getIndex(double x, double y, int& ix, int& iy)
 
     // return 0 if in range, otherwise 1
     return (ix < 0 || iy < 0 || ix >= width_ || iy >= height_);
+    //return 0;
 }
 
 
@@ -840,6 +912,20 @@ void ImageData::shrinkToFit(int width, int height)
     if (factor >= -1)
 	factor = 1;
     setScale(factor, factor);
+}
+
+/*
+ * set the scaling factor so that the image will fill the given box
+ */
+void ImageData::fillToFit(int width, int height)
+{
+    if (width_ <= 2 || height_ <=2)
+	return;
+    int factor = min(width/width_, height/height_);
+    if (factor == 0)
+        shrinkToFit(width, height);
+    else
+	setScale(factor, factor);
 }
 
 
@@ -876,7 +962,7 @@ void ImageData::setDefaultCutLevels()
 	}
 	getMinMax();
     }
-    // set default cut levels 
+    // set default cut levels
     setCutLevels(minValue_, maxValue_, 0);
 }
 
@@ -913,11 +999,6 @@ void ImageData::setCutLevels(double low, double high, int scaled)
  */
 void ImageData::autoSetCutLevels(double percent)
 {
-    // get dimensions of visible image area (minus 10 pixels on each side)
-    int w = x1_ - x0_ + 1, h = y1_ - y0_ + 1;
-    // change to  percent to cut off and split between low and high
-    int cutoff = (int)((w*h * (100.0 - percent)/100.0)/2);
-
     // set initial default values
     getMinMax();		// get min/max pixel estimate for visible area
     double low = minValue_;
@@ -941,42 +1022,42 @@ void ImageData::autoSetCutLevels(double percent)
     }
     if ( npixels > 0 ) {
 
-      // change to  percent to cut off and split between low and high
-      int cutoff = int((double(npixels)*(100.0-percent)/100.0)/2.0);
+	// change to  percent to cut off and split between low and high
+	int cutoff = int((double(npixels)*(100.0-percent)/100.0)/2.0);
       
-      // set low cut value
-      npixels = 0;
-      int nprev = 0;
-      for (i=0 ; i<numValues; i++) {
-        nprev = npixels;
-        npixels += (int)(xyvalues[i*2+1]);
-	if (npixels >= cutoff) {
-          low = xyvalues[i*2];
-          if ( i != 0 ) {
-            // Interpolate between the relevant bins.
-            double interp = (double(cutoff)-double(nprev))/(double(npixels)-double(nprev));
-            low = xyvalues[(i-1)*2] + (low-xyvalues[(i-1)*2])*interp;
-          }
-          break;
+	// set low cut value
+	npixels = 0;
+	int nprev = 0;
+	for (i=0 ; i<numValues; i++) {
+	    nprev = npixels;
+	    npixels += (int)(xyvalues[i*2+1]);
+	    if (npixels >= cutoff) {
+		low = xyvalues[i*2];
+		if ( i != 0 ) {
+		    // Interpolate between the relevant bins.
+		    double interp = (double(cutoff)-double(nprev))/(double(npixels)-double(nprev));
+		    low = xyvalues[(i-1)*2] + (low-xyvalues[(i-1)*2])*interp;
+		}
+		break;
+	    }
 	}
-      }
       
-      // set high cut value
-      npixels = 0;
-      nprev = 0;
-      for (i=numValues-1 ; i>0; i--) {
-        nprev = npixels;
-	npixels += (int)(xyvalues[i*2+1]);
-	if (npixels >= cutoff) {
-          high = xyvalues[i*2];
-          if ( i != numValues-1 ) {
-            // Interpolate between the relevant bins.
-            double interp = (double(cutoff)-double(nprev))/(double(npixels)-double(nprev));
-            high = xyvalues[(i+1)*2] + (xyvalues[(i+1)*2]-high)*interp;
-          }
-          break;
+	// set high cut value
+	npixels = 0;
+	nprev = 0;
+	for (i=numValues-1 ; i>0; i--) {
+	    nprev = npixels;
+	    npixels += (int)(xyvalues[i*2+1]);
+	    if (npixels >= cutoff) {
+		high = xyvalues[i*2];
+		if ( i != numValues-1 ) {
+		    // Interpolate between the relevant bins.
+		    double interp = (double(cutoff)-double(nprev))/(double(npixels)-double(nprev));
+		    high = xyvalues[(i+1)*2] + (xyvalues[(i+1)*2]-high)*interp;
+		}
+		break;
+	    }
 	}
-      }
     }
 
     if (high > low)
@@ -997,16 +1078,13 @@ void ImageData::update()
 
 
 /*
- * update the image area starting at the given offset (image coordinate
- * distance from the upper left corner of the window)
- * and continuing to the end of the raw image or the end of the X image
- * data, which ever comes first. The raw data starting at the offset
- * (x0,y0) is copied to the X image starting at (0,0) or at the correct
- * offset (see code below).
+ * Update the X image area starting at the given offset and continuing
+ * to the end of the raw image or the end of the X image data, which
+ * ever comes first.
  *
  * (This method is used when the X Image is the same size as the visible
  * window (or image, if smaller) and displays the part of the image at
- * some x,y scroll offset.)
+ * some x,y scroll offset.)  
  */
 void ImageData::updateOffset(double x, double y)
 {
@@ -1051,11 +1129,25 @@ void ImageData::updateOffset(double x, double y)
 
 
 /*
+ * Clip and set the bounds of the visible portion of the image (x0_, y0_, x1_, y1_).
+ * These are used by some operations, such as getMinMax() to save time.
+ */
+void ImageData::setBounds(int x0, int y0, int x1, int y1, int dest_x, int dest_y)
+{
+    int maxx = width_ - 1, maxy = height_ - 1;
+    x0_ = min(max(x0, 0), maxx);
+    y0_ = min(max(y0, 0), maxy);
+    x1_ = min(min(x1, maxx), x0_ + xImageMaxX_ - dest_x);
+    y1_ = min(min(y1, maxy), y0_ + xImageMaxY_ - dest_y);
+}
+
+
+/*
  * copy the raw image to the xImage, doing any transformations as
  * necessary.
  *
  * The arguments x0, y0, x1 and y1 are the bounding box of the region of
- * the raw image (image coordinates) that needs to be copied.
+ * the raw image that needs to be copied (origin at (0,0)) 
  *
  * dest_x and dest_y give the coordinates in the XImage where copying
  * should start. These are normally either (-x0,-y0) or (0,0).
@@ -1065,16 +1157,15 @@ void ImageData::updateOffset(double x, double y)
  */
 void ImageData::toXImage(int x0, int y0, int x1, int y1, int dest_x, int dest_y)
 {
-    // add any requested x,y raw data offset and check range
-    int maxx = width_ - 1, maxy = height_ - 1;
+    // no bias subtraction for colorramp
+    int biasOn = biasInfo_->on;
+    if (strcmp(this->name(), "Ramp") == 0)
+        biasInfo_->on = 0;
 
-    // if (verbose_)
-    //	printf("toXImage: %d,%d, %d,%d\n", x0, y0, x1, y1);
-
-    x0_ = min(max(x0, 0), maxx);
-    y0_ = min(max(y0, 0), maxy);
-    x1_ = min(min(x1, maxx-dest_x), x0_+xImageMaxX_-dest_x);
-    y1_ = min(min(y1, maxy-dest_y), y0_+xImageMaxY_-dest_y);
+    // set and clip the member variables x0_, y0_, x1_, y1_
+    setBounds(x0, y0, x1, y1, dest_x, dest_y);
+    if (x0 > x1 || y0 > y1)
+	return;
 
     // copy the relevant area of the raw image to the X image
     if (xScale_ > 1) 
@@ -1087,11 +1178,13 @@ void ImageData::toXImage(int x0, int y0, int x1, int y1, int dest_x, int dest_y)
     // x0_, y0_, x1_ and y1_ are the coordinates of the visible part of 
     // the image and are needed later for setting cut levels and calculating 
     // the min/max pixel for the displayed image area. The display routines
-    // above (rawToXImage, grow, shrink) use the "unflipped" coords 
-    // (because they were originally written that way...)
+    // called above (rawToXImage, grow, shrink) expect the coordinates to have
+    // the origin at upper left (0,0) (XImage type coordinates), while the rest
+    // of the code deals with FITS image coordinates (origin at lower left (1, 1)).
     flip(x0_, y0_, x1_, y1_);
     
     update_pending_ = 0;
+    biasInfo_->on = biasOn;
 }
 
 
@@ -1225,10 +1318,10 @@ int ImageData::getSpectrum(double* xyvalues, int x0, int y0, int x1, int y1)
  * The return value is 0 if all is OK.
  */
 int ImageData::getStatistics(double x, double y, int w, int h, 
-		  double& meanX, double& meanY,
-		  double& fwhmX, double& fwhmY,
-		  double& symetryAngle, 
-		  double& objectPeak, double& meanBackground)
+			     double& meanX, double& meanY,
+			     double& fwhmX, double& fwhmY,
+			     double& symetryAngle, 
+			     double& objectPeak, double& meanBackground)
 {
     // Get the image data for the area into an array.
     // Use floats because the midas C routines use them...
@@ -1236,9 +1329,11 @@ int ImageData::getStatistics(double x, double y, int w, int h,
     getValues(x, y, w, h, ar);
 
     float parm[8], sdev[8];
+    // The old Midas routine had an "array out of bounds" which crashed rtd.
+    // The new one has been checked with Purify.
     int status = (iqe(ar, NULL, w, h, parm, sdev) != 0);
 
-    delete [] ar;
+    delete []ar;
 
     meanX = parm[0]; 
     meanY = parm[2]; 
@@ -1252,6 +1347,61 @@ int ImageData::getStatistics(double x, double y, int w, int h,
 	error("Could not calculate statistics on specified area of image. Please make another selection.");
 
     return status;
+}
+
+/*
+ * get noise statistics on specified area of the image.
+ *
+ * x0,y0 - is the lower left corner of the image
+ * w,h   - indicate the size of the image to examine
+ *
+ * Returns:
+ *   dmin   = minimum value
+ *   dmax   = maximum value
+ *   av     = average value
+ *   rms    = RMS value
+ *   n      = number of samples used
+ *   xs, ys = lower left corner (image coordinates) of area
+ *   xe, ye = upper right corner (image coordinates) of area
+ *
+ * The return value of the method is 0 if all is OK.
+ */
+
+int ImageData::noiseStatistics(double rx0, double ry0, int w, int h,
+			       double *dmin, double *dmax, double *av, double *rms,
+			       int *xs, int *xe, int *ys, int *ye)
+{
+    int    ix, iy, numVal = 0;
+    double x0 = 0., y0 = 0., minv, maxv, cv, sum = 0., sumsq = 0.;
+
+    minv = maxv = getValue(rx0, ry0);
+    for (int y = 0; y < h ; y++) {
+	y0 = ry0 + y;
+	for (int x = 0; x < w; x++) {
+	    x0 = rx0 + x;
+	    if (getIndex(x0, y0, ix, iy) != 0)
+		continue;
+	    if (numVal == 0) {
+		*xs = (int)x0;
+		*ys = (int)y0;
+	    }
+	    numVal++;
+	    cv     = getValue(x0, y0);
+	    sum   += cv;
+	    sumsq += cv * cv;
+	    if (cv < minv)
+		minv = cv;
+	    if (cv > maxv)
+		maxv = cv;
+	}
+    }
+    *xe    = (int)x0;
+    *ye    = (int)y0;
+    *dmin  = minv;
+    *dmax  = maxv;
+    *av    = sum / numVal;
+    *rms   = sqrt(sumsq / numVal - *av * *av);
+    return numVal;
 }
 
 
@@ -1286,3 +1436,122 @@ void ImageData::getDist(int& numValues, double* xyvalues)
 	getPixDist(numValues, xyvalues, factor);
 }
 
+/* 
+ * Return the image coords of the visible image area (bounding box)
+ */
+void ImageData::getBbox(double *x0, double *x1, double *y0, double *y1)
+{
+    *x0 = x0_ + 0.5;
+    *x1 = x1_ + 0.5;
+    *y0 = y0_ + 0.5;
+    *y1 = y1_ + 0.5;
+}
+
+/* 
+ * Get meander coords of a horizontal line at position y (origin starting at 0.5).
+ * The size of vector xyvalues must be allocated 4 times the size of the line.
+ */
+int ImageData::getXline4(int y, int from, int to, double *xyvalues)
+{
+    int    ix, iy, numVal = 0;
+    double cy;
+
+    for (int x = from; x <= to; x++, numVal++) {
+	if (getIndex(x, y, ix, iy) != 0)
+	    continue;
+	cy = getValue(x, y);           // y axis value
+	*xyvalues++ = (double) x - 0.5;      // x axis value
+	*xyvalues++ = cy;
+	*xyvalues++ = (double) x + 0.5;
+	*xyvalues++ = cy;
+    }
+    return numVal;
+}
+
+/* 
+ * Same as getXline4 but with specified x range (start xr0, delta dxr)
+ */
+int ImageData::getXline4(int y, int from, int to, double *xyvalues, double xr0, double dxr)
+{
+    int    ix, iy, numVal = 0;
+    double cy, xr = xr0, dx = dxr/2.0;
+
+    for (int x = from; x <= to; x++, xr += dxr, numVal++) {
+	if (getIndex(x, y, ix, iy) != 0)
+	    continue;
+	cy = getValue(x, y);           // y axis value
+	*xyvalues++ = (double) xr - dx;      // x axis value
+	*xyvalues++ = cy;
+	*xyvalues++ = (double) xr + dx;
+	*xyvalues++ = cy;
+    }
+    return numVal;
+}
+
+/* 
+ * Get min/max values on a specified area of the image (origin at (1,1))
+ */
+int ImageData::getMinMax(double rx0, double ry0, int w, int h, double *minval, double *maxval)
+{
+    int    ix, iy, numVal = 0;
+    double x0, y0, minv, maxv, cv;
+
+    minv = maxv = getValue(rx0, ry0);
+    for (int y = 0; y < h ; y++) {
+	y0 = ry0 + y;
+	for (int x = 0; x < w; x++) {
+	    x0 = rx0 + x;
+	    if (getIndex(x0, y0, ix, iy) != 0)
+		continue;
+	    numVal++;
+	    cv = getValue(x0, y0);
+	    if (cv < minv)
+		minv = cv;
+	    if (cv > maxv)
+		maxv = cv;
+	}
+    }
+    *minval = minv;
+    *maxval = maxv;
+    return numVal;
+}
+
+/* 
+ * get meander coords of a vertical line at position x (index starting at 0)
+ */
+int ImageData::getYline4(int x, int y0, int y1, double *xyvalues)
+{
+    int numVal = 0;
+    double cx;
+
+    if (x < 0 || x >= width_ || y0 < 0 || y0 >= height_ ||
+	y1 < 0 || y1 >= height_)
+	return 0;
+   
+    for (int y = y0; y < y1; y++, numVal++) {
+	cx = getValue(x, y);           // y axis value
+	*xyvalues++ = (double) x - 0.5;      // x axis value
+	*xyvalues++ = cx;
+	*xyvalues++ = (double) x + 0.5;
+	*xyvalues++ = cx;
+    }
+    return numVal;
+}
+
+/*
+ * Initialize flag for speeding up bias subtraction
+ */
+
+void ImageData::initGetVal()
+{
+    biasINFO* bias = ImageData::biasInfo_;
+
+    bias->sameTypeAndDims = (bias->width  == width_ &&
+			     bias->height == height_ &&
+			     bias->type   == dataType());
+    /*
+     * if the byte order of the main- and bias frame is different
+     * then set a flag to swap the bytes of the bias frame.
+     */
+    bias_swap_bytes_ = (bias->usingNetBO != BIGENDIAN);
+}

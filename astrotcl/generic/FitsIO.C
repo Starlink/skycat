@@ -1,7 +1,7 @@
 /*
  * E.S.O. - VLT project / ESO Archive
  *
- * "@(#) $Id: FitsIO.C,v 1.23 1999/03/22 21:40:56 abrighto Exp $" 
+ * "@(#) $Id: FitsIO.C,v 1.5 2005/02/02 01:43:04 brighton Exp $" 
  *
  * FitsIO.C - method definitions for class FitsIO, for operating on
  *            Fits files.
@@ -13,19 +13,25 @@
  * Allan Brighton  16/02/98  renamed check_decompress to check_compress and added check
  *                           for bitpix=16 for H_COMPRESS.
  *                 12/03/98  Initialize WCS in constructor.
+ * pbiereic        17/02/03  Added 'using namespace std'. Removed ::std specs.
+ * pbiereic        20/07/04  use %20 field width for keywords in methods put_keyword,
+ *                           so that other tools like xv, ds9, fv can read stored real-time
+ *                           images.
  */
-static const char* const rcsId="@(#) $Id: FitsIO.C,v 1.23 1999/03/22 21:40:56 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: FitsIO.C,v 1.5 2005/02/02 01:43:04 brighton Exp $";
 
 
-#include <string.h>
-#include <stdio.h>
-#include <ctype.h>
-#include <iostream.h>
-#include <strstream.h>
-#include <stdlib.h>
+using namespace std;
+#include <cstdio>
+#include <cstring>
+#include <cctype>
+#include <string>
+#include <iostream>
+#include <sstream>
+#include <cstdlib>
 #include <unistd.h>
-#include <math.h>
-#include <time.h>
+#include <cmath>
+#include <ctime>
 #include "util.h"
 #include "error.h"
 #include "fitsio.h"
@@ -33,6 +39,7 @@ static const char* const rcsId="@(#) $Id: FitsIO.C,v 1.23 1999/03/22 21:40:56 ab
 #include "Compress.h"
 #include "Mem.h"
 #include "FitsIO.h"
+#include "define.h"
 
 // size of a FITS block
 enum {FITSBLOCK=2880};
@@ -63,6 +70,8 @@ FitsIO::FitsIO(int width, int height, int bitpix, double bzero,
     : ImageIORep(width, height, bitpix, bzero, bscale, header, data),
       fitsio_(fitsio) 
 {
+    // Save a reference to the primary header
+    primaryHeader_ = header;	// ref counted copy
 }
 
 
@@ -81,10 +90,47 @@ FitsIO::~FitsIO()
 
 
 /*
+ * Return a copy of this object that shares the data, but can have a different current HDU
+ */
+FitsIO* FitsIO::copy()
+{
+    int status = 0;
+    fitsfile* newFitsio;
+    fits_reopen_file(fitsio_, &newFitsio, &status);
+    if (status != 0)
+	return NULL;
+    return new FitsIO(width_, height_, bitpix_, bzero_, bscale_, 
+		      header_, data_, newFitsio);
+}
+
+
+/*
  * initialize world coordinates (based on the image header)
  */
 int FitsIO::wcsinit()
 {
+    // if there are multiple HDUs, merge the primary header with 
+    // the extension header to get all of the WCS info
+    // (requested by Andreas Wicenec <awicenec@eso.org>).
+    if (getNumHDUs() > 1) {
+	int length = header_.length() + primaryHeader_.length();
+	mergedHeader_ = Mem(length+1, 0);
+	if (mergedHeader_.status() == 0) {
+
+	    strncpy((char*)mergedHeader_.ptr(), 
+		    (char*)header_.ptr(), 
+		    header_.length());
+
+	    strncpy(((char*)mergedHeader_.ptr())+header_.length(), 
+		    (char*)primaryHeader_.ptr(), 
+		    primaryHeader_.length());
+	    
+	    ((char*)mergedHeader_.ptr())[length] = '\0';
+
+	    wcs_ = WCS(new SAOWCS((const char*)mergedHeader_.ptr(), length));
+	    return wcs_.status();
+	}
+    }
     wcs_ = WCS(new SAOWCS((const char*)header_.ptr(), header_.length()));
     return wcs_.status();
 }
@@ -140,7 +186,12 @@ const char* FitsIO::check_compress(const char* filename, char* buf, int bufsz, i
 				   int decompress_flag, int bitpix)
 {
     // check the file extension for recognized compression types
-    const char* suffix = fileSuffix(fileSuffix(filename)); // fits.gz => .gz
+    const char* suffix = strrchr(filename, '.'); 
+    if (suffix)
+	suffix++;
+    else
+	suffix = "";
+
     Compress::CompressType ctype = Compress::NO_COMPRESS;
     if (strcmp(suffix, "hfits") == 0) {
 	if (bitpix && abs(bitpix) != 16) {
@@ -247,7 +298,7 @@ FitsIO* FitsIO::read(const char* filename, int mem_options)
 int FitsIO::cfitsio_error()
 {
     char buf[81];
-    ostrstream os;
+    ostringstream os;
     int i = 0;
     while (fits_read_errmsg(buf)) {
 	os << buf << endl;
@@ -255,9 +306,7 @@ int FitsIO::cfitsio_error()
     }
     fits_clear_errmsg();
     if (i) {
-	os << ends;
-	error("cfitsio: ", os.str());
-	free(os.str());
+	error("cfitsio: ", os.str().c_str());
     }
     return ERROR;
 }
@@ -442,7 +491,8 @@ FitsIO* FitsIO::blankImage(double ra, double dec, double equinox,
     Mem header(FITSBLOCK, 0);	// more than large enough to hold the fields below
     if (header.status() != 0) 
 	return NULL;
-    ostrstream os((char*)header.ptr(), header.length()); // stream will write to shared memory
+
+    ostringstream os;
  
     // generate the fits header
     double r = radius/60.0;	// radius in degrees
@@ -477,7 +527,8 @@ FitsIO* FitsIO::blankImage(double ra, double dec, double equinox,
 
     char buf[81];
     sprintf(buf, "%-80s", "END"); // mark the end of the header
-    os << buf << ends;
+
+    strncpy((char*)header.ptr(), os.str().c_str(), header.length()); // write to shared memory
 
     // generate the blank image 
     return new FitsIO(width, height, BYTE_IMAGE, 0.0, 1.0, header, data);
@@ -505,7 +556,7 @@ int FitsIO::put_keyword(ostream& os, const char* keyword, char* value)
 int FitsIO::put_keyword(ostream& os, const char* keyword, char value) 
 {
     char  buf1[81], buf2[81];
-    sprintf(buf1, "%-8s= %c", keyword, value);
+    sprintf(buf1, "%-8s= %20c", keyword, value);
     sprintf(buf2, "%-80s", buf1);
     os << buf2;
     return 0;
@@ -519,7 +570,7 @@ int FitsIO::put_keyword(ostream& os, const char* keyword, char value)
 int FitsIO::put_keyword(ostream& os, const char* keyword, int value) 
 {
     char  buf1[81], buf2[81];
-    sprintf(buf1, "%-8s= %d", keyword, value);
+    sprintf(buf1, "%-8s= %20d", keyword, value);
     sprintf(buf2, "%-80s", buf1);
     os << buf2;
     return 0;
@@ -532,7 +583,7 @@ int FitsIO::put_keyword(ostream& os, const char* keyword, int value)
 int FitsIO::put_keyword(ostream& os, const char* keyword, double value) 
 {
     char  buf1[81], buf2[81];
-    sprintf(buf1, "%-8s= %f", keyword, value);
+    sprintf(buf1, "%-8s= %20f", keyword, value);
     sprintf(buf2, "%-80s", buf1);
     os << buf2;
     return 0;
@@ -546,7 +597,7 @@ int FitsIO::put_keyword(ostream& os, const char* keyword, double value)
 int FitsIO::put_keyword(FILE* f, const char* keyword, int value) 
 {
     char  buf[81];
-    sprintf(buf, "%-8s= %d", keyword, value);
+    sprintf(buf, "%-8s= %20d", keyword, value);
     fprintf(f, "%-80s", buf);
     return 0;
 }
@@ -558,7 +609,7 @@ int FitsIO::put_keyword(FILE* f, const char* keyword, int value)
 int FitsIO::put_keyword(FILE* f, const char* keyword, double value) 
 {
     char  buf[81];
-    sprintf(buf, "%-8s= %f", keyword, value);
+    sprintf(buf, "%-8s= %20f", keyword, value);
     fprintf(f, "%-80s", buf);
     return 0;
 }
@@ -583,7 +634,7 @@ int FitsIO::put_keyword(FILE* f, const char* keyword, const char* value)
 int FitsIO::put_keyword(FILE* f, const char* keyword, char value) 
 {
     char  buf[81];
-    sprintf(buf, "%-8s= %c", keyword, value);
+    sprintf(buf, "%-8s= %20c", keyword, value);
     fprintf(f, "%-80s", buf);
     return 0;
 }
@@ -610,7 +661,7 @@ void FitsIO::padFile(FILE* f, int size)
  */
 int FitsIO::write(const char *filename) const
 {
-    char tmpfilename[1024];
+     char tmpfilename[1024];
     int istemp = 1;
 
     if (fitsio_) {
@@ -654,14 +705,15 @@ int FitsIO::write(const char *filename) const
 	put_keyword(f, "NAXIS", 2); size--;
 	put_keyword(f, "NAXIS1", width_); size--;
 	put_keyword(f, "NAXIS2", height_); size--;
+
 	if (bitpix_ == -16) {
 	    put_keyword(f, "BZERO", (double)32768.0); size--;
 	    put_keyword(f, "BSCALE", (double)1.0); size--;
 	}
-	put_keyword(f, "COMMENT", "Generated by FitsIO::write on:"); size--;
+	put_keyword(f, "COMMENT", "Generated by FitsIO::write"); size--;
 
 	// add a timestamp
-	char buf2[20];
+	char buf2[50];
 	time_t clock = time(0);
 	strftime(buf2, sizeof(buf2), "%d/%m/%y", localtime(&clock));
 	put_keyword(f, "DATE", buf2); size--;
@@ -687,7 +739,7 @@ int FitsIO::write(const char *filename) const
     case 16:
     case 32:
     case -32:
-	fwrite((char*)data_.ptr(), tsize, width_*height_, f);
+	fwriteNBO((char*)data_.ptr(), tsize, width_*height_, f);
 	break;
     case -16:
     {
@@ -701,11 +753,21 @@ int FitsIO::write(const char *filename) const
 	    return error("Not enough memory");
 	}
 	int nn;
-	while (i--) {
-	    nn = (int)(*pu++) - 32768;
-	    *ps++ = (unsigned int) nn;
+	if (BIGENDIAN == usingNetBO()) {  // native byte order?
+	    while (i--) {
+		nn = (int)(*pu++) - 32768;
+		*ps++ = (unsigned int) nn;
+	    }
 	}
-	fwrite((char*)ps_new, tsize, width_*height_, f);
+	else {
+	    while (i--) {
+		nn = (int)(SWAP16(*pu)) - 32768;
+		*ps = (unsigned int) SWAP16(nn);
+		pu++;
+		ps++;
+	    }
+	}
+	fwriteNBO((char*)ps_new, tsize, width_*height_, f);
 	delete ps_new;
     }
     break;
@@ -734,6 +796,48 @@ int FitsIO::write(const char *filename) const
     return OK;
 }
 
+/*
+ * Write data to disk (network byte ordered, NBO).
+ * Byte swap is only needed when data are in shm and not
+ * in BIGENDIAN.
+ * Since data are passed as char* there is no automatic type
+ * conversion by gcc.
+ */
+int FitsIO::fwriteNBO(char *data, int tsize, int size, FILE *f) const
+{
+    int status;
+    int n = size;
+
+    if (tsize == 1 || usingNetBO()) {
+        return fwrite(data, tsize, size, f);
+    }
+
+    Mem dbuf(size * tsize, 0);
+    if (dbuf.status() != 0)
+        return 0;
+
+    if (tsize == 2) {
+        unsigned short *from = (unsigned short *) data;
+        unsigned short *to   = (unsigned short *) dbuf.ptr();
+        while (n--) {
+            *to++ = SWAP16(*from);
+            from++;
+        }
+    }
+
+    else if (tsize == 4) {
+        unsigned long *from = (unsigned long *) data;
+        unsigned long *to   = (unsigned long *) dbuf.ptr();
+        while (n--) {
+            *to++ = SWAP32(*from);
+            from++;
+        }
+    }
+
+    status = fwrite(dbuf.ptr(), tsize, size, f);
+
+    return status;
+}
 
 
 /*
@@ -742,7 +846,8 @@ int FitsIO::write(const char *filename) const
  */
 int FitsIO::getFitsHeader(ostream& os) const
 {
-    istrstream is((char*)header_.ptr(), header_.length());
+    string s((char*)header_.ptr(), header_.length());
+    istringstream is(s);
     char buf[81];
     while(is.read(buf, 80)) {
 	for (int i = 0; i < 79; i++)
@@ -753,7 +858,6 @@ int FitsIO::getFitsHeader(ostream& os) const
 	if (strncmp(buf, "END     ", 8) == 0)
 	    break;
     }
-    os << ends;
     return 0;
 }
 
@@ -1145,6 +1249,7 @@ int FitsIO::getHDUNum()
 
 /*
  * Move to the specified HDU and make it the current one 
+ * (Note that "num" is one based, so the primary array is num = 1.)
  */
 int FitsIO::setHDU(int num)
 {
@@ -1290,7 +1395,7 @@ char* FitsIO::getTableValue(long row, int col)
     case TSTRING:
 	char* p[1];
 	p[0] = buf_;
-	if (fits_read_col(fitsio_, TSTRING, col, row, 1, 1, "", 
+	if (fits_read_col(fitsio_, TSTRING, col, row, 1, 1, (char *)"", 
 			  p, &anynulls, &status) != 0) {
 	    cfitsio_error();
 	    return NULL;
@@ -1302,7 +1407,7 @@ char* FitsIO::getTableValue(long row, int col)
     case TINT:
     case TLONG:
 	long l;
-	if (fits_read_col(fitsio_, TLONG, col, row, 1, 1, "", 
+	if (fits_read_col(fitsio_, TLONG, col, row, 1, 1, NULL, 
 			  &l, &anynulls, &status) != 0) {
 	    cfitsio_error();
 	    return NULL;
@@ -1314,7 +1419,7 @@ char* FitsIO::getTableValue(long row, int col)
     case TUINT:
     case TULONG:
 	unsigned long ul;
-	if (fits_read_col(fitsio_, TULONG, col, row, 1, 1, "", 
+	if (fits_read_col(fitsio_, TULONG, col, row, 1, 1, NULL, 
 			  &ul, &anynulls, &status) != 0) {
 	    cfitsio_error();
 	    return NULL;
@@ -1325,7 +1430,7 @@ char* FitsIO::getTableValue(long row, int col)
     case TFLOAT:
     case TDOUBLE:
 	double d;
-	if (fits_read_col(fitsio_, TDOUBLE, col, row, 1, 1, "", 
+	if (fits_read_col(fitsio_, TDOUBLE, col, row, 1, 1, NULL, 
 			  &d, &anynulls, &status) != 0) {
 	    cfitsio_error();
 	    return NULL;
@@ -1335,7 +1440,7 @@ char* FitsIO::getTableValue(long row, int col)
 
     case TLOGICAL:
 	char c;
-	if (fits_read_col(fitsio_, TLOGICAL, col, row, 1, 1, "", 
+	if (fits_read_col(fitsio_, TLOGICAL, col, row, 1, 1, NULL, 
 			  &c, &anynulls, &status) != 0) {
 	    cfitsio_error();
 	    return NULL;

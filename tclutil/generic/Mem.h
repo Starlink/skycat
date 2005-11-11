@@ -4,7 +4,7 @@
 /*
  * E.S.O. - VLT project / ESO Archive
  *
- * "@(#) $Id: Mem.h,v 1.3 1998/12/03 22:11:42 abrighto Exp $" 
+ * "@(#) $Id: Mem.h,v 1.3 2005/02/02 01:43:01 brighton Exp $" 
  *
  * Mem.h - declarations for class Mem, a class for managing memory areas,
  *         which may or may not be shared memory.
@@ -17,7 +17,7 @@
  * D.Hopkinson      21/01/97  Added constructor to use when multi-buffering shared memory.
  */
 
-#include <stdio.h>
+#include <cstdio>
 class Mem_Map;
 
 // internal struct used for reference counting
@@ -81,7 +81,7 @@ private:
 
 public:
     // default constructor
-    Mem() : offset_(0), length_(0), rep_(new MemRep) { 
+    Mem() : rep_(new MemRep), offset_(0), length_(0) { 
     }
     
     // constructor: attach (if needed) to existing shared memory area
@@ -89,7 +89,7 @@ public:
 
     // constructor: create new memory area, shared if useShm is true
     Mem(int size, int useShm, int verbose = 0) 
-	: offset_(0), length_(0), rep_(new MemRep(size, useShm, verbose)) {
+	: rep_(new MemRep(size, useShm, verbose)), offset_(0), length_(0) {
     }
 
     // mmap options

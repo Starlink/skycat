@@ -1,5 +1,5 @@
 # E.S.O. - VLT project/ ESO Archive
-# "@(#) $Id: TopLevelWidget.tcl,v 1.28 1999/03/19 20:10:25 abrighto Exp $"
+# "@(#) $Id: TopLevelWidget.tcl,v 1.3 2005/02/02 01:43:02 brighton Exp $"
 #
 # TopLevelWidget.tcl - Itk base class for popup windows
 #
@@ -17,6 +17,10 @@
 #                 10 Mar 99  Added fix to split up args in
 #                            setup_menuitem. This makes the
 #                            accelerator code work.
+# pbiereic        26/08/99   added option 'wait' to method 'start' which
+#                            returns to interactive mode when wait=0
+# pbiereic        21/10/02   Made menubar and help-area a bit smaller to
+#                            have more space for the future toolbar.
 
 itk::usual TopLevelWidget {}
 
@@ -95,8 +99,13 @@ itcl::class util::TopLevelWidget {
     #
     # If "name" is not specified, the class name in lower case is used with
     # a "." prepended and the clone number appended (1, 2, 3, ...).
+    #
+    # The "wait" flag controls whether or not this method waits for all of the
+    # top level windows to be closed before returing (defaults to true).
+    #
+    # The "optlist" parameter may contain a Tcl list of valid arguments (default: empty).
 
-    public proc start {class {default_opt ""} {usage ""} {name ""}} {
+    public proc start {class {default_opt ""} {usage ""} {name ""} {wait 1} {optlist ""}} {
 	global ::argv ::argc ::mainclass ::tcl_version
 
 	# hide the "." window since an itcl class will replace it
@@ -127,6 +136,15 @@ itcl::class util::TopLevelWidget {
 	for {set i 0} {$i < $argc} {incr i} {
 	    set opt [lindex $argv $i]
 	    if {"[string index $opt 0]" == "-" && "$opt" != "-"} {
+		if {"$opt" == "--help"} {
+		    puts "$usage"
+		    exit 0
+		}
+		if {[llength $optlist] && [lsearch -exact $optlist $opt] == -1} {
+		    puts "invalid option: $opt"
+		    puts "$usage"
+		    exit 1
+		}
 		set arg [lindex $argv [incr i]]
 	    } else {
 		if {"$default_opt" == "" || "$default_arg" != ""} {
@@ -151,14 +169,18 @@ itcl::class util::TopLevelWidget {
 	# keep track of main windows
 	set main_windows_(.) 0
 
-	# exit when all toplevel window based classes exit - don't wait for "."
-	if {[winfo exists $name]} {
-	    set main_windows_($name) 1
-	    tkwait window $name
-	    unset main_windows_($name)
-	}
-	if {[llength [array names main_windows_]] == 1} {
-	    exit 0
+	if {$wait} {
+	    # exit when all toplevel window based classes exit - don't wait for "."
+	    if {[winfo exists $name]} {
+		set main_windows_($name) 1
+		tkwait window $name
+		unset main_windows_($name)
+	    }
+	    if {[llength [array names main_windows_]] == 1} {
+		exit 0
+	    }
+	} else {
+	    return
 	}
     }
 
@@ -228,6 +250,7 @@ itcl::class util::TopLevelWidget {
 	} 
 
 	if {[incr busy_count_ -1] == 0} {
+	    update idletasks
 	    blt::busy release $w_
 	    catch {focus [focus -lastfor $w_]}
 	}
@@ -257,7 +280,7 @@ itcl::class util::TopLevelWidget {
 	} {
 	}
 	pack $itk_component(menubar) \
-	    -side top -fill x -ipady 1m
+	    -side top -fill x -ipady 0
     }
 
 
@@ -376,10 +399,10 @@ itcl::class util::TopLevelWidget {
 	    wm withdraw $w_
 	    update idletasks
 	    set parent [winfo parent $w_]
-	    set x [expr [winfo screenwidth $w_]/2 - [winfo reqwidth $w_]/2 \
-		       - [winfo vrootx $parent]]
-	    set y [expr [winfo screenheight $w_]/2 - [winfo reqheight $w_]/2 \
-		       - [winfo vrooty $parent]]
+	    set x [expr {[winfo screenwidth $w_]/2 - [winfo reqwidth $w_]/2 \
+			     - [winfo vrootx $parent]}]
+	    set y [expr {[winfo screenheight $w_]/2 - [winfo reqheight $w_]/2 \
+			     - [winfo vrooty $parent]}]
 	    wm geom $w_ +$x+$y
 	}
 	wm deiconify $w_
@@ -392,10 +415,9 @@ itcl::class util::TopLevelWidget {
 	# Optional short help window at bottom.
 	itk_component add short_help {
 	    text $w_.shelp \
-		-borderwidth 3 \
-		-height 1 \
+		-borderwidth 1 \
 		-width 1 \
-		-spacing1 3 \
+		-height 1 \
 		-wrap none \
                 -takefocus 0 \
 		-relief groove \
@@ -404,9 +426,8 @@ itcl::class util::TopLevelWidget {
 	    rename -font -helpfont helpFont HelpFont
 	}
 	set w $itk_component(short_help)
-	# Kim added this
+
 	set short_help_win_ $this
-	pack $w -side $side -anchor w -fill x -ipady 1m
 	set bitmap_bg_ [$w cget -background]
 
 	$w window create end \
@@ -419,6 +440,7 @@ itcl::class util::TopLevelWidget {
 					{bitmap b1} means press mouse button <1>, \
 					{bitmap dragb1} = drag <1>, \
 					{bitmap shiftdragb1} = drag shift <1>}
+	pack $w -side $side -anchor w -fill x -ipady 2
 	$w config -state disabled
     }
 
@@ -476,7 +498,7 @@ itcl::class util::TopLevelWidget {
 	set key {}
 	for {set i 0} {$i < $n} {incr i 2} {
 	    set opt [lindex $largs $i]
-	    set arg [lindex $largs [expr $i+1]]
+	    set arg [lindex $largs [expr {$i+1}]]
 	    if {"$opt" == "-accelerator"} {
 		set key $arg
 	    }

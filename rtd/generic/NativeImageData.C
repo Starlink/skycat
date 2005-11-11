@@ -1,7 +1,7 @@
 /*
  * E.S.O. - VLT project 
  *
- * "@(#) $Id: NativeImageData.C,v 1.2 1998/07/28 21:23:47 abrighto Exp $" 
+ * "@(#) $Id: NativeImageData.C,v 1.2 2005/02/02 01:43:02 brighton Exp $" 
  *
  * NativeImageData.C - cpp template definitions to support native byte
  *                     order images on byte swapped machines (i386, vax, etc.)
@@ -18,41 +18,38 @@
  * who             when      what
  * --------------  --------  ----------------------------------------
  * Allan Brighton  20/03/98  Created
+ * pbiereic        17/02/03  Native byte order routines revised
  */
 
-#if defined(i386) || defined(__i386__) || defined(__alpha) || \
-     defined(vax) || defined(__vax__) || (defined(mips) && defined(MIPSEL))
-
-// byte swapping needed, make copies of existing classes, but with swapping disabled
 #define NTOH(x) x
-#include "NativeImageData.h"
-
 #define ShortImageData NativeShortImageData
 #include "ShortImageData.C"
 #undef ShortImageData
-#undef CLASS_NAME
-#undef DATA_TYPE
-#undef ISNAN
+#undef NTOH
 
+#define NTOH(x) x
 #define UShortImageData NativeUShortImageData
 #include "UShortImageData.C"
 #undef UShortImageData
-#undef CLASS_NAME
-#undef DATA_TYPE
-#undef ISNAN
+#undef NTOH
 
+#define NTOH(x) x
 #define LongImageData NativeLongImageData
 #include "LongImageData.C"
 #undef LongImageData
-#undef CLASS_NAME
-#undef DATA_TYPE
-#undef ISNAN
+#undef NTOH
 
+#define NTOH(x) x
 #define FloatImageData NativeFloatImageData
 #include "FloatImageData.C"
 #undef FloatImageData
-#undef CLASS_NAME
-#undef DATA_TYPE
-#undef ISNAN
+#undef NTOH
 
-#endif /* defined(i386) ... */
+
+
+
+
+
+
+
+

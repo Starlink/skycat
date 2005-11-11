@@ -1,6 +1,6 @@
  /*
  * E.S.O. - VLT project/ESO Archive 
- * $Id: HTTP.C,v 1.14 1998/07/20 13:29:44 abrighto Exp $
+ * $Id: HTTP.C,v 1.6 2005/02/02 01:43:00 brighton Exp $
  *
  * HTTP.C - method definitions for class HTTP
  *          (based on code from DSS:HTTP.c by Miguell Albrecht)
@@ -11,17 +11,19 @@
  * --------------  --------   ----------------------------------------
  * Allan Brighton  26 Sep 95  Created
  * Peter W. Draper 16 Jun 98  Added support for web proxy servers.
+ * pbiereic        17/02/03   Added 'using namespace std'. Removed ::std specs.
  */
-static const char* const rcsId="@(#) $Id: HTTP.C,v 1.14 1998/07/20 13:29:44 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: HTTP.C,v 1.6 2005/02/02 01:43:00 brighton Exp $";
 
 
-#include <stdio.h>
-#include <ctype.h>
-#include <stdlib.h>
-#include <string.h>
-#include <iostream.h>
-#include <fstream.h>
-#include <strstream.h>
+using namespace std;
+#include <cstdio>
+#include <cctype>
+#include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <fstream>
+#include <sstream>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -274,7 +276,7 @@ int HTTP::openCommand(const char* command)
     char cmd[2048];
     char tmpfile[80];
     strcpy(tmpfile, "/tmp/httpXXXXXX"); 
-    mktemp(tmpfile);
+    mkstemp(tmpfile);
     sprintf(cmd, "%s > %s", command, tmpfile);
     if (system(cmd) != 0) {
 	error("error executing command: ", command);
@@ -505,7 +507,7 @@ int HTTP::addAuthFileEntry(const char* server, const char* realm)
 	authFile(default_auth_file_);
 
     ifstream is(auth_file_);
-    ostrstream os;
+    ostringstream os;
     char newentry[1024];
     sprintf(newentry, "%s:%s:%s", server, realm, auth_info_);
     char buf[1024];
@@ -515,13 +517,14 @@ int HTTP::addAuthFileEntry(const char* server, const char* realm)
 	    os << buf << endl;
     }
     is.close();
-    os << newentry << endl << ends;
+    os << newentry << endl;
     
     // create the auth file with -rw------- perms
-    ofstream f(auth_file_, ios::out, 0600);
+    //ofstream f(auth_file_, ios::out, 0600);
+    ofstream f(auth_file_, ios::out);
+    chmod(auth_file_, 0600);
     if (f) 
 	f << os.str();
-    delete os.str();
 
     return 0;
 }
@@ -671,7 +674,7 @@ int HTTP::get(const char* url)
     }
 
     // generate the request
-    ostrstream os(req, sizeof(req));
+    ostringstream os;
     os << "GET " << args << " HTTP/1.0\n";
 
     // add the user-agent
@@ -685,7 +688,8 @@ int HTTP::get(const char* url)
 	os << "Authorization: Basic " << auth_info_ << endl;
 
     // add newline after request and null terminate
-    os << endl << ends;
+    os << endl;
+    strncpy(req, os.str().c_str(), sizeof(req));
     
     // send the request
     int n = strlen(req);
@@ -752,7 +756,7 @@ char* HTTP::get(const char* url, int& nlines, int freeFlag)
     }
 	
     // read the data into a buffer
-    ostrstream os;
+    ostringstream os;
     char buf[8*1024];
     nlines = 0;
     int n;
@@ -769,8 +773,7 @@ char* HTTP::get(const char* url, int& nlines, int freeFlag)
 	    os.write(buf, n);
 	}
     }
-    os << ends;
-    resultPtr_ = resultBuf_ = os.str();
+    resultPtr_ = resultBuf_ = strdup(os.str().c_str());
 
     // count the lines
     // and remove "end of data" marker 

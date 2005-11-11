@@ -1,5 +1,5 @@
 # E.S.O. - VLT project/ESO Archive
-# @(#) $Id: AstroCat.tcl,v 1.56 1999/03/12 18:42:02 abrighto Exp $
+# @(#) $Id: AstroCat.tcl,v 1.1.1.1 2002/04/04 20:11:47 brighton Exp $
 #
 # AstroCat.tcl - user interface class for viewing catalog info
 #
@@ -93,8 +93,8 @@ itcl::class cat::AstroCat {
 	# for local catalogs, start search automatically
 	set name $itk_option(-catalog)
 	if {"[$w_.cat servtype]" == "local"} {
-	    wm title $w_ "[file tail [$w_.cat longname $name]] ($itk_option(-number))"
-	    wm iconname $w_ "[file tail [$w_.cat shortname $name]]"
+	    wm title $w_ "[file tail [$w_.cat longname $name $itk_option(-catalogdir)]] ($itk_option(-number))"
+	    wm iconname $w_ "[file tail [$w_.cat shortname $name $itk_option(-catalogdir)]]"
 	    search
 	}
 
@@ -161,9 +161,10 @@ itcl::class cat::AstroCat {
     # window for a catalog
     
     protected method set_instance {} {
-	set name [$w_.cat longname $itk_option(-catalog)]
+	set name [$w_.cat longname $itk_option(-catalog) $itk_option(-catalogdir)]
 	set id $itk_option(-id)
-	set instance_idx_ "$name,$id"
+	set dirPath $itk_option(-catalogdir)
+	set instance_idx_ "$name,$id,$dirPath"
 	set instances_($instance_idx_) $w_ 
     }
 
@@ -635,7 +636,7 @@ itcl::class cat::AstroCat {
 	} else {
 	    astrocat $w_.cat
 	}
-	if {[catch {$w_.cat open $itk_option(-catalog)} msg]} {
+	if {[catch {$w_.cat open $itk_option(-catalog) $itk_option(-catalogdir)} msg]} {
 	    error_dialog $msg $w_
 	    return
 	}
@@ -847,11 +848,11 @@ itcl::class cat::AstroCat {
 
 	# open the catalog
 	set name $itk_option(-catalog)
-	if {[catch {$w_.cat open $name} msg]} {
+	if {[catch {$w_.cat open $name $itk_option(-catalogdir)} msg]} {
 	    error_dialog $msg $w_
 	    return
 	}
-	
+
 	# set iscat_ to true if the catalog is not an image server
 	set iscat_ 1
 	if {"[$w_.cat servtype]" == "imagesvr"} {
@@ -871,8 +872,8 @@ itcl::class cat::AstroCat {
 	}
 	
 	# display catalog name in header and icon
-	wm title $w_ "[$w_.cat longname $name] ($itk_option(-number))"
-	wm iconname $w_ "[$w_.cat shortname $name]"
+	wm title $w_ "[$w_.cat longname $name $itk_option(-catalogdir)] ($itk_option(-number))"
+	wm iconname $w_ "[$w_.cat shortname $name $itk_option(-catalogdir)]"
     }
 
     
@@ -1202,7 +1203,7 @@ itcl::class cat::AstroCat {
 		set filename $info
 		# load the image and remove the temp file
 		display_image_file $filename
-		catch {file delete $filename}
+		#catch {file delete $filename}
 	    } else {
 		busy {
 		    set prev_headings $headings_
@@ -1293,8 +1294,8 @@ itcl::class cat::AstroCat {
     # and if not, ask the user for a new path name or remove it from the menu.
     
     public proc check_local_catalog {name {id ""} {classname AstroCat} {debug 0} 
-				     {tcs_flag 0} {type "catalog"} {w ""}} {
-	if {"[$astrocat_ servtype $name]" != "local"} {
+				     {tcs_flag 0} {type "catalog"} {w ""} {dirPath ""}} {
+	if {"[$astrocat_ servtype $name $dirPath]" != "local"} {
 	    return 0
 	}
 	set file [$astrocat_ url $name]
@@ -1309,7 +1310,7 @@ itcl::class cat::AstroCat {
 		set file [filename_dialog]
 		if {[file isfile $file]} {
 		    $astrocat_ entry remove $name
-		    new_catalog $file $id $classname $debug $tcs_flag $type $w
+		    new_catalog $file $id $classname $debug $tcs_flag $type $w $dirPath
 		    if {[winfo exists .catinf]} {
 			.catinf reinit_tree
 		    }
@@ -1562,16 +1563,19 @@ itcl::class cat::AstroCat {
     # "imagesvr".
     #
     # w should be the top level window of the caller, if specified.
+    #
+    # dirPath may be the name of the catalog directory (or a tcl list forming
+    # the path to it). The default is the root catalog directory.
 
     public proc new_catalog {name {id ""} {classname AstroCat} {debug 0} {tcs_flag 0} 
-		      {type "catalog"} {w ""}} {
+			     {type "catalog"} {w ""} {dirPath ""}} {
 
 	# if it is a local catalog, make sure it exists still, or get a new name
-	if {[check_local_catalog $name $id $classname $debug $tcs_flag $type $w] != 0} {
+	if {[check_local_catalog $name $id $classname $debug $tcs_flag $type $w $dirPath] != 0} {
 	    return
 	}
 
-	set i "$name,$id"
+	set i "$name,$id,$dirPath"
 	if {[info exists instances_($i)] && [winfo exists $instances_($i)]} {
 	    utilRaiseWindow $instances_($i)
 	    if {"[$instances_($i).cat servtype]" == "local"} {
@@ -1581,7 +1585,7 @@ itcl::class cat::AstroCat {
 	    return
 	}
 
-	if {[catch {$astrocat_ open $name} msg]} {
+	if {[catch {$astrocat_ open $name $dirPath} msg]} {
 	    error_dialog $msg
 	    return
 	}
@@ -1599,6 +1603,7 @@ itcl::class cat::AstroCat {
 		 -debug $debug \
 		 -catalog $name \
 		 -catalogtype $type \
+		 -catalogdir $dirPath \
 		 -tcs $tcs_flag \
 		 -transient 0 \
 		 -center 0]
@@ -1705,6 +1710,9 @@ itcl::class cat::AstroCat {
 
     # type of catalog (catalog or archive)
     itk_option define -catalogtype catalogType CatalogType "catalog"
+
+    # name of catalog directory, or a tcl list forming the path to it (empty means root)
+    itk_option define -catalogdir catalogDir CatalogDir ""
 
     # Optional unique id, used in searching for already existing catalog widgets.
     itk_option define -id id Id ""

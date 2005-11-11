@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project 
- * "@(#) $Id: rtdRemote.c,v 1.6 1999/03/19 20:09:56 abrighto Exp $"
+ * "@(#) $Id: rtdRemote.c,v 1.3 2005/02/02 01:43:03 brighton Exp $"
  *
  * rtdRemote.c - client library for remote control of an RtdImage
  *               widget, communicates over a socket with a remote
@@ -13,14 +13,15 @@
  * --------------  --------  ----------------------------------------
  * Allan Brighton  05/03/96  Created
  * Peter W. Draper 09/02/98  Removed sys_errlist and replaced with strerror.
+ * pbiereic        07/04/04  Fixed: variable argument list
  */
-static const char* const rcsId="@(#) $Id: rtdRemote.c,v 1.6 1999/03/19 20:09:56 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: rtdRemote.c,v 1.3 2005/02/02 01:43:03 brighton Exp $";
 
 
 
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <sys/types.h>
 #include <sys/time.h>
 #include <sys/socket.h>
@@ -32,7 +33,7 @@ static const char* const rcsId="@(#) $Id: rtdRemote.c,v 1.6 1999/03/19 20:09:56 
 #include <netdb.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
-#include <varargs.h>
+#include <stdarg.h>
 #include <errno.h>
 #include "rtdRemote.h"
 
@@ -62,15 +63,12 @@ static rtdRemote info;	/* this struct holds local info */
  * The error message is kept in a local buffer and can be retrieved
  * with rtdRemoteGetError().
  */
-static int error(va_alist)
-va_dcl
+static int error(const char *fmt, ...)
 {
     va_list args;
-    char *fmt;
     char buf[sizeof(info.errmsg)];
 
-    va_start(args);
-    fmt = va_arg(args, char *);
+    va_start(args, fmt);
     vsprintf(buf, fmt, args);
     va_end(args);
     
@@ -85,17 +83,14 @@ va_dcl
 /*
  * report the error, including system error code
  */
-static int sys_error(va_alist)
-va_dcl
+static int sys_error(const char *fmt, ...)
 {
     va_list args;
-    char *fmt;
     char buf[sizeof(info.errmsg)];
     extern int sys_nerr;
     extern int errno;
 
-    va_start(args);
-    fmt = va_arg(args, char *);
+    va_start(args, fmt);
     vsprintf(buf, fmt, args);
     va_end(args);
     
@@ -179,7 +174,8 @@ static int readline(int fd, char* ptr, int maxlen)
 	    *ptr++ = c;
 	    if (c == '\n')
 		break;
-	} else if (rc == 0) {
+	}
+	else if (rc == 0) {
 	    if (n == 1)
 		return(0);	/* EOF, no data read */
 	    else
