@@ -6,23 +6,20 @@
  *
  * "@(#) $Id$" 
  *
- * FitsIO.h - declarations for class FitsIO, a class representing the
+ * Fits_IO.h - declarations for class FitsIO, a class representing the
  *            contents of a FITS image file (or other image source)
  * 
  * who             when      what
  * --------------  --------  ----------------------------------------
  * Allan Brighton  05/10/95  Created
- * Peter W. Draper 10/01/00  Added getFitsFile member to allow access
- *                           to fitsio file handle (used to access
- *                           HDUs in derived/related classes). 
- * Peter W. Draper 04/02/00  Changed constness of write so that
- *                           non-const member can be used within this
- *                           member. 
- *                 15/08/00  Made write virtual so it can be overriden.
+ * pbiereic        17/02/03  Revised byte-order issues
+ * abrighto        02/01/05  Renamed .h file to avoid conflict with cfitsio's 
+ *                           "fitsio.h" on case-ignoring file systems, such as 
+ *                           Mac OSX.
  */
 
-#include <stdio.h>
-#include <iostream.h>
+#include <cstdio>
+#include <iostream>
 #include "ImageIO.h"
 #include "fitsio.h"
 
@@ -33,6 +30,14 @@
  */
 class FitsIO : public ImageIORep {
 private:
+    fitsfile* fitsio_;		// handle to use for cfitsio C library routines
+    static FitsIO* fits_;	// current class ptr for reallocFile callback
+
+    Mem primaryHeader_;		// the primary header, if there is more than one HDU
+
+    Mem mergedHeader_;		// the primary header merged with the current extension
+                                // header, if applicable (The primary header is appended
+                                // after the extension header).
     
     // set wcslib header length for searching
     static void set_header_length(const Mem& header);
@@ -44,20 +49,9 @@ private:
     // extend the size of the FITS header by one header block 
     int extendHeader();
 
-    static void *reallocFile(void* p, size_t newsize);
+    static void* FitsIO::reallocFile(void* p, size_t newsize);
 
 protected:   
-    //  PWD: Move here so that derived classes can manipulate (needed to get
-    //  at HDU functions from ther  
-    fitsfile* fitsio_;		// handle to use for cfitsio C library routines
-    static FitsIO* fits_;	// current class ptr for reallocFile callback
-
-    Mem primaryHeader_;		// the primary header, if there is more than one HDU
-
-    Mem mergedHeader_;		// the primary header merged with the current extension
-                                // header, if applicable (The primary header is appended
-                                // after the extension header).
- 
     // Check that this object represents a FITS file (and not just some kind of memory)
     // and return 0 if it does. If not, return an error message.
     int checkFitsFile();
@@ -103,12 +97,11 @@ public:
     // destructor
     ~FitsIO();
 
+    // Return a copy of this object that shares the data, but can have a different current HDU
+    FitsIO* copy();
+
     // initialize world coordinates (based on the image header)
     int wcsinit();
-
-    // return true if this class uses native byte ordering
-    // (FITS uses network byte order, so return 0 here).
-    int nativeByteOrder() const {return 0;}
 
     // return the class name as a string
     const char* classname() const {return "FitsIO";}
@@ -118,7 +111,7 @@ public:
     static FitsIO* read(const char* filename, int memOptions = 0);
 
     // write the data to a FITS file 
-    virtual int write(const char *filename);
+    int write(const char *filename) const;
 
     // compress or decompress the given file and return the new filename
     // see comments in source file for details.
@@ -168,6 +161,8 @@ public:
     //  write a (ASCII formatted) copy of the FITS header to the given stream.
     int getFitsHeader(ostream& os) const;
 
+    // write data to disk (network byte ordered, NBO)
+    int fwriteNBO(char *data, int tsize, int size, FILE *f) const;
 
     // Insert the given FITS keyword and value and return 0 if OK
     // If there is not enough space in the header, the file size is
@@ -180,10 +175,6 @@ public:
     
     // -- HDU access --
     
-    //  Return fitsfile reference so this can be used in related
-    //  classes. 
-    fitsfile *getFitsFile() { return fitsio_; }
-
     // Return the total number of HDUs
     int getNumHDUs();
 
@@ -227,4 +218,4 @@ public:
     int setTableValue(long row, int col, const char* value);
 };
 
-#endif _FitsIO_h_
+#endif /* _FitsIO_h_ */

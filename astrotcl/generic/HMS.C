@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project/ESO Archive 
- * $Id: HMS.C,v 1.4 2005/02/02 01:43:04 brighton Exp $
+ * $Id: HMS.C,v 1.1.1.1 2006/01/12 16:43:53 abrighto Exp $
  *
  * HMS.C - method definitions for class HMS
  * 
@@ -10,7 +10,7 @@
  * --------------  --------   ----------------------------------------
  * Allan Brighton  26 Sep 95  Created
  */
-static const char* const rcsId="@(#) $Id: HMS.C,v 1.4 2005/02/02 01:43:04 brighton Exp $";
+static const char* const rcsId="@(#) $Id: HMS.C,v 1.1.1.1 2006/01/12 16:43:53 abrighto Exp $";
 
 
 #include <cstdio>

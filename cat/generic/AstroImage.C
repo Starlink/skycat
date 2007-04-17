@@ -16,17 +16,18 @@
 static const char* const rcsId="@(#) $Id$";
 
 
+using namespace std;
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <iostream.h>
-#include <fstream.h>
-#include <strstream>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <cstdlib>
+#include <cstdio>
 #include <unistd.h>
+#include <cstring>
 #include "error.h"
-#include "Compress.h"
+#include "DCompress.h"
 #include "AstroImage.h"
 
 
@@ -130,8 +131,7 @@ int AstroImage::getImage(const WorldOrImageCoords& pos, double width, double hei
     for (int i = 0; i < 3 && urls[i]; i++) {
 
 	// generate the http url command
-	char url[1024];	
-	std::ostrstream os(url, sizeof(url));
+	ostringstream os;
 
 	// expand the variables in the http server command
 	const char* p = urls[i];
@@ -173,9 +173,8 @@ int AstroImage::getImage(const WorldOrImageCoords& pos, double width, double hei
 		os << *p++;
 	    }
 	}
-	os << ends;
 
-	if (getImage(url) == 0)
+	if (getImage(os.str().c_str()) == 0)
 	    return 0;
 
 	// don't go to backup URL if it was a request for authorization

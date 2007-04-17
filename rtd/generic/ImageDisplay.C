@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project 
- * "@(#) $Id: ImageDisplay.C,v 1.5 2005/02/02 01:43:03 brighton Exp $"
+ * "@(#) $Id: ImageDisplay.C,v 1.1.1.1 2006/01/12 16:39:29 abrighto Exp $"
  *
  * ImageDisplay.C - member routines for class ImageDisplay,
  *                  for managing XImage to Pixmap display including
@@ -15,7 +15,7 @@
  *                           of data to bytes_per_line*width when not
  *                           using shared memory. 
   */
-static const char* const rcsId="@(#) $Id: ImageDisplay.C,v 1.5 2005/02/02 01:43:03 brighton Exp $";
+static const char* const rcsId="@(#) $Id: ImageDisplay.C,v 1.1.1.1 2006/01/12 16:39:29 abrighto Exp $";
 
 // #define DEBUG
 // #define XXXDEBUG
@@ -28,6 +28,9 @@ static const char* const rcsId="@(#) $Id: ImageDisplay.C,v 1.5 2005/02/02 01:43:
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include "define.h"
 #include "error.h"
 #include "ErrorHandler.h"

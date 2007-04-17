@@ -1,7 +1,7 @@
 /*
  * E.S.O. - VLT project / ESO Archive
  *
- * "@(#) $Id: FitsIO.C,v 1.5 2005/02/02 01:43:04 brighton Exp $" 
+ * "@(#) $Id: FitsIO.C,v 1.1.1.1 2006/01/12 16:43:57 abrighto Exp $" 
  *
  * FitsIO.C - method definitions for class FitsIO, for operating on
  *            Fits files.
@@ -17,8 +17,11 @@
  * pbiereic        20/07/04  use %20 field width for keywords in methods put_keyword,
  *                           so that other tools like xv, ds9, fv can read stored real-time
  *                           images.
+ * abrighto        02/01/05  Renamed .h file to avoid conflict with cfitsio's 
+ *                           "fitsio.h" on case-ignoring file systems, such as 
+ *                           Mac OSX.
  */
-static const char* const rcsId="@(#) $Id: FitsIO.C,v 1.5 2005/02/02 01:43:04 brighton Exp $";
+static const char* const rcsId="@(#) $Id: FitsIO.C,v 1.1.1.1 2006/01/12 16:43:57 abrighto Exp $";
 
 
 using namespace std;
@@ -36,9 +39,12 @@ using namespace std;
 #include "error.h"
 #include "fitsio.h"
 #include "SAOWCS.h"
-#include "Compress.h"
+#include "DCompress.h"
 #include "Mem.h"
-#include "FitsIO.h"
+#include "Fits_IO.h"
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include "define.h"
 
 // size of a FITS block
@@ -322,8 +328,7 @@ int FitsIO::cfitsio_error()
 void* FitsIO::reallocFile(void* p, size_t newsize)
 {
     if (!fits_) {
-	error("No current FITS file");
-	return NULL;
+	return p;
     }
     if (fits_->checkWritable() != 0)
 	return NULL;		// not a writable FITS file
@@ -1486,6 +1491,7 @@ int FitsIO::createTable(const char* extname, long rows, int cols,
 	fits_ = NULL;
 	return cfitsio_error();
     }
+    fits_ = NULL;
     if (flush() != 0) 
 	return 1;		// error flushing data
 

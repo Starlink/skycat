@@ -1,6 +1,6 @@
  /*
  * E.S.O. - VLT project/ESO Archive 
- * $Id: HTTP.C,v 1.6 2005/02/02 01:43:00 brighton Exp $
+ * $Id: HTTP.C,v 1.1.1.1 2006/01/12 16:40:58 abrighto Exp $
  *
  * HTTP.C - method definitions for class HTTP
  *          (based on code from DSS:HTTP.c by Miguell Albrecht)
@@ -13,7 +13,7 @@
  * Peter W. Draper 16 Jun 98  Added support for web proxy servers.
  * pbiereic        17/02/03   Added 'using namespace std'. Removed ::std specs.
  */
-static const char* const rcsId="@(#) $Id: HTTP.C,v 1.6 2005/02/02 01:43:00 brighton Exp $";
+static const char* const rcsId="@(#) $Id: HTTP.C,v 1.1.1.1 2006/01/12 16:40:58 abrighto Exp $";
 
 
 using namespace std;
@@ -33,7 +33,9 @@ using namespace std;
 #include <netdb.h>
 #include <arpa/inet.h>
 #include "error.h"
+#ifdef HAVE_CONFIG_H
 #include "config.h"
+#endif
 #include "util.h"
 #include "base64.h"
 #include "HTTP.h"
@@ -41,11 +43,13 @@ using namespace std;
 
 #ifdef NEED_SOCKET_PROTO
 // some protos missing in SunOS
+/*
 extern "C" {
     int socket(int, int, int);
     int connect(int, const void*, int);
     int strncasecmp(char*, char*, int);
 }
+*/
 #endif /* NEED_SOCKET_PROTO */
 
 

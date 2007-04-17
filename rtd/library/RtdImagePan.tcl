@@ -1,7 +1,7 @@
 #*******************************************************************************
 # E.S.O. - VLT project
 #
-# "@(#) $Id: RtdImagePan.tcl,v 1.2 2005/02/02 01:43:03 brighton Exp $"
+# "@(#) $Id: RtdImagePan.tcl,v 1.1.1.1 2006/01/12 16:38:07 abrighto Exp $"
 #
 # RtdImagePan.tcl - itcl widget managing the RtdImage panning window
 # 
@@ -11,6 +11,8 @@
 # --------------  ---------  ----------------------------------------
 # Allan Brighton  01 Jun 95  Created
 # pbiereic        14/12/04   Fixed: Panning while image events are received
+# pbiereic        30/03/05   Fixed: pan image width for long, narrow spectra
+#                            in method notify_cmd
 
 itk::usual RtdImagePan {}
 
@@ -121,6 +123,7 @@ itcl::class rtd::RtdImagePan {
     public method init_panning {} {
 	set panImageWidth_ [$image_ dispwidth]
 	set panImageHeight_ [$image_ dispheight]
+
 	if {$panImageWidth_ == 0} {
 	    $target_image_ pan start [code $this pan] 1
 	    return
@@ -157,9 +160,13 @@ itcl::class rtd::RtdImagePan {
     # if "changed" is 1, there is a new image with pos. different dimensions.
 
     protected method pan {x1 y1 x2 y2 changed} {
+	set scale [lindex [$image_ scale] 0]
         if { [info exists coords_] } {
             if { $x1 == $coords_(pan_x1) && $y1 == $coords_(pan_y1) && \
-                 $x2 == $coords_(pan_x2) && $y2 == $coords_(pan_y2) && \
+		 $x2 == $coords_(pan_x2) && $y2 == $coords_(pan_y2) && \
+		 "$scale" == "$coords_(scale)" && \
+                 $panImageHeight_ == $coords_(panImageHeight) && \
+		 $panImageWidth_ == $coords_(panImageWidth) &&
                  $panImageWidth_ > 1 } {
                 return
             }
@@ -168,6 +175,9 @@ itcl::class rtd::RtdImagePan {
         set coords_(pan_y1) $y1
         set coords_(pan_x2) $x2
         set coords_(pan_y2) $y2
+        set coords_(scale)  $scale
+        set coords_(panImageWidth) $panImageWidth_
+        set coords_(panImageHeight) $panImageHeight_
 
 	if {$changed} {
 	    init_panning
@@ -186,11 +196,11 @@ itcl::class rtd::RtdImagePan {
     # op is set to "resize" or "move" (resize not currently supported)
 
     public method notify_cmd {op} {
-	if {$panImageWidth_ == 0} {
+	if { [$image_ isclear] || $panImageWidth_ == 0} {
 	    return
 	}
 	lassign [$canvas_ coords $panner_] x1 y1 x2 y2
-	if {"$op" == "move" && $panImageWidth_>2 && $panImageHeight_>2} {
+	if {"$op" == "move" && $panImageWidth_ > 1 && $panImageHeight_ > 1} {
 	    $target_canvas_ xview moveto [expr {$x1/($panImageWidth_-1)}]
 	    $target_canvas_ yview moveto [expr {$y1/($panImageHeight_-1)}]
 	    $target_image_ pan update

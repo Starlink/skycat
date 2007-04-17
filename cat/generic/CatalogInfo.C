@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project/ESO Archive
- * $Id: CatalogInfo.C,v 1.4 2003/01/20 15:52:21 brighton Exp $
+ * $Id: CatalogInfo.C,v 1.1.1.1 2006/01/12 16:36:24 abrighto Exp $
  *
  * CatalogInfo.C - method definitions for class CatalogInfo, CatalogInfoEntry
  *
@@ -126,9 +126,10 @@
  * --------------  --------   ----------------------------------------
  * Allan Brighton  29 Oct 95  Created
  */
-static const char* const rcsId="@(#) $Id: CatalogInfo.C,v 1.4 2003/01/20 15:52:21 brighton Exp $";
+static const char* const rcsId="@(#) $Id: CatalogInfo.C,v 1.1.1.1 2006/01/12 16:36:24 abrighto Exp $";
 
 
+using namespace std;
 #include <unistd.h>
 #include <cstdlib>
 #include <cctype>
@@ -214,7 +215,7 @@ int split(char* buf, char*& keyword, char*& value)
  * read a line from the stream into buf and return the stream. 
  * Lines ending with backslash are continued on the next line
  */ 
-std::istream& CatalogInfo::getline(std::istream& f, char* buf, int size)
+istream& CatalogInfo::getline(istream& f, char* buf, int size)
 {
     if (f.getline(buf, size)) {
 	char* p = buf;
@@ -240,11 +241,11 @@ std::istream& CatalogInfo::getline(std::istream& f, char* buf, int size)
  *  f - istream open for reading the config file (or buffer)
  *  filename - name of file (or URL) for error reporting
  */
-CatalogInfoEntry* CatalogInfo::load(std::istream& f, const char* filename)
+CatalogInfoEntry* CatalogInfo::load(istream& f, const char* filename)
 {
     int line = 0;		// line number in config file
     int n;
-    char buf[10*1024];		// contents of a line
+    char buf[10*2048];		// contents of a line
     char* keyword;		// left of ':'
     char* value;		// right of ':'
     CatalogInfoEntry* entry = NULL; // for list of catalog entries
@@ -422,7 +423,7 @@ int CatalogInfo::set_entry_value(CatalogInfoEntry* entry,
  */
 int CatalogInfo::cfg_error(const char* filename, int line, const char* msg1, const char* msg2)
 {
-    std::ostringstream os;
+    ostringstream os;
     os << "error in catalog config file: " 
        << filename << ": line " << line << ": " << msg1 << msg2;
     return error(os.str().c_str());
@@ -594,7 +595,7 @@ CatalogInfoEntry* CatalogInfo::loadRootConfig()
 
     // if all else fails, use this hard coded config info
     e->url("default");
-    std::istringstream is(config_info_);
+    istringstream is(config_info_);
     e->link(load(is));
     if (! e->link()) {
 	delete e;
@@ -627,7 +628,7 @@ int CatalogInfo::load(CatalogInfoEntry* e) {
 	return http.html_error(s);
     }
 
-    std::istringstream is(s);
+    istringstream is(s);
     e->link(load(is, e->url()));
     if (! e->link()) 
 	return 1;		// input error
@@ -722,7 +723,7 @@ CatalogInfoEntry* CatalogInfo::lookup(CatalogInfoEntry* entry, const char* name)
  */
 CatalogInfoEntry* CatalogInfo::lookupFile(const char* name)
 {
-    std::ifstream is(name);
+    ifstream is(name);
     if (!is) {
 	sys_error("can't open file: ", name);
 	return NULL;
@@ -814,12 +815,12 @@ void CatalogInfo::remove(CatalogInfoEntry* e, CatalogInfoEntry* dir)
  * Read config keyword entries from the given stream and update the given
  * entry values. 
  */
-void CatalogInfo::updateConfigEntry(std::istream& is, CatalogInfoEntry* entry)
+void CatalogInfo::updateConfigEntry(istream& is, CatalogInfoEntry* entry)
 {
     if (! entry)
 	return;
 
-    char buf[1024];
+    char buf[2048];
     char* keyword;		// left of ':'
     char* value;		// right of ':'
     while (getline(is, buf, sizeof(buf))) {
@@ -1043,66 +1044,66 @@ int CatalogInfoEntry::append(CatalogInfoEntry* e)
  * output operator: format similar to config file input:
  * keyword: value ...
  */
-std::ostream& operator<<(std::ostream& os, const CatalogInfoEntry& e)
+ostream& operator<<(ostream& os, const CatalogInfoEntry& e)
 {
     if (e.servType())
-	os << "serv_type: " << e.servType() << std::endl;
+	os << "serv_type: " << e.servType() << endl;
 
     if (e.longName())
-	os << "long_name: " << e.longName() << std::endl;
+	os << "long_name: " << e.longName() << endl;
 
 
     if (e.shortName())
-	os << "short_name: " << e.shortName() << std::endl;
+	os << "short_name: " << e.shortName() << endl;
 
     if (e.url())
-	os << "url: " << e.url() << std::endl;
+	os << "url: " << e.url() << endl;
 
     if (e.backup1())
-	os << "backup1: " << e.backup1() << std::endl;
+	os << "backup1: " << e.backup1() << endl;
 
     if (e.backup2())
-	os << "backup2: " << e.backup1() << std::endl;
+	os << "backup2: " << e.backup1() << endl;
     
     if (e.symbol())
-	os << "symbol: " << e.symbol() << std::endl;
+	os << "symbol: " << e.symbol() << endl;
     
     if (e.searchCols())
-	os << "search_cols: " << e.searchCols() << std::endl;
+	os << "search_cols: " << e.searchCols() << endl;
     
     if (e.sortCols())
-	os << "sort_cols: " << e.sortCols() << std::endl;
+	os << "sort_cols: " << e.sortCols() << endl;
     
     if (e.showCols())
-	os << "show_cols: " << e.showCols() << std::endl;
+	os << "show_cols: " << e.showCols() << endl;
     
     if (e.copyright())
-	os << "copyright: " << e.copyright() << std::endl;
+	os << "copyright: " << e.copyright() << endl;
 
     if (e.help())
-	os << "help: " << e.help() << std::endl;
+	os << "help: " << e.help() << endl;
     
     if (e.equinox() != 2000.)
-	os << "equinox: " << e.equinox() << std::endl;
+	os << "equinox: " << e.equinox() << endl;
 
     if (e.id_col() > 0)
-	os << "id_col: " << e.id_col() << std::endl;
+	os << "id_col: " << e.id_col() << endl;
 
     // don't need to output default order of: id, ra, dec
     if (e.ra_col() >= 0 && e.ra_col() != 1)  
-	os << "ra_col: " << e.ra_col() << std::endl;
+	os << "ra_col: " << e.ra_col() << endl;
     
     if (e.dec_col() >= 0 && e.dec_col() != 2)
-	os << "dec_col: " << e.dec_col() << std::endl;
+	os << "dec_col: " << e.dec_col() << endl;
 
     if (e.x_col() >= 0 && e.x_col() != 1)
-	os << "x_col: " << e.x_col() << std::endl;
+	os << "x_col: " << e.x_col() << endl;
 
     if (e.y_col() >= 0 && e.y_col() != 2)
-	os << "y_col: " << e.y_col() << std::endl;
+	os << "y_col: " << e.y_col() << endl;
 
     if (e.is_tcs())
-	os << "is_tcs: " << e.is_tcs() << std::endl;
+	os << "is_tcs: " << e.is_tcs() << endl;
 
     return os;
 }

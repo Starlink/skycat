@@ -9,26 +9,21 @@
  * who             when       what
  * --------------  --------   ----------------------------------------
  * Allan Brighton  26 Sep 95  Created
- * Peter W. Draper 01 May 03  Added "ws" and "hs" to get width and
- *                            height in arcsecs (2MASS image servers)
- * Peter W. Draper 10 Dec 03  Moved "delete cat" in nameToWorldCoords
- *                            so that it is performed after the last
- *                            reference to "cat" (->equinox()). 
- *                            Started crashing query subprocess.
  */
 static const char* const rcsId="@(#) $Id$";
 
 
+using namespace std;
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <string.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <unistd.h>
-#include <iostream.h>
-#include <fstream.h>
-#include <strstream>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <cstring>
 #include "error.h"
-#include "Compress.h"
+#include "DCompress.h"
 #include "WorldOrImageCoords.h"
 #include "HTTP.h"
 #include "Mem.h"
@@ -286,7 +281,7 @@ int AstroCatalog::query(const AstroQuery& q, const char* filename, QueryResult& 
     if (! isCatalog(entry_))
 	return wrongServType(entry_);
 
-    // generate the URL for a standard query in buf (using ostrstream)
+    // generate the URL for a standard query in buf (using ostringstream)
     char* result_buf =  NULL;
     int nlines = 0;
 
@@ -295,7 +290,7 @@ int AstroCatalog::query(const AstroQuery& q, const char* filename, QueryResult& 
     urls[0] = entry_->url();
     urls[1] = entry_->backup1();
     urls[2] = entry_->backup2();
-    char url[1024];
+    char url[10000];
 
     char* ctype = "";
     for (int i = 0; i < 3 && urls[i]; i++) {
@@ -374,7 +369,7 @@ int AstroCatalog::getImage(const AstroQuery& q)
     urls[0] = entry_->url();
     urls[1] = entry_->backup1();
     urls[2] = entry_->backup2();
-    char url[1024];
+    char url[10000];
 
     // for each url, backup-url, etc...
     for (int i = 0; i < 3 && urls[i]; i++) {
@@ -426,8 +421,6 @@ int AstroCatalog::getImage(const char* url)
  *   %x, %y           - image coordinates of center point (for pixel based catalogs)
  *
  *   %w, %h           - width and height of area in arcmin (area query)
- * 
- *   %ws, %hs         - width and height of area in arcsec (area query)
  *
  *   %r1, %r2         - min and max radius (for circular query)
  *
@@ -453,7 +446,7 @@ int AstroCatalog::genHttpQuery(char* buf, int bufsz, const AstroQuery& q, const 
     if (q.pos().status() != 0)
 	return ERROR;
 
-    std::ostrstream os(buf, bufsz);
+    ostringstream os;
     int i;
     int url_has_id = 0, 
 	url_has_radec = 0, 
@@ -526,16 +519,6 @@ int AstroCatalog::genHttpQuery(char* buf, int bufsz, const AstroQuery& q, const 
 		    os << q.maxRows()+1;
 		url++;
 	    }
-	    else if (strncmp(url, "ws", 2) == 0) {
-		if (q.width() != 0.0 || q.height() != 0.0)
-		    os << q.width() * 60.0;
-		url++;
-	    }
-	    else if (strncmp(url, "hs", 2) == 0) {
-		if (q.width() != 0.0 || q.height() != 0.0)
-		    os << q.height() * 60.0;
-		url++;
-	    }
 	    else if (strncmp(url, "w", 1) == 0) {
 		if (q.width() != 0.0 || q.height() != 0.0)
 		    os << q.width();
@@ -605,7 +588,7 @@ int AstroCatalog::genHttpQuery(char* buf, int bufsz, const AstroQuery& q, const 
 	    os << *url++;
 	}
     }
-    os << ends;
+    strncpy(buf, os.str().c_str(), bufsz);
     
     // report an error if the caller specified an id, but there is none in the URL
     if (strlen(q.id()) && ! url_has_id) 
@@ -1017,8 +1000,7 @@ int AstroCatalog::getPreview(const char* url, char*& ctype)
     }
 
     // correct Content-type after decompression
-    const char *ctemp = (is_image ? "image/x-fits" : "text/x-starbase");
-    ctype = (char *) ctemp;
+    ctype = (char*)(is_image ? "image/x-fits" : "text/x-starbase");
 
     // if we got here, then we have the FITS file, so return the file name
     return 0;

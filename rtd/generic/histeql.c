@@ -20,6 +20,9 @@ static char SccsId[] = "%W%  %G%";
 #include <stdio.h>
 #include "histeq.h"		/* define SubrangeLink */
 
+static int count_nonzero_histogram_entries(), rescan_histogram();
+static void unmark_peak_links();
+
 /*
  * Subroutine:	histogram_equalize
  * Purpose:	Create a scaling map which equalizes image cells per
@@ -44,8 +47,6 @@ void histogram_equalize ( scalemap, histogram, area, pmin, pmax,
   char *calloc_errchk();
   int distribute_levels();
   void generate_scalemap(), scan_histogram_for_peaks(), resolve_zeroes();
-  static int count_nonzero_histogram_entries(), rescan_histogram();
-  static void unmark_peak_links();
 
   /* initialize link list */
   linklist = (SubrangeLink *)calloc_errchk(10, sizeof(int), "HElink");

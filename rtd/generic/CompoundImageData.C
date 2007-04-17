@@ -23,8 +23,11 @@
 #include <cstring>
 #include <cassert>
 #include <cmath>
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include "define.h"
-#include "FitsIO.h"
+#include "Fits_IO.h"
 #include "error.h"
 #include "CompoundImageData.h"
 
@@ -515,7 +518,7 @@ void CompoundImageData::toXImage(int x0, int y0, int x1, int y1, int dest_x, int
 
 /*----------------------------------------------------------------------------
  * The methods below access the actual image data and are normally implemented
- * in ImageTemplates.C. Here we need to define the methods to access the
+ * in ImageTemplates.icc. Here we need to define the methods to access the
  * correct image extensions, based on the visible area, or requested area
  * of the image.
  *----------------------------------------------------------------------------*/

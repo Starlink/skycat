@@ -1,7 +1,7 @@
 /*
  * E.S.O. - VLT project / ESO Archive
  *
- * "@(#) $Id: ImageIO.C,v 1.3 2005/02/02 01:43:04 brighton Exp $" 
+ * "@(#) $Id: ImageIO.C,v 1.2 2006/01/18 17:56:53 abrighto Exp $" 
  *
  * ImageIO.C - method definitions for class ImageIO, for managing image
  *             I/O and storage
@@ -14,15 +14,15 @@
  *                           class FitsIO or other class derived from
  *                           ImageIORep.
  */
-static const char* const rcsId="@(#) $Id: ImageIO.C,v 1.3 2005/02/02 01:43:04 brighton Exp $";
+static const char* const rcsId="@(#) $Id: ImageIO.C,v 1.2 2006/01/18 17:56:53 abrighto Exp $";
 
 
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #include <cmath>
 #include <cstdlib>
 #include "error.h"
 #include "ImageIO.h"
-
 
 /*
  * copy constructor - increment the reference count...

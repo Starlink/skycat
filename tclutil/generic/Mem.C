@@ -1,7 +1,7 @@
 /*
  * E.S.O. - VLT project / ESO Archive
  *
- * "@(#) $Id: Mem.C,v 1.4 2005/02/02 01:43:00 brighton Exp $" 
+ * "@(#) $Id: Mem.C,v 1.1.1.1 2006/01/12 16:41:00 abrighto Exp $" 
  *
  * Mem.C - method definitions for class Mem, for managing memory
  *         areas with or without shared memory.
@@ -15,7 +15,7 @@
  *                           message queue of a possible parent process is not closed
  * pbiereic        17/02/03  Added 'using namespace std'.
  */
-static const char* const rcsId="@(#) $Id: Mem.C,v 1.4 2005/02/02 01:43:00 brighton Exp $";
+static const char* const rcsId="@(#) $Id: Mem.C,v 1.1.1.1 2006/01/12 16:41:00 abrighto Exp $";
 
 
 using namespace std;
@@ -29,6 +29,9 @@ using namespace std;
 #include <sys/shm.h>
 #include <sys/sem.h>
 #include "error.h"
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include "define.h"
 #include "util.h"
 #include "Mem.h"

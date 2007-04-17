@@ -12,14 +12,16 @@
  *                 17 Mar 98  Made WCSRep an abstract base class to allow 
  *                            new implementations of WCS. Renamed old WCSRep
  *                            to SAOWCS (based on Doug Mink's saoimage version).
+ * abrighto        02/01/06   Renamed WCS.C to WCSRep.C to avoid name conflict
+ *                            with wcs.c on file systems that ignore case
  */
 static const char* const rcsId="@(#) $Id$";
 
 
-#include <string.h>
-#include <stdlib.h>
+#include <cstdlib>
+#include <cstring>
 #include "error.h"
-#include "WCS.hxx"
+#include "WCSRep.h"
 
 
 /*

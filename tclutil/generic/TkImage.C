@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project 
- * "@(#) $Id: TkImage.C,v 1.6 2005/02/02 01:43:02 brighton Exp $"
+ * "@(#) $Id: TkImage.C,v 1.1.1.1 2006/01/12 16:41:06 abrighto Exp $"
  *
  * TkImage.C - base class definitions for Tk images implemented in C++
  * 
@@ -16,7 +16,7 @@
  *                           are now left at window defaults.
  * pbiereic        17/02/03  Added 'using namespace std'. Removed ::std specs.
  */
-static const char* const rcsId="@(#) $Id: TkImage.C,v 1.6 2005/02/02 01:43:02 brighton Exp $";
+static const char* const rcsId="@(#) $Id: TkImage.C,v 1.1.1.1 2006/01/12 16:41:06 abrighto Exp $";
 
 
 
@@ -28,6 +28,9 @@ using namespace std;
 #include <cstring>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 #include "define.h"
 #include "error.h"
 #include "ErrorHandler.h"
