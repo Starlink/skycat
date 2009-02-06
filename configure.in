@@ -9,7 +9,7 @@
 # Allan Brighton  15/12/05   Rewrote using TCL TEA standard
 # -----------------------------------------------------------------------
 
-AC_INIT([skycat], [3.0.1])
+AC_INIT([skycat], [3.0.2])
 
 AC_CONFIG_AUX_DIR(tclconfig)
 

@@ -4,7 +4,7 @@
 /*
  * E.S.O. - VLT project 
  *
- * "@(#) $Id$" 
+ * "@(#) $Id: Fits_IO.h,v 1.1.1.1 2006/01/12 16:43:52 abrighto Exp $" 
  *
  * Fits_IO.h - declarations for class FitsIO, a class representing the
  *            contents of a FITS image file (or other image source)

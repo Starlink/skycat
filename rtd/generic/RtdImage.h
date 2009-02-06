@@ -267,7 +267,7 @@ protected:
     int displayLocked_;		// flag: true if image is currently being updated
 
     // views (copy of image sharing same raw data)
-    enum {MAX_VIEWS = 8};	 // maximum number of views of an image
+    enum {MAX_VIEWS = 64};	 // maximum number of views of an image
     RtdImage* view_[MAX_VIEWS];  // array of views (tkimage widgets)
     RtdImage* viewMaster_; 	 // the image this image is a view of
     RtdImage* currentView_; 	 // cur view, when more than one image is in a canvas

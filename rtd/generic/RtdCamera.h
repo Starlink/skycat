@@ -62,58 +62,58 @@ public:
     static void fileEventProc(ClientData, int mask);
 
     // start/stop/pause or continue accepting images
-    int start(const char* cameraName);
-    int stop();
-    int pause();
-    int cont();
+    int   start(const char* cameraName);
+    int   stop();
+    int   pause();
+    int   cont();
 
     // return camera name
     char* camera() {return camera_;}
 
     // Add timestamp in performance tool.
-    void timeStamp(char *evDesc);
+    void  timeStamp(char *evDesc);
 
     // update global variables
-    int updateGlobals();
+    int   updateGlobals();
 
     // check if camera is attached
-    int attached();
+    int   attached();
 
 protected:
 
     // member called by fileEventProc for image events
-    int fileEvent();
+    int   fileEvent();
 
     // cleanup image events in the socket queue
-    void cleanup();
+    void  cleanup();
 
     // called to display new image from shared memory
     // (defined in a derived class)
     virtual int display(const rtdIMAGE_INFO&, const Mem& data) = 0;
 
     // set camera name
-    void camera(const char *camera) {strcpy(camBuf_, camera);}
+    void  camera(const char *camera) {strcpy(camBuf_, camera);}
 
     // create/delete the Tcl file handler
-    void fileHandler(int create);
+    void  fileHandler(int create);
 
     // disconnect from camera
-    void disconnect();
+    void  disconnect();
 
     // Decrement the semaphore
-    void semDecr();
+    void  semDecr();
 
     // check if rtdServer is alive
-    void rtdServerCheck();
+    void  rtdServerCheck();
 
     // check status after image event failure
-    void checkStat();
+    void  checkStat();
 
     // start accepting events from the camera
-    int attach(const char* camera);
+    int   attach(const char* camera);
 
     // check image type
-    int checkType(int type);
+    int   checkType(int type);
 
     Tcl_Interp* interp_;           // Tcl interp (for file events, error handling)
     rtdIMAGE_EVT_HNDL* eventHndl_; // image event handle
@@ -133,9 +133,9 @@ protected:
 
     // -- short cuts --
 
-    int connected() {return connected_;}
-    void connected(int set) {connected_ = set; }
-    void attached(int set) {attached_ = set; }
+    int   connected() {return connected_;}
+    void  connected(int set) {connected_ = set; }
+    void  attached(int set) {attached_ = set; }
 };
 
 #endif /* _RtdCamera_h_ */

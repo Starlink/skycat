@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project/ESO Archive
- * $Id$
+ * $Id: AstroCatalog.C,v 1.2 2006/03/26 13:22:33 abrighto Exp $
  *
  * AstroCatalog.C - method definitions for class AstroCatalog
  * 
@@ -17,7 +17,7 @@
  *                            Started crashing query subprocess.
  *                 27 Aug 08  Allow image/fits as a content type.
  */
-static const char* const rcsId="@(#) $Id$";
+static const char* const rcsId="@(#) $Id: AstroCatalog.C,v 1.2 2006/03/26 13:22:33 abrighto Exp $";
 
 
 #include <sys/types.h>

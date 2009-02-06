@@ -4,7 +4,7 @@
 
 /*
  * E.S.O. - VLT project 
- * $Id$
+ * $Id: DCompress.h,v 1.1.1.1 2006/01/12 16:44:02 abrighto Exp $
  *
  * DCompress.h - utility class for compressing/decompressing FITS files
  * 
