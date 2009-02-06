@@ -7,6 +7,10 @@ and user interface. The latest changes are at the top.
 See also the CHANGES files in the tclutil, astrotcl, rtd, cat and
 skycat directories for changes specific to those packages.
 
+--------------- 09.06.08 released skycat-3.0.2 -----------------
+
+* Added fix for VLTSW20080117 ticket. Increase the number of of MAX_VIEWS
+  from 8 to 64 in file RtdImage.h 
 
 --------------- 26.03.06 released skycat-3.0.1 -----------------
 

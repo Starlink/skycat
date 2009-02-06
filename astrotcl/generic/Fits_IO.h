@@ -4,7 +4,7 @@
 /*
  * E.S.O. - VLT project 
  *
- * "@(#) $Id$" 
+ * "@(#) $Id: Fits_IO.h,v 1.1.1.1 2006/01/12 16:43:52 abrighto Exp $" 
  *
  * Fits_IO.h - declarations for class FitsIO, a class representing the
  *            contents of a FITS image file (or other image source)
@@ -49,7 +49,7 @@ private:
     // extend the size of the FITS header by one header block 
     int extendHeader();
 
-    static void* FitsIO::reallocFile(void* p, size_t newsize);
+    static void* reallocFile(void* p, size_t newsize);
 
 protected:   
     // Check that this object represents a FITS file (and not just some kind of memory)

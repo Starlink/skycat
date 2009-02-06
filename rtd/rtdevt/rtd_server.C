@@ -1,7 +1,7 @@
 /*******************************************************************************
 * E.S.O. - VLT project
 * 
-* "@(#) $Id$"
+* "@(#) $Id: rtd_server.C,v 1.1.1.1 2006/01/12 16:39:56 abrighto Exp $"
 * 
 *  rtdServer.C
 * 
@@ -9,7 +9,7 @@
 * --------     --------  ----------------------------------------------
 * pbiereic     01/03/01  Adapted from previous version
 */
-static const char* const rcsId="@(#) $Id$";
+static const char* const rcsId="@(#) $Id: rtd_server.C,v 1.1.1.1 2006/01/12 16:39:56 abrighto Exp $";
 
 /************************************************************************
 *   NAME

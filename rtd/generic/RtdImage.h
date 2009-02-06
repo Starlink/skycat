@@ -245,7 +245,7 @@ protected:
     int displayLocked_;		// flag: true if image is currently being updated
 
     // views (copy of image sharing same raw data)
-    enum {MAX_VIEWS = 8};	 // maximum number of views of an image
+    enum {MAX_VIEWS = 64};	 // maximum number of views of an image
     RtdImage* view_[MAX_VIEWS];  // array of views (tkimage widgets)
     RtdImage* viewMaster_; 	 // the image this image is a view of
     RtdImage* currentView_; 	 // cur view, when more than one image is in a canvas
@@ -428,7 +428,7 @@ public:
     static int rtd_set_cmap(ClientData, Tcl_Interp* interp, int argc, char** argv);
  
     // update idle tasks and performance test variables
-    void RtdImage::updateRequests();   
+    void updateRequests();   
 
     // read-only access to configuration options
     static ImageColor* colors() {return colors_;}
