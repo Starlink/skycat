@@ -297,7 +297,7 @@ $(PKG_LIB_FILE): $(PKG_OBJECTS)
 # As necessary, add $(srcdir):$(srcdir)/compat:....
 #========================================================================
 
-VPATH = $(srcdir):$(srcdir)/generic:$(srcdir)/press:$(srcdir)/libwcs:$(srcdir)/cfitsio
+VPATH = $(srcdir):$(srcdir)/generic:$(srcdir)/press:$(srcdir)/libwcs
 
 .c.@OBJEXT@:
 	$(COMPILE) -c `@CYGPATH@ $<` -o $@

@@ -16,6 +16,8 @@ if test -f $cf ; then
     AC_SUBST(BLT_LIB_SPEC)
     AC_SUBST(tclutil_SRC_DIR)
     AC_SUBST(tclutil_PKG_OBJECTS)
+    AC_SUBST(CFITSIO_LIB_DIR)
+    AC_SUBST(CFITSIO_LIB_SPEC)
 else
     AC_MSG_ERROR([$cf doesn't exist])
 fi

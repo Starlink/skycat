@@ -43,3 +43,11 @@ astrotcl_PKG_OBJECTS='@astrotcl_PKG_OBJECTS@'
 
 # List of header filesinstalled for this library (for merging packages).
 astrotcl_PKG_HEADERS='@astrotcl_PKG_HEADERS@'
+
+# String to pass to linker to pick up the CFITSIO library from its
+# installed directory.
+CFITSIO_LIB_SPEC='@CFITSIO_LIB_SPEC@'
+
+# Directory containing the CFITSIO shared library 
+CFITSIO_LIB_DIR='@CFITSIO_LIB_DIR@'
+

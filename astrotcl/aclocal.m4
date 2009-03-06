@@ -12,6 +12,7 @@ if test -f $cf ; then
     AC_SUBST(tclutil_LIB_SPEC)
     AC_SUBST(BLT_LIB_SPEC)
     AC_SUBST(tclutil_SRC_DIR)
+    AC_SUBST(CFITSIO_LIB_SPEC)
 else
     AC_MSG_ERROR([$cf doesn't exist])
 fi
@@ -118,6 +119,70 @@ AC_MSG_RESULT("yes")
 AC_DEFINE(HAVE_NET_SERVICES)
 
 # ==================== END OF cfitsio SECTION ================
+
+#------------------------------------------------------------------------
+# ASTROTCL_PATH_CFITSIO --
+#
+#	Locate the CFITSIO library
+#
+# Arguments:
+#	none
+#
+# Results:
+#
+#	Adds the following arguments to configure:
+#		--with-cfitsio=...
+#
+#	Defines the following vars:
+#		CFITSIO_LIB_SPEC      String to add to link the CFITSIO lib (-L... -lBLT)
+#		CFITSIO_LIB_DIR       Directory containing libcfitsio.so
+#------------------------------------------------------------------------
+
+AC_DEFUN(ASTROTCL_PATH_CFITSIO, [
+    AC_MSG_CHECKING(for CFITSIO library)
+    AC_ARG_WITH(cfitsio,
+       [AC_HELP_STRING([--with-cfitsio=DIR],[link with CFITSIO library installed in DIR])],
+       CFITSIO_LIB_DIR=$withval)
+
+    CFITSIO_LIBNAME=libcfitsio${SHLIB_SUFFIX}
+    CFITSIO_LIBFLAG=-lcfitsio
+
+    if test -z "$CFITSIO_LIB_DIR" ; then
+	# If --with-cfitsio=dir was not specified, try the exec-prefix/lib dir
+       	places="\
+		$exec_prefix/lib \
+		$prefix/lib \
+	" 
+	for i in $places ; do 
+		if test -f $i/$CFITSIO_LIBNAME 
+		then
+       			CFITSIO_LIB_DIR=$i
+			break
+		fi
+	done
+        if test -z "$CFITSIO_LIB_DIR" ; then
+	     echo
+	     AC_MSG_ERROR([could not find $CFITSIO_LIBNAME: Please use the --with-cfitsio=DIR option.])
+	fi
+    else 
+       # Check if the CFITSIO library is in the lib subdir of the given dir
+       if test ! -f $CFITSIO_LIB_DIR/$CFITSIO_LIBNAME
+       then
+          if test ! -f $CFITSIO_LIB_DIR/lib/$CFITSIO_LIBNAME
+          then
+	     echo
+	     AC_MSG_ERROR([could not find $CFITSIO_LIBNAME in $CFITSIO_LIB_DIR or in $CFITSIO_LIB_DIR/lib: Please use the --with-cfitsio=DIR option.])
+          else
+	    CFITSIO_LIB_DIR=$CFITSIO_LIB_DIR/lib
+          fi
+       fi
+    fi
+    CFITSIO_LIB_SPEC="-L$CFITSIO_LIB_DIR $CFITSIO_LIBFLAG"
+    AC_MSG_RESULT($CFITSIO_LIB_DIR)
+    AC_SUBST(CFITSIO_LIB_DIR)
+    AC_SUBST(CFITSIO_LIB_SPEC)
+])
+
 
 #------------------------------------------------------------------------
 #  Check if we require additional libraries to support C++ shareable

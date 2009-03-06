@@ -86,9 +86,9 @@ TEA_ADD_SOURCES([${csources}])
 TEA_ADD_HEADERS([${cheaders}])
 TEA_ADD_INCLUDES([${cincludes}])
 if test $MERGED = yes ; then
-    TEA_ADD_LIBS([${BLT_LIB_SPEC}])
+    TEA_ADD_LIBS([${BLT_LIB_SPEC} ${CFITSIO_LIB_SPEC}])
 else
-    TEA_ADD_LIBS([$astrotcl_BUILD_LIB_SPEC $tclutil_BUILD_LIB_SPEC ${BLT_LIB_SPEC}])
+    TEA_ADD_LIBS([$astrotcl_BUILD_LIB_SPEC $tclutil_BUILD_LIB_SPEC ${BLT_LIB_SPEC} ${CFITSIO_LIB_SPEC}])
 fi
 TEA_ADD_CFLAGS([])
 TEA_ADD_STUB_SOURCES([])
