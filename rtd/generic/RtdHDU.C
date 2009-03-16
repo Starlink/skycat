@@ -15,6 +15,9 @@
 *                        coordinates are convered from radians to degrees.
 *                        also delete the fits copy in hduCmdSet when
 *                        a table is accessed, stops a leak.
+* P.W. Draper  16/03/09  Transfer comments from FITS extension to the
+*                        local table in getHDU (these can be useful for 
+*                        provenance and may contain additional meta-data).
 */
 
 /************************************************************************
@@ -44,7 +47,7 @@
 *------------------------------------------------------------------------
 */
 
-static char *rcsId="@(#) $Id: RtdHDU.C,v 1.2 2006/03/26 13:22:33 abrighto Exp $";
+static const char *rcsId="@(#) $Id: RtdHDU.C,v 1.2 2006/03/26 13:22:33 abrighto Exp $";
 
 static void *use_rcsId = ((void)&use_rcsId,(void *) &rcsId);
 
@@ -358,6 +361,12 @@ int RtdImage::getHDU(FitsIO* fits, const char* filename, const char* entry)
 
 	Tcl_Free((char *)keys);
 	os << "# End config entry\n\n";
+    }
+
+    // PWD: add any comment cards so that context is preserved.
+    const char *c;
+    while ( ( c = fits->getComment( "COMMENT*" ) ) != NULL ) {
+        os << "#C" << c << endl;
     }
 
     // output the column headings, if id_col is undefined then create a fake

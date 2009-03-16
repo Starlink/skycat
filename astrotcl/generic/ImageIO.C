@@ -15,7 +15,7 @@
  *                           ImageIORep.
  * Peter W. Draper 24/06/99  Changed to use FITS_LONG as type in byte
  *                           swapping. "long" is 8 bytes on alphas and 64 SUNs.
- */
+x */
 static const char* const rcsId="@(#) $Id: ImageIO.C,v 1.2 2006/01/18 17:56:53 abrighto Exp $";
 
 /* see Apple Developer Connection Tech Notes

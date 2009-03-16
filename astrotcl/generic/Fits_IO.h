@@ -34,7 +34,7 @@
  *                           "fitsio.h" on case-ignoring file systems, such as 
  *                           Mac OSX.
  * Peter W. Draper 23/01/09  Added dummyReallocFile and length_.
-
+ *                 16/03/09  Added getComment function.
  */
 
 #include <cstdio>
@@ -166,6 +166,9 @@ public:
 
     // find and return the value for the given FITS keyword, or NULL if not found
     char* get(const char* keyword) const;
+
+    // find and return the comment for the given FITS keyword, or NULL if not found
+    char* getComment(const char* keyword) const;
 
     // same as get(const char*), but you supply the buffer to hold the result
     char* get(const char* keyword, char* buf, int bufsz) const;

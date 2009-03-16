@@ -51,6 +51,8 @@
  *                           sufficiently large. Previously it always returned
  *                           a pointer to the memory, which caused problems
  *                           when the file was truncated.
+ *                 16/03/09  Add getComment function to get the comment
+ *                           part of a card.
  */
 static const char* const rcsId="@(#) $Id: FitsIO.C,v 1.1.1.1 2006/01/12 16:43:57 abrighto Exp $";
 
@@ -1160,6 +1162,25 @@ char* FitsIO::get(const char* keyword) const {
     }
     int status = 0;
     if (fits_read_key(fitsio_, TSTRING, (char*)keyword, buf_, NULL, &status) != 0) {
+	cfitsio_error();
+	return NULL;
+    }
+    return buf_;
+}
+
+/*
+ * find and return the comment for the given FITS keyword, or NULL if not found
+ * The returned value, if any, points to static data and should be saved by the
+ * caller.
+ */
+char* FitsIO::getComment(const char* keyword) const {
+    if (! fitsio_) {
+	error(noHdrErrMsg);
+	return NULL;
+    }
+    int status = 0;
+    char value[81];
+    if (fits_read_key(fitsio_, TSTRING, (char*)keyword, value, buf_, &status) != 0) {
 	cfitsio_error();
 	return NULL;
     }
