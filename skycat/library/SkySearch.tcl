@@ -12,7 +12,9 @@
 #                        is no longer true
 #            03 Mar 08   change add_history to deal with images without
 #                        a WCS (fix from GAIA).
-
+#            16 Mar 09   Add a imgplot method for subclassing the plot 
+#                        method (so that the call to the real imgplot
+#                        may be tweaked).
 
 itk::usual SkySearch {}
 
@@ -438,13 +440,20 @@ itcl::class skycat::SkySearch {
 
 	set equinox [$w_.searchopts get_equinox]
 	
+        imgplot_ $equinox
+     }
+     
+     #  Call the imgplot method with the local settings and the given
+     #  equinox. The equinox is that of the catalogue positions (and
+     #  should be matched to those of the image, iff different).
+     protected method imgplot_ {equinox} {
+
 	# the plot method was reimplemented in C++ for better performance
 	# See SkySearch.C for the implementation of the astrocat plot subcommand.
 	if {[catch {$w_.cat imgplot $image_ $info_ $equinox $headings_} msg]} {
 	    error_dialog $msg
 	}
     }
-
     
     # Called when a row in the table is selected. Redefined from parent
     # clas to also select the plot symbol.
