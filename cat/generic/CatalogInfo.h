@@ -17,6 +17,8 @@
  * Peter W. Draper 01 Jul 08  Added system, epoch, unit, ucd, utype
  *                            and datatype support, plus equinox as string. 
  *                            Needed for VO interop.
+ *                 20 Mar 09  Added hooks for preserving comments extracted
+ *                            from a local catalogue.
  */
 
 
@@ -140,6 +142,7 @@ private:
 	UCD_,		        // UCDs for all columns "ucd1 \t ucd2 \t \t ucd4 \t..."
 	UTYPE_,		        // utypes for all columns "utype1 \t utype2 \t \t utype4 \t..."
         DATATYPE_,              // datatypes of columns, if interpreted
+        COMMENTS_,              // comments associated with entry, if any
 
 	NUM_KEY_STRINGS_	// dummy last entry, number of keywords
     };
@@ -204,6 +207,7 @@ public:
     void ucd(const char* s)       {setVal_(UCD_, s);}
     void utype(const char* s)     {setVal_(UTYPE_, s);}
     void datatype(const char* s)  {setVal_(DATATYPE_, s);}
+    void comments(const char* s)  {setVal_(COMMENTS_, s);}
 
     // set int keyword values
     void id_col(int i)  {id_col_  = i;}
@@ -240,6 +244,8 @@ public:
     const char* ucd() const       {return val_[UCD_];}
     const char* utype() const     {return val_[UTYPE_];}
     const char* datatype() const  {return val_[DATATYPE_];}
+
+    const char* comments() const  {return val_[COMMENTS_];}
 
     // get int keyword values
     int id_col() const;

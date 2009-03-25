@@ -135,6 +135,9 @@
  *                            This is needed for catalogues that are saved
  *                            and do not have this information set (otherwise
  *                            when read back the default columns are assumed).
+ *                 20 Mar 09  Add support for comments. Note these are not
+ *                            output as they are verbose and associated 
+ *                            with local catalogues (so are volatile).
  */
 static const char* const rcsId="@(#) $Id: CatalogInfo.C,v 1.1.1.1 2006/01/12 16:36:24 abrighto Exp $";
 
@@ -476,6 +479,9 @@ int CatalogInfo::set_entry_value(CatalogInfoEntry* entry,
     else if (strcmp(keyword, "datatype") == 0) {
 	entry->datatype(value);
     } 
+    else if ( strcmp(keyword, "comments") == 0) {
+        entry->comments(value);
+    }
     return 0;
 }
 

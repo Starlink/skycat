@@ -17,6 +17,7 @@
  * --------------  --------   ----------------------------------------
  * Allan Brighton   9 Jan 96  Created
  * Peter W. Draper 28 Aug 08  Increase MAX_COLUMNS to 512 from 256.
+ *                 17 Mar 09  Add changes to access header comments.
  */
 
 
@@ -40,6 +41,9 @@ protected:
     char* buf_;			// saved copy of input buffer (memory for table)
     char** table_;		// array of row/col values
     int* index_;		// array of row indexes for sorting
+
+    char** comments_;           // array of comments extracted from header
+    int numComments_;           // number of comments
 
     char sep_;			// separator char (default: \t)
     int status_;		// status after constructor (0 if OK)
@@ -219,12 +223,17 @@ public:
 	t.save(os); return os;
     }
 
+    // get a comment
+    int getComment(int n, char*& value) const;
+
     // member access
     virtual int numRows() const {return numRows_;}
     virtual void numRows(int n) {if (n < numRows_ && n >= 0) numRows_ = n;}
     virtual int numCols() const {return numCols_;}
     virtual char** colNames() const {return colNames_;}
     virtual int status() const {return status_;}
+
+    virtual int numComments() const {return numComments_;}
 };
 
 

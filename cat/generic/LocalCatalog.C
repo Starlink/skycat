@@ -143,6 +143,37 @@ int LocalCatalog::getInfo()
     if (info_.init(data, 0, 1) != 0)
 	return 1;
 
+    // copy the comments from table to entry
+    int n = info_.numComments();
+    if ( n > 0 ) {
+        char* c = NULL;
+        int have = 1024;
+        int l = 0;
+        int used = 0;
+
+        char* com = (char*)malloc(have);
+        com[0] = '\0';
+        char* p = com;
+
+        for ( int i = 0; i < n; i++ ) {
+            info_.getComment( i, c );
+            l = strlen( c );
+            if (( used + l ) >= have) { 
+                have += 1024;
+                com = (char*)realloc(com, have);
+                p = com + used;
+            }
+            strcpy( p, c );
+            used += l+1;
+            p += l;
+            if (i < (n-1)) {
+                *p++ = '\n'; //  new line not NULL.
+            }
+        }
+        entry_->comments(com);
+        free(com);
+    }
+
     // this will extract any catalog config info from the file's header
     info_.entry(entry_, data);
     return 0;

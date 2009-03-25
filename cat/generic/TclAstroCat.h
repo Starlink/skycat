@@ -14,6 +14,8 @@
  * who             when       what
  * --------------  --------   ----------------------------------------
  * Allan Brighton  26 Sep 95  Created
+ * Peter W. Draper 18 Mar 09  Added commentsCmd and various commands for 
+ *                            VO support.
  */
 
 
@@ -122,6 +124,8 @@ public:
     virtual int ucdCmd(int argc, char* argv[]);
     virtual int utypeCmd(int argc, char* argv[]);
     virtual int datatypeCmd(int argc, char* argv[]);
+
+    virtual int commentsCmd(int argc, char* argv[]);
 };
 
 #endif /* _TclAstroCat_h_ */

@@ -13,6 +13,7 @@
  * Peter W. Draper 17/09/08   Added VO support meta-data access.
  *                 28/11/08   Change removeQueryResult to use the id_col
  *                            value rather than 0.
+ *                 18/03/09   Added comments command.
  */
 static const char* const rcsId="@(#) $Id: TclAstroCat.C,v 1.3 2006/03/26 13:22:33 abrighto Exp $";
 
@@ -86,6 +87,7 @@ public:
     {"check",       &TclAstroCat::checkCmd,        1,  1},
     {"checkrow",    &TclAstroCat::checkrowCmd,     1,  1},
     {"close",       &TclAstroCat::closeCmd,        0,  0},
+    {"comments",    &TclAstroCat::commentsCmd,     0,  1},
     {"copyright",   &TclAstroCat::copyrightCmd,    0,  0},
     {"datatype",    &TclAstroCat::datatypeCmd,     0,  0},
     {"dec_col",     &TclAstroCat::dec_colCmd,      0,  0},
@@ -2124,4 +2126,25 @@ int TclAstroCat::getQueryResult(int numCols, char** colNames, const char* list,
 	Tcl_Free((char *)rows);		// free split list of rows
 
     return status;
+}
+
+/*
+ * comments subcommand:
+ *
+ * usage: $cat comments ?comments?
+ *
+ * return or set the comments associated with the current catalog.
+ */
+int TclAstroCat::commentsCmd(int argc, char* argv[])
+{
+    if (argc == 0) {
+	if (cat_)
+	    return set_result(cat_->comments());
+	return TCL_OK;
+    }
+    if (cat_) {
+        cat_->comments(argv[1]);
+        return TCL_OK;
+    }
+    return error( "cannot set comments, no current catalog" );
 }
