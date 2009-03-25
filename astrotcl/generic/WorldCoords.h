@@ -14,6 +14,7 @@
  * who             when       what
  * --------------  --------   ----------------------------------------
  * Allan Brighton  27 Sep 95  Created
+ * Peter W. Draper 24 Mar 09  Made checkRange virtual for subclasses
  */
 
 #include <cstdio>
@@ -40,7 +41,7 @@ protected:
     int convertEquinox(const char* from_equinox, const char* to_equinox = "J2000", double epoch = 0., int dflag = 1);
 
     // check range of ra,dec values
-    int checkRange();
+    virtual int checkRange();
     
 public:
 
