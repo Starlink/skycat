@@ -15,6 +15,8 @@
  * --------------  --------   ----------------------------------------
  * Allan Brighton  26 Sep 95  Created
  * Peter W. Draper 21 Jan 99  Moved constructor into public interface.
+ *                 20 Mar 09  Added various accessors for meta-data
+ *                            (VO and comments)
  */
 
 
@@ -136,6 +138,10 @@ public:
     const char* ucd() {return entry_->ucd();}
     const char* utype() {return entry_->utype();}
     const char* datatype() {return entry_->datatype();}
+
+    // return or set comments associated with catalog
+    const char* comments() {return entry_->comments();}
+    void comments(const char* comments) {entry_->comments(comments);}
 
     // return true if the catalog uses world coordinates
     int isWcs() {return entry_->isWcs();}
