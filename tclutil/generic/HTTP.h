@@ -15,6 +15,7 @@
  * Allan Brighton  26 Sep 95  Created
  * Peter W. Draper 16 Jun 98  Added support for proxy servers
  * pbiereic        17/02/03  Added 'using namespace std'.
+ * Peter W. Draper 06 Apr 09  Increase size of host buffers to 64 from 32.
  */
 
 using namespace std;
@@ -36,8 +37,8 @@ class HTTP {
 private:
     int status_;		// status after constructor
     sockaddr_in	servAddr_;	// server address 
-    char hostname_[32];		// http server hostname
-    char proxyname_[32];	// http proxy server hostname
+    char hostname_[64];		// http server hostname
+    char proxyname_[64];	// http proxy server hostname
     int port_;			// port number for http server
     int proxyport_;		// port number for http proxy server
     int fd_;			// file desc from last call to get(url)

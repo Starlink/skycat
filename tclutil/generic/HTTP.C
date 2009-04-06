@@ -17,6 +17,7 @@
  *                            after gcc3 looses a non-standard
  *                            ofstream constructor. 
  * pbiereic        17/02/03   Added 'using namespace std'. Removed ::std specs.
+ * Peter W. Draper 06 Apr 09  Increase size of host buffers to 64 from 32.
  */
 static const char* const rcsId="@(#) $Id: HTTP.C,v 1.1.1.1 2006/01/12 16:40:58 abrighto Exp $";
 
@@ -639,7 +640,7 @@ int HTTP::get(const char* url)
     }
 
     // look for URL: "http://host:port/args" or "http://host/args"
-    char host[32];		// http host name
+    char host[64];		// http host name
     int port = 80;		// http server port on host
     char args[1024];		// part of URL after host:port
     char req[2048];		// request sent to http
@@ -652,8 +653,8 @@ int HTTP::get(const char* url)
  	fflush(feedback_);
     }
 
-    if (sscanf(new_url, "http://%31[^:/]:%d%1000s", host, &port, args) != 3 && 
-	sscanf(new_url, "http://%31[^/]%1000s", host, args) != 2) {
+    if (sscanf(new_url, "http://%63[^:/]:%d%1000s", host, &port, args) != 3 && 
+	sscanf(new_url, "http://%63[^/]%1000s", host, args) != 2) {
 	return error("bad URL format: ", new_url);
     }
 
@@ -676,7 +677,7 @@ int HTTP::get(const char* url)
 
         // The apparent hostname and port are now wrong. Change these
         // to values that make sense in the feedback messages.
-        strncpy( hostname_, host, 32 );
+        strncpy( hostname_, host, 64 );
         port_ = port;
     }
 
@@ -877,13 +878,13 @@ int HTTP::post(const char* url, const char* data)
     }
 
     // look for URL: "http://host:port/args" or "http://host/args"
-    char host[32];		// http host name
+    char host[64];		// http host name
     int port = 80;		// http server port on host
     char args[1024];		// part of URL after host:port
     char req[1024];		// request sent to http
 
-    if (sscanf(url, "http://%31[^:/]:%d%1000s", host, &port, args) != 3 && 
-	sscanf(url, "http://%31[^/]%1000s", host, args) != 2) {
+    if (sscanf(url, "http://%63[^:/]:%d%1000s", host, &port, args) != 3 && 
+	sscanf(url, "http://%63[^/]%1000s", host, args) != 2) {
 	return error("bad URL format: ", url);
     }
 
@@ -906,7 +907,7 @@ int HTTP::post(const char* url, const char* data)
 
         // The apparent hostname and port are now wrong. Change these
         // to values that make sense in the feedback messages.
-        strncpy(hostname_, host, 32);
+        strncpy(hostname_, host, 64);
         port_ = port;
     }
 
@@ -1111,8 +1112,8 @@ void HTTP::checkProxy( const char *host )
         //  Parse the string into a hostname and port number. This
         //  should be in the form :
         //  "http://host:port/" or "http://host/"
-        if ( sscanf( proxy, "http://%31[^:/]:%d", proxyname_, &proxyport_ ) == 2 ||
-             sscanf( proxy, "http://%31[^/]", proxyname_ ) == 1 ) {
+        if ( sscanf( proxy, "http://%63[^:/]:%d", proxyname_, &proxyport_ ) == 2 ||
+             sscanf( proxy, "http://%63[^/]", proxyname_ ) == 1 ) {
           
             //  Succeeded. Make sure port is valid.
             if ( proxyport_ == -1 ) {
