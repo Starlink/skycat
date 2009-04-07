@@ -165,17 +165,9 @@ AC_DEFUN(ASTROTCL_PATH_CFITSIO, [
 	     AC_MSG_ERROR([could not find $CFITSIO_LIBNAME: Please use the --with-cfitsio=DIR option.])
 	fi
     else 
-       # Check if the CFITSIO library is in the lib subdir of the given dir
-       if test ! -f $CFITSIO_LIB_DIR/$CFITSIO_LIBNAME
-       then
-          if test ! -f $CFITSIO_LIB_DIR/lib/$CFITSIO_LIBNAME
-          then
-	     echo
-	     AC_MSG_ERROR([could not find $CFITSIO_LIBNAME in $CFITSIO_LIB_DIR or in $CFITSIO_LIB_DIR/lib: Please use the --with-cfitsio=DIR option.])
-          else
-	    CFITSIO_LIB_DIR=$CFITSIO_LIB_DIR/lib
-          fi
-       fi
+        #  Just assume the given value will work. This may not be true if
+        #  CFITSIO itself isn't built yet, so allow the flexibility.
+        CFITSIO_LIB_DIR=$CFITSIO_LIB_DIR/lib
     fi
     CFITSIO_LIB_SPEC="-L$CFITSIO_LIB_DIR $CFITSIO_LIBFLAG"
     AC_MSG_RESULT($CFITSIO_LIB_DIR)
