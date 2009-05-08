@@ -17,6 +17,7 @@
  * Peter W. Draper 21 Jan 99  Moved constructor into public interface.
  *                 20 Mar 09  Added various accessors for meta-data
  *                            (VO and comments)
+ *                 08 May 09  Added stc_col member
  */
 
 
@@ -129,6 +130,7 @@ public:
     int x_col() {return entry_->x_col();}
     int y_col() {return entry_->y_col();}
     int is_tcs() {return entry_->is_tcs();}
+    int stc_col() {return entry_->stc_col();}
 
     //  PWD: more "standard" fields.
     const char* system() {return entry_->system();}

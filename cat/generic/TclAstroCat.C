@@ -126,6 +126,7 @@ public:
     {"showcols",    &TclAstroCat::showcolsCmd,     0,  1},
     {"sortcols",    &TclAstroCat::sortcolsCmd,     0,  1},
     {"sortorder",   &TclAstroCat::sortorderCmd,    0,  1},
+    {"stc_col",     &TclAstroCat::stc_colCmd,      0,  0},
     {"symbol",      &TclAstroCat::symbolCmd,       0,  1},
     {"system",      &TclAstroCat::systemCmd,       0,  0},
     {"ucd",         &TclAstroCat::ucdCmd,          0,  0},
@@ -1217,6 +1218,12 @@ int TclAstroCat::entryCmd(int argc, char* argv[])
 	    sprintf(buf, "%d", e->is_tcs());
 	    appendKeyVal("is_tcs", buf);
 	}
+
+	if (e->stc_col() != -1) {
+	    sprintf(buf, "%d", e->stc_col());
+	    appendKeyVal("stc_col", buf);
+	}
+
     }
     else if (strcmp(argv[0], "remove") == 0) {
 	e = CatalogInfo::lookup(argv[1]);
@@ -1379,7 +1386,7 @@ int TclAstroCat::headingsCmd(int argc, char* argv[])
 
 
 /*
- * column subcommands: id_col, ra_col, dec_col, x_col, y_col
+ * column subcommands: id_col, ra_col, dec_col, x_col, y_col & stc_col
  * Just return the column index from the catalog config entry.
  */
 int TclAstroCat::id_colCmd(int argc, char* argv[])
@@ -1412,6 +1419,13 @@ int TclAstroCat::y_colCmd(int argc, char* argv[])
 	return set_result(cat_->y_col());
     return TCL_OK;
 }
+int TclAstroCat::stc_colCmd(int argc, char* argv[])
+{
+    if (cat_)
+	return set_result(cat_->stc_col());
+    return TCL_OK;
+}
+
 
 /*
  * VO meta-data subcommands:

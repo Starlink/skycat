@@ -77,7 +77,6 @@ public:
     virtual int checkrowCmd(int argc, char* argv[]);
     virtual int closeCmd(int argc, char* argv[]);
     virtual int copyrightCmd(int argc, char* argv[]);
-    virtual int helpCmd(int argc, char* argv[]);
     virtual int dec_colCmd(int argc, char* argv[]);
     virtual int entryCmd(int argc, char* argv[]);
     virtual int feedbackCmd(int argc, char* argv[]);
@@ -87,11 +86,12 @@ public:
     virtual int getpreviewCmd(int argc, char* argv[]);
     virtual int hascolCmd(int argc, char* argv[]);
     virtual int headingsCmd(int argc, char* argv[]);
+    virtual int helpCmd(int argc, char* argv[]);
     virtual int id_colCmd(int argc, char* argv[]);
     virtual int infoCmd(int argc, char* argv[]);
     virtual int is_tcsCmd(int argc, char* argv[]);
-    virtual int iswcsCmd(int argc, char* argv[]);
     virtual int ispixCmd(int argc, char* argv[]);
+    virtual int iswcsCmd(int argc, char* argv[]);
     virtual int loadCmd(int argc, char* argv[]);
     virtual int longnameCmd(int argc, char* argv[]);
     virtual int moreCmd(int argc, char* argv[]);
@@ -110,6 +110,7 @@ public:
     virtual int showcolsCmd(int argc, char* argv[]);
     virtual int sortcolsCmd(int argc, char* argv[]);
     virtual int sortorderCmd(int argc, char* argv[]);
+    virtual int stc_colCmd(int argc, char* argv[]);
     virtual int symbolCmd(int argc, char* argv[]);
     virtual int urlCmd(int argc, char* argv[]);
     virtual int x_colCmd(int argc, char* argv[]);

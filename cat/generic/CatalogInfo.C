@@ -43,6 +43,8 @@
  *
  *   is_tcs:      flag: true if using TCS columns
  *
+ *   stc_col:     column with STC region description (VO WCS)
+ *
  *  Service Types
  * ---------------
  *
@@ -428,6 +430,11 @@ int CatalogInfo::set_entry_value(CatalogInfoEntry* entry,
     }
 
     // PWD: extras.
+    else if (strcmp(keyword, "stc_col") == 0) {
+	int stc_col = undef_col_;
+	if (sscanf(value, "%d", &stc_col) == 1 && stc_col != undef_col_) 
+	    entry->stc_col(stc_col);
+    }
     else if (strcmp(keyword, "system") == 0) {
 	entry->system(value);
     } 
@@ -920,6 +927,7 @@ CatalogInfoEntry::CatalogInfoEntry()
       x_col_(undef_col_),
       y_col_(undef_col_),
       is_tcs_(0),
+      stc_col_(undef_col_),
       equinox_(2000.),
       epoch_(2000.),
       link_(NULL),
@@ -940,6 +948,7 @@ CatalogInfoEntry::CatalogInfoEntry(const CatalogInfoEntry& e)
       x_col_(e.x_col_),
       y_col_(e.y_col_),
       is_tcs_(e.is_tcs_),
+      stc_col_(undef_col_),
       equinox_(e.equinox_),
       epoch_(e.epoch_),
       link_(NULL),  // no links or marks copied
@@ -961,6 +970,7 @@ CatalogInfoEntry& CatalogInfoEntry::operator=(const CatalogInfoEntry& e)
     x_col_ = e.x_col_;
     y_col_ = e.y_col_;
     is_tcs_ = e.is_tcs_;
+    stc_col_ = e.stc_col_;
     equinox_ = e.equinox_;
     epoch_ = e.epoch_;
     // don't copy the links or marks
@@ -1073,6 +1083,18 @@ int CatalogInfoEntry::dec_col() const
 
 
 /*
+ * Return the column number for the STC region, defaults to -1 if no
+ * STC column is defined.
+ */
+int CatalogInfoEntry::stc_col() const 
+{
+    if (stc_col_ == undef_col_) 
+	return -1;
+    return stc_col_;
+}
+
+
+/*
  * set the value for a config keyword
  */
 void CatalogInfoEntry::setVal_(KeyStrings keyword, const char* s)
@@ -1181,6 +1203,9 @@ ostream& operator<<(ostream& os, const CatalogInfoEntry& e)
 	os << "is_tcs: " << e.is_tcs() << endl;
 
     //  PWD: extras.
+    if (e.stc_col() != undef_col_ )
+	os << "stc_col: " << e.stc_col() << endl;
+
     if (e.epoch() != 2000.) {
         if ( e.epochprefix() ) 
             os << "epoch: " << e.epochprefix() << e.epoch() << endl;

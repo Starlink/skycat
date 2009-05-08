@@ -19,6 +19,7 @@
  *                            Needed for VO interop.
  *                 20 Mar 09  Added hooks for preserving comments extracted
  *                            from a local catalogue.
+ *                 08 May 09  Added stc_col support.
  */
 
 
@@ -156,6 +157,7 @@ private:
     int x_col_;			// instead of RA, can use pixel coords X,Y
     int y_col_;
     int is_tcs_;		// flag: true if using TCS columns
+    int stc_col_;               // column containing STC region
 
     // double keyword values
     double equinox_;		// equinox of wcs coords (default: J2000)
@@ -216,6 +218,7 @@ public:
     void x_col(int i)   {x_col_   = i;}
     void y_col(int i)   {y_col_   = i;}
     void is_tcs(int i)  {is_tcs_  = i;}
+    void stc_col(int i) {stc_col_ = i;}
 
     // set double keyword values
     void equinox(double d)  {equinox_  = d;}
@@ -254,6 +257,7 @@ public:
     int x_col() const;
     int y_col() const;
     int is_tcs() const {return is_tcs_;}
+    int stc_col() const;
 
     // get double keyword values
     double equinox() const {return equinox_;}
