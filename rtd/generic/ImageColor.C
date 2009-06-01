@@ -279,6 +279,7 @@ int ImageColor::storeColors(XColor* colors)
     ErrorHandler errorHandler(display_); // catch X errors
 
     if (readOnly_) {
+        pixelval_[0] = 0;
 	for (int i = 1; i < colorCount_; i++) {
 	    if (!XAllocColor(display_, colormap_, colors+i))
 		return fmt_error("can't allocate %d read-only colors (only %d)", 
