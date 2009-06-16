@@ -239,7 +239,7 @@ public:
     const char* copyright() const {return val_[COPYRIGHT_];}
     const char* help() const      {return val_[HELP_];}
 
-    const char* system() const    {return val_[SYSTEM_] ? val_[SYSTEM_] : "fk5";}
+    const char* system() const    {return val_[SYSTEM_] ? val_[SYSTEM_] : "";}
     const char* equinoxprefix() const {return val_[EQUINOX_];}
     const char* epochprefix() const {return val_[EPOCH_];}
 
