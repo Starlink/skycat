@@ -1182,6 +1182,8 @@ int TclAstroCat::entryCmd(int argc, char* argv[])
 	appendKeyVal("copyright", (char*)e->copyright());
 	appendKeyVal("help", (char*)e->help());
 
+	appendKeyVal("system", (char*)e->system());
+
 	// don't include these values if they are already defaults
 
 	if (e->equinox() != 2000.) {
