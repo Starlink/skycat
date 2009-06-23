@@ -20,6 +20,7 @@
  * P.Biereichel    30/06/97  Changed parameters in getValues() for pixel table
  * Peter W. Draper 12/07/99  Added getBlank();
  *                 16/04/08  Added growAndShrink()
+ *                 19/06/09  Added parseBlank()
  */
 
 #define SAMP_METHOD_MAX              0  /* max value of all pixels in a NxN box (default) */
@@ -90,3 +91,6 @@ void getHistogram(ImageDataHistogram&);
 // return the blank value.
 int haveBlank() {return haveBlank_;}
 double getBlank() {return (double) blank_;}
+
+// set blank value from a string
+int parseBlank(const char* value);

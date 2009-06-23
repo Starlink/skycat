@@ -26,6 +26,7 @@
  *                 14/07/98  Added checks for blanks in convert and
  *                           scale ToShort.
  * pbiereic        17/02/03  Added 'using namespace std'.
+ * Peter W. Draper 23/06/09  Added parseBlank to get blank value in this type.
  */
 
 using namespace std;
@@ -152,6 +153,17 @@ void LongImageData::initShortConversion()
     scaled_ = (scale_ != 1.0);  // Sense inverted - PWD
 }
 
+/*
+ * Set the blank value from a given string. Return 1 if successful.
+ */
+int LongImageData::parseBlank(const char* value) {
+    long l;
+    int n = sscanf(value, "%ld", &l);
+    if ( n > 0 ) {
+        blank_ = (FITS_LONG) l;
+    }
+    return n;
+}
 
 /*
  * Include some standard methods as (cpp macro) templates:

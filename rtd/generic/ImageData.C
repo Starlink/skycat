@@ -66,6 +66,7 @@
  *                           the limits are zero-based in getMinMax(). In
  *                           getDist treat bin width factor differently for
  *                           integers and others. Wasn't right for either case.
+ *                 23/06/09  Initialise new blankValue_ member.
  */
 static const char* const rcsId="@(#) $Id: ImageData.C,v 1.1.1.1 2006/01/12 16:38:59 abrighto Exp $";
 
@@ -171,6 +172,7 @@ ImageData::ImageData(const char* imageName, const ImageIO& image,
 {
     name(imageName);
     object("");
+    setBlank("");
 }
 
 
@@ -232,6 +234,7 @@ ImageData::ImageData(const ImageData& im)
 {
     name("");  // new name should be set from outside
     object(im.object_);
+    setBlank(im.blankValue_);
 }
 
 

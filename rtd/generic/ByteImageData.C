@@ -13,6 +13,7 @@
  * Allan Brighton  05/10/95  Created
  * Peter W. Draper 15/03/99  Blank bin is always 128
  * pbiereic        17/02/03  Added 'using namespace std'.
+ * Peter W. Draper 23/06/09  Added parseBlank to get blank value in this type.
  */
 static const char* const rcsId="@(#) $Id: ByteImageData.C,v 1.1.1.1 2006/01/12 16:39:03 abrighto Exp $";
 
@@ -45,6 +46,17 @@ void ByteImageData::initShortConversion()
 	scaledBlankPixelValue_ = 128;
 }
 
+/*
+ * Set the blank value from a given string. Return 1 if successful.
+ */
+int ByteImageData::parseBlank(const char* value) {
+    long l;
+    int n = sscanf(value, "%ld", &l);
+    if ( n > 0 ) {
+        blank_ = l;
+    }
+    return n;
+}
 
 /*
  * Include some standard methods as (cpp macro) templates:

@@ -13,6 +13,7 @@
  * Peter W. Draper 30/05/01  Created.
  *                 29/10/07  Add colorScale so that a bin for NaN pixels
  *                           is always available (shared with blank).
+ * Peter W. Draper 23/06/09  Added parseBlank to get blank value in this type.
  */
 
 #include <cstdlib>
@@ -94,6 +95,18 @@ void DoubleImageData::colorScale(int ncolors, unsigned long* colors)
     // Always set value for blank pixel in case we have NaNs, not just
     // when blank is set.
     lookup_.setPixelColor( scaledBlankPixelValue_, color0_ );
+}
+
+/*
+ * Set the blank value from a given string. Return 1 if successful.
+ */
+int DoubleImageData::parseBlank(const char* value) {
+    double d;
+    int n = sscanf(value, "%lf", &d);
+    if ( n > 0 ) {
+        blank_ = (double) d;
+    }
+    return n;
 }
 
 /*

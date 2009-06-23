@@ -12,6 +12,7 @@
  * --------------  --------  ----------------------------------------
  * Allan Brighton  05/10/95  Created
  * pbiereic        17/02/03  Added 'using namespace std'.
+ * Peter W. Draper 23/06/09  Added parseBlank to get blank value in this type.
  */
 static const char* const rcsId="@(#) $Id: XImageData.C,v 1.1.1.1 2006/01/12 16:39:06 abrighto Exp $";
 
@@ -29,6 +30,17 @@ using namespace std;
 #endif
 #include "define.h"
 
+/*
+ * Set the blank value from a given string. Return 1 if successful.
+ */
+int XImageData::parseBlank(const char* value) {
+    long l;
+    int n = sscanf(value, "%ld", &l);
+    if ( n > 0 ) {
+        blank_ = (byte) l;
+    }
+    return n;
+}
 
 /*
  * Include some standard methods as (cpp macro) templates:

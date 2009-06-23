@@ -12,6 +12,7 @@
  * --------------  --------  ----------------------------------------
  * Allan Brighton  05/10/95  Created
  * T. Herlin       08/12/95  Added color scale functions to avoid sign problem
+ * Peter W. Draper 23/06/09  Added parseBlank to get blank value in this type.
  */
 
 
@@ -38,6 +39,18 @@ void ShortImageData::initShortConversion()
     scaledHighCut_ = (short)highCut_;
     if (haveBlank_)
 	scaledBlankPixelValue_ = LOOKUP_BLANK; // PWD: use last bin
+}
+
+/*
+ * Set the blank value from a given string. Return 1 if successful.
+ */
+int ShortImageData::parseBlank(const char* value) {
+    long l;
+    int n = sscanf(value, "%ld", &l);
+    if ( n > 0 ) {
+        blank_ = (short) l;
+    }
+    return n;
 }
 
 

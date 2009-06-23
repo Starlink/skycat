@@ -35,6 +35,8 @@
  * pbiereic        10/02/03  Native byte order routines revised
  * P.W. Draper     16/01/07  Make sure object_ is null terminated.
  *                 24/04/08  Added growAndShrink().
+ *                 19/06/09  Add setBlank member to handle case when BLANK
+ *                           isn't set, but should be.
  */
 
 #include <sys/types.h>
@@ -163,6 +165,7 @@ protected:
     int scaledBlankPixelValue_;
     
     int haveBlank_;		   // flag: true if the BLANK keyword was found
+    char blankValue_[32];          // character string with BLANK value
    
     // color cut values
     double highCut_;
@@ -237,10 +240,6 @@ protected:
     // used by color scaling algorithms as index in lookup table 
     // (defined in a derived class, not needed for byte images)
     virtual void initShortConversion() = 0;
-
-    // If there is a special value for blank pixels, get it and set the
-    // values of haveBlankPixel_ and scaledBlankPixelValue_.
-    virtual void initBlankPixel() = 0;
 
     // scan the image for the min and max values
     virtual void getMinMax() = 0;
@@ -541,6 +540,15 @@ public:
     // return the blank value as a double
     virtual double getBlank() = 0;
     virtual int haveBlank() = 0;
+
+    // If there is a special value for blank pixels, get it and set the
+    // values of haveBlankPixel_ and scaledBlankPixelValue_.
+    virtual void initBlankPixel() = 0;
+
+    // set the blank value string
+    void setBlank(const char* value) {
+        strncpy(blankValue_, value, sizeof(blankValue_)-1);
+    }
 };
 
 

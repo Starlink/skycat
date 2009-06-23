@@ -38,6 +38,8 @@
  *                 16/04/08  Added growAndShrink() to allow scales
  *                           to have positive and negative values
  *                           at the same time.
+ *                 19/06/09  Change initBlankValue to use the cached
+ *                           blankValue_ and make public (allows change).
  *
  * This file is included in the .C files for classes derived from class
  * ImageData. The file defines a number of member functions that are
@@ -1435,9 +1437,15 @@ void CLASS_NAME::getHistogram(ImageDataHistogram& hist)
  */
 void CLASS_NAME::initBlankPixel()
 {
-    haveBlank_ = (image_.get("BLANK", blank_) == 0);
-    if (!haveBlank_)
-	haveBlank_ = (image_.get("BADPIXEL", blank_) == 0);
+    //  If an override for the BLANK value exists, use it.
+    if ( blankValue_[0] != '\0' ) {
+        haveBlank_ = parseBlank( blankValue_ );
+    }
+    if (!haveBlank_) {
+        haveBlank_ = (image_.get("BLANK", blank_) == 0);
+        if (!haveBlank_)
+            haveBlank_ = (image_.get("BADPIXEL", blank_) == 0);
+    }
 }
 
 #undef ISNAN

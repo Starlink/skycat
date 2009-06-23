@@ -14,6 +14,7 @@
  * Peter W. Draper 15/03/99  Modified to use LOOKUP_BLANK for blank pixels.
  *                 29/10/07  Add colorScale so that a bin for NaN pixels
  *                           is always available (shared with blank).
+ * Peter W. Draper 23/06/09  Added parseBlank to get blank value in this type.
  */
 
 #include <cstdlib>
@@ -100,6 +101,19 @@ void FloatImageData::colorScale(int ncolors, unsigned long* colors)
     // when blank is set.
     lookup_.setPixelColor( scaledBlankPixelValue_, color0_ );
 }
+
+/*
+ * Set the blank value from a given string. Return 1 if successful.
+ */
+int FloatImageData::parseBlank(const char* value) {
+    double d;
+    int n = sscanf(value, "%lf", &d);
+    if ( n > 0 ) {
+        blank_ = (float) d;
+    }
+    return n;
+}
+
 
 /*
  * Include some standard methods as (cpp macro) templates:
