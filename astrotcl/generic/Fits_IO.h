@@ -33,8 +33,9 @@
  * abrighto        02/01/05  Renamed .h file to avoid conflict with cfitsio's 
  *                           "fitsio.h" on case-ignoring file systems, such as 
  *                           Mac OSX.
- * Peter W. Draper 23/01/09  Added dummyReallocFile and length_.
  *                 16/03/09  Added getComment function.
+ * Peter W. Draper 29/30/09  Added length_ to support check of opened file
+ *                           length.
  */
 
 #include <cstdio>
@@ -61,7 +62,6 @@ private:
     int extendHeader();
 
     static void* reallocFile(void* p, size_t newsize);
-    static void* dummyReallocFile(void* p, size_t newsize);
 
 protected:   
     //  PWD: Move here so that derived classes can manipulate (needed to get

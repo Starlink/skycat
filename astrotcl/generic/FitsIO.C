@@ -46,13 +46,12 @@
  *                           on memory FITS.
  *                 27/08/08  Use DBL_DIG and FLT_DIG to encode double and
  *                           float values so that we do not lose any precision.
- *                 23/01/09  Add dummyReallocFile for use when opening a file.
- *                           This will always fail unless the file is already
- *                           sufficiently large. Previously it always returned
- *                           a pointer to the memory, which caused problems
- *                           when the file was truncated.
  *                 16/03/09  Add getComment function to get the comment
  *                           part of a card.
+ *                 30/06/09  Check that the length of a opening file is not
+ *                           less than expected. If true return a NULL in
+ *                           reallocFile rather than the given pointer. This
+ *                           protects against opening truncated files.
  */
 static const char* const rcsId="@(#) $Id: FitsIO.C,v 1.1.1.1 2006/01/12 16:43:57 abrighto Exp $";
 
@@ -374,6 +373,9 @@ int FitsIO::cfitsio_error()
 void* FitsIO::reallocFile(void* p, size_t newsize)
 {
     if (!fits_) {
+        if ( length_ != 0 && newsize > length_ ) {
+            return NULL;
+        }
         return p;
     }
     if (fits_->checkWritable() != 0)
@@ -421,26 +423,13 @@ fitsfile* FitsIO::openFitsMem(Mem& header)
     MemRep* mrep = (MemRep*)header.rep();
     FitsIO::length_ = mrep->size;
     if (fits_open_memfile(&fitsio, filename, rw_flag, &mrep->ptr, &mrep->size,
-			  FITSBLOCK, FitsIO::dummyReallocFile, &status) != 0) {
+			  FITSBLOCK, FitsIO::reallocFile, &status) != 0) {
         FitsIO::length_ = 0;
 	cfitsio_error();
 	return NULL;
     }
+    FitsIO::length_ = 0;
     return fitsio;
-}
-
-/*
- * This static method is called by the cfitsio routines when the size of the
- * file has to be increased, which will be an error when opening the file for
- * first time, unless no actual increase has been requested (need to set
- * static member length_ to length of file before call).
- */
-void* FitsIO::dummyReallocFile(void* p, size_t newsize)
-{
-    if ( newsize > length_ ) {
-        return NULL;
-    }
-    return p;
 }
 
 /*
