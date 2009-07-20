@@ -289,8 +289,8 @@ itcl::class rtd::RtdImagePixTable {
     itk_option define -ncols ncols Ncols 3
 
     # fonts used
-    itk_option define -labelfont labelFont LabelFont -Adobe-helvetica-bold-r-normal-*-12*
-    itk_option define -valuefont valueFont ValueFont -Adobe-helvetica-medium-r-normal-*-12*
+    itk_option define -labelfont labelFont LabelFont TkDefaultFont
+    itk_option define -valuefont valueFont ValueFont TkDefaultFont
 
     # set the width for displaying labels and values
     itk_option define -labelwidth labelWidth LabelWidth 4

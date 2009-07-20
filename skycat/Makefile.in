@@ -476,7 +476,7 @@ TCLTK_FILES = \
 	lib/tk@TK_VERSION@/ \
 	lib/@TK_LIB_FILE@ \
 	lib/blt2.4/ \
-	lib/libBLT24@SHLIB_SUFFIX@ \
+	lib/libBLTX30@SHLIB_SUFFIX@ \
 	lib/itcl3.3/ \
 	lib/itk3.3/ \
 	lib/tclx8.4/ \

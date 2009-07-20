@@ -14,6 +14,8 @@
  *                 28/11/08   Change removeQueryResult to use the id_col
  *                            value rather than 0.
  *                 18/03/09   Added comments command.
+ *                 20/07/09   Use object interface for building the query
+ *                            table list. Old interface very slow in tcl8.5.
  */
 static const char* const rcsId="@(#) $Id: TclAstroCat.C,v 1.3 2006/03/26 13:22:33 abrighto Exp $";
 
@@ -726,11 +728,11 @@ int TclAstroCat::queryCmd(int argc, char* argv[])
 
     if (nrows >= 0) {
 	Tcl_ResetResult(interp_);
-
+        Tcl_Obj *result = Tcl_GetObjResult(interp_);
 	for (i = 0; i < nrows; i++) {
 
 	    // start a row
-	    Tcl_AppendResult(interp_, " {", NULL);
+            Tcl_Obj *list = Tcl_NewListObj(0, NULL);
 
 	    if (cat_->isWcs()) { // include formatted world coords
 		WorldCoords pos;
@@ -747,11 +749,14 @@ int TclAstroCat::queryCmd(int argc, char* argv[])
 		    if (result_->get(i, j, s) != 0)
 			s = "";
 		    if (j == ra_col)
-			Tcl_AppendElement(interp_, ra_buf) ;
+                        Tcl_ListObjAppendElement(interp_, list,
+                                                 Tcl_NewStringObj(ra_buf,-1));
 		    else if (j == dec_col)
-			Tcl_AppendElement(interp_, dec_buf) ;
+                        Tcl_ListObjAppendElement(interp_, list,
+                                                 Tcl_NewStringObj(dec_buf,-1));
 		    else
-			Tcl_AppendElement(interp_, s) ;
+                        Tcl_ListObjAppendElement(interp_, list,
+                                                 Tcl_NewStringObj(s, -1));
 		}
 	    }
 	    else {  // image coords - no special formatting needed
@@ -759,12 +764,13 @@ int TclAstroCat::queryCmd(int argc, char* argv[])
 		for (j = 0; j < ncols; j++) {
 		    if (result_->get(i, j, s) != 0)
 			s = "";
-		    Tcl_AppendElement(interp_, s) ;
+                    Tcl_ListObjAppendElement(interp_, list,
+                                             Tcl_NewStringObj(s, -1));
 		}
 	    }
 
 	    // end a row
-	    Tcl_AppendResult(interp_, "}", NULL);
+            Tcl_ListObjAppendElement(interp_, result, list);
 	}
 
 	return TCL_OK;

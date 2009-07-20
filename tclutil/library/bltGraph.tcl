@@ -119,7 +119,7 @@ proc blt::FindElement { graph x y } {
     $graph marker create text -coords { $info(x) $info(y) } \
 	-name $markerName \
 	-text "$info(name): $info(dist)\nindex $info(index)" \
-	-font *lucida*-r-*-10-* \
+	-font TkDefaultFont \
 	-anchor center -justify left \
 	-yoffset 0 -bg {} 
 
@@ -197,7 +197,7 @@ proc blt::MarkPoint { graph index } {
      	$graph marker configure $marker -coords { $x $y } -text $text 
     } else {
     	$graph marker create text -coords { $x $y } -name $marker \
-   	    -font *lucida*-r-*-10-* \
+   	    -font TkDefaultFont \
 	    -text $text -anchor center -bg {} -justify left
     }
 }
@@ -280,7 +280,7 @@ proc blt::ResetZoom { graph } {
     }
 }
 
-option add *zoomTitle.font	  -*-helvetica-bold-o-*-*-18-*-*-*-*-*-*-* 
+option add *zoomTitle.font	  TkDefaultFont
 option add *zoomTitle.shadow	  black
 option add *zoomTitle.foreground  yellow
 option add *zoomTitle.coords	  "-Inf Inf"
@@ -373,7 +373,7 @@ proc Blt_PostScriptDialog { graph } {
     table $top $top.title -cspan 7
     foreach bool { center landscape maxpect preview decorations } {
 	set w $top.$bool-label
-	label $w -text "-$bool" -font *courier*-r-*12* 
+	label $w -text "-$bool" -font TkFixedFont
 	table $top $row,$col $w -anchor e -pady { 2 0 } -padx { 0 4 }
 	set w $top.$bool-yes
 	global $graph.$bool
@@ -384,7 +384,7 @@ proc Blt_PostScriptDialog { graph } {
 	table $top $row,$col+2 $w -anchor w
 	incr row
     }
-    label $top.modes -text "-colormode" -font *courier*-r-*12* 
+    label $top.modes -text "-colormode" -font TkFixedFont
     table $top $row,0 $top.modes -anchor e  -pady { 2 0 } -padx { 0 4 }
     set col 1
     foreach m { color greyscale } {
@@ -399,7 +399,7 @@ proc Blt_PostScriptDialog { graph } {
     set col 4
     foreach value { padx pady paperwidth paperheight width height } {
 	set w $top.$value-label
-	label $w -text "-$value" -font *courier*-r-*12* 
+	label $w -text "-$value" -font TkFixedFont
 	table $top $row,$col $w -anchor e  -pady { 2 0 } -padx { 0 4 }
 	set w $top.$value-entry
 	global $graph.$value
@@ -546,7 +546,7 @@ proc BltFindElement { graph x y } {
     $graph marker create text -coords { $info(x) $info(y) } \
 	-name $markerName \
 	-text "$info(name): $info(dist)\nindex $info(index)" \
-	-font *lucida*-r-*-10-* \
+	-font TkDefaultFont \
 	-anchor center -justify left \
 	-yoffset 0 -bg {}
     BltFlashPoint $graph $info(name) $info(index) 10
@@ -604,7 +604,7 @@ proc BltMarkPoint { graph index } {
      	$graph marker configure $marker -coords { $x $y } -text $text 
     } else {
     	$graph marker create text -coords { $x $y } -name $marker \
-   	    -font *lucida*-r-*-10-* \
+   	    -font TkDefaultFont \
 	    -text $text -anchor center -bg {} -justify left
     }
 }
@@ -871,7 +871,7 @@ proc BltFindElement { graph x y } {
     $graph marker create text -coords { $info(x) $info(y) } \
 	-name $markerName \
 	-text "$info(name): $info(dist)\nindex $info(index)" \
-	-font *lucida*-r-*-10-* \
+	-font TkDefaultFont \
 	-anchor center -justify left \
 	-yoffset 0 -bg {}
     BltFlashPoint $graph $info(name) $info(index) 10
@@ -929,7 +929,7 @@ proc BltMarkPoint { graph index } {
      	$graph marker configure $marker -coords { $x $y } -text $text 
     } else {
     	$graph marker create text -coords { $x $y } -name $marker \
-   	    -font *lucida*-r-*-10-* \
+   	    -font TkDefaultFont \
 	    -text $text -anchor center -bg {} -justify left
     }
 }

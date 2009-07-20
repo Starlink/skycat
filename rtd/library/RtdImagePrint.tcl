@@ -421,8 +421,7 @@ itcl::class rtd::RtdImagePrint {
     itk_option define -bot_right bot_right Bot_right {}
     
     # footer fonts
-    itk_option define -footer_font footer_font Footer_font \
-	{-*-courier-bold-r-*-*-10-100-*-*-*-*-*-*}
+    itk_option define -footer_font footer_font Footer_font TkFixedFont
 
     # upper left X coordinate of area of canvas to print (default bbox all)
     itk_option define -x0 x0 X0 {} {set x0 $itk_option(-x0)}

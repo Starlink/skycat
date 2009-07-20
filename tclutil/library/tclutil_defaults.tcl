@@ -17,16 +17,16 @@ proc util::setXdefaults {} {
     option add *background #B2B2B2 
     option add *DisabledForeground Gray90
 
-    set labelFont -Adobe-Helvetica-Bold-R-Normal--*-120-*-*-*-*-*-*
+    set labelFont TkDefaultFont
     option add *Font $labelFont
 
     option add *Menu.tearOff false
 
-    option add *Chooser.font -*-courier-medium-r-*-*-*-140-*-*-*-*-iso8859-* 
-    option add *Listbox.font -*-courier-medium-r-*-*-*-140-*-*-*-*-iso8859-* 
-    option add *Entry.font -*-courier-medium-r-*-*-*-140-*-*-*-*-iso8859-* 
-    option add *titleFont -*-courier-Bold-r-*-*-*-140-*-*-*-*-iso8859-* 
-    option add *Text.Font "-*-Courier-Medium-R-Normal--*-120-*-*-*-*-*-*"
+    option add *Chooser.font TkFixedFont
+    option add *Listbox.font TkFixedFont
+    option add *Entry.font TkFixedFont
+    option add *titleFont TkDefaultFont
+    option add *Text.Font TkFixedFont
 
     option add *Text.foreground Black 
     option add *Listbox.foreground Black 
@@ -43,7 +43,7 @@ proc util::setXdefaults {} {
     option add *highlightColor Black 
 
     option add *shelp*Background  #B2B2B2
-    option add *shelp*Font -Adobe-helvetica-medium-r-normal--14*
+    option add *shelp*Font TkDefaultFont
 
     option add *plotBackground #C0C0C0 
 
@@ -53,15 +53,15 @@ proc util::setXdefaults {} {
 
     option add *DialogWidget.messageWidth 4i 
     option add *DialogWidget.justify left 
-    option add *DialogWidget.messageFont -Adobe-Times-Medium-R-Normal-*-180-* 
+    option add *DialogWidget.messageFont TkDefaultFont
 
     option add *InputDialog.messageWidth 3i 
     option add *InputDialog.justify left 
-    option add *InputDialog.messageFont -Adobe-Times-Medium-R-Normal-*-180-* 
+    option add *InputDialog.messageFont TkDefaultFont
 
     option add *ChoiceDialog.messageWidth 3i 
     option add *ChoiceDialog.justify left 
-    option add *ChoiceDialog.messageFont -Adobe-Times-Medium-R-Normal-*-180-* 
+    option add *ChoiceDialog.messageFont TkDefaultFont
 
     option add *LabelCheck.anchor w 
     option add *LabelChoice.anchor w 
@@ -83,35 +83,35 @@ proc util::setXdefaults {} {
     option add *LabelValue.relief ridge 
 
     option add *LabelWidget.anchor w 
-    option add *LabelWidget.labelFont -Adobe-Helvetica-Bold-R-Normal--*-120-*-*-*-*-*-* 
+    option add *LabelWidget.labelFont TkDefaultFont
 
     option add *ListboxWidget.relief sunken 
     option add *ListboxWidget.borderwidth 3 
     option add *ListboxWidget.setgrid 1 
-    option add *ListboxWidget.font -adobe-courier-medium-r-*-*-*-140-*-*-*-*-*-*
-    option add *ListboxWidget.titleFont -Adobe-helvetica-bold-r-normal--14* 
+    option add *ListboxWidget.font TkFixedFont
+    option add *ListboxWidget.titleFont TkDefaultFont
 
-    option add *ProgressBar.font -Adobe-helvetica-medium-r-normal--14* 
+    option add *ProgressBar.font TkDefaultFont
     option add *ProgressBar.width 8 
     option add *ProgressBar.length 6c 
     option add *ProgressBar.readonlyBackground {}
 
     option add *TableList.relief sunken 
     option add *TableList.borderwidth 3 
-    option add *TableList.font -*-courier-medium-r-*-*-*-120-*-*-*-*-iso8859-* 
-    option add *TableList.headingFont -*-courier-bold-r-*-*-*-120-*-*-*-*-iso8859-* 
+    option add *TableList.font TkFixedFont
+    option add *TableList.headingFont TkDefaultFont
     option add *TableList.headingLines 1 
-    option add *TableList.titleFont -Adobe-helvetica-bold-r-normal-*-12* 
+    option add *TableList.titleFont TkDefaultFont
 
     option add *TextDialog.textWidth 80 
     option add *TextDialog.textHeight 40 
     option add *TextDialog.messageWidth 3i 
     option add *TextDialog.justify left 
-    option add *TextDialog.messageFont -Adobe-Times-Medium-R-Normal-*-180-* 
+    option add *TextDialog.messageFont TkDefaultFont
     option add *TextDialog.textState disabled 
 
     option add *ListDialog.messageWidth 3i 
-    option add *ListDialog.messageFont -Adobe-Times-Medium-R-Normal-*-180-* 
+    option add *ListDialog.messageFont TkDefaultFont
 
     option add *FileSelect.title "Select File"
 

@@ -104,9 +104,7 @@
  *
  * Allan Brighton  16/12/05  Added local Tk_CanvasWindowCoordsNoClip method (moved from tclutil)
  * Allan Brighton  28/12/05  Replaced init script
- * Peter W. Draper 20/04/07  Add TkCanvasPsImage_Init call to use canvas
- *                           printing that handles zoomed images.
- *                 16/10/08  Record if user set the levels in setCutLevels
+ * Peter W. Draper 16/10/08  Record if user set the levels in setCutLevels
  *                           even if they are not changed. That's makes more
  *                           sense to the user.
  */
@@ -145,9 +143,6 @@ extern "C" int XSyncInitialize(Display *, int *, int *);
 extern "C" int gethostname(char *name, unsigned int namelen);
 #endif /* NEED_GETHOSTNAME_PROTO */
 #endif
-
-// local extension to enable postscript printing for images
-extern "C" void TkCanvasPsImage_Init();
 
 // generated code for bitmaps used in tcl scripts
 void defineRtdBitmaps(Tcl_Interp*);
@@ -334,9 +329,6 @@ extern "C"
 int Rtd_Init(Tcl_Interp* interp)  
 {
     // Initialize the local packages that rtd depends on
-
-    // PWD: enable postscript printing for images (local ext)
-    TkCanvasPsImage_Init();
 
     // initialize the tclutil package 
     if (Tclutil_Init(interp) == TCL_ERROR) {
@@ -951,9 +943,11 @@ void RtdImage::updateRequests()
 
 // Fix for Tk clipping coordinates to short range: See CanvasWindowCoordsNoClip() below.
 #ifdef HAVE_TKCANVAS_H
+#define MODULE_SCOPE extern
 #include "tkCanvas.h"
 #else
 // The structure we need hasn't changed for a long time, so just include a local copy.
+#define MODULE_SCOPE extern "C"
 #include "tkCanvas.h-tk8.4.11"
 #define HAVE_TKCANVAS_H 
 #endif

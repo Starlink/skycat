@@ -8,6 +8,7 @@
 # Allan Brighton  01 Jun 94  Created
 # Peter W. Draper 11 Jul 00  Changed to use "fit" variable, previous
 #                            form wasn't working as fit to page option.
+#                 20 Jul 09  Removed mono mode, no longer supported.
 
 itk::usual GraphPrint {}
 
@@ -34,13 +35,18 @@ itcl::class util::GraphPrint {
         } else {
            set fit no
         }
-
+        if { [set $w_.color] == "color" } {
+           set gs no
+        } else {
+           set gs yes
+        }
+       
 	# try to fit on a page
 	set width [lindex [$itk_option(-graph) config -width] 4]
 	set height [lindex [$itk_option(-graph) config -height] 4]
 
         $itk_option(-graph) postscript configure \
-		-colormode [set $w_.color] \
+		-greyscale $gs \
 		-paperwidth [$w_.pagesize.width get] \
 		-paperheight [$w_.pagesize.height get] \
 		-landscape [set $w_.rotate] \

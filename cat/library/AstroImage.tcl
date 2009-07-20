@@ -769,13 +769,13 @@ itcl::class cat::AstroImage {
     }
 
     # font to use for labels
-    itk_option define -labelfont labelFont LabelFont -Adobe-helvetica-bold-r-normal-*-12*
+    itk_option define -labelfont labelFont LabelFont TkDefaultFont
 
     # font to use for values
-    itk_option define -valuefont valueFont ValueFont -adobe-courier-medium-r-*-*-*-120-*-*-*-*-*-*
+    itk_option define -valuefont valueFont ValueFont TkFixedFont
 
     # font to use for ra,dec labels
-    itk_option define -wcsfont wcsFont WcsFont -*-symbol-*-*-*-*-14-*-*-*-*-*-*-*
+   itk_option define -wcsfont wcsFont WcsFont {Symbol -14}
 
     # set the width for  displaying labels
     itk_option define -labelwidth labelWidth LabelWidth 14

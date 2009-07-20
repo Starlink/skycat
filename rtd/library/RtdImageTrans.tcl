@@ -258,8 +258,8 @@ itcl::class rtd::RtdImageTrans {
     itk_option define -image image Image {}
 
     # font for label and value
-    itk_option define -labelfont labelFont LabelFont -Adobe-helvetica-bold-r-normal-*-12*
-    itk_option define -valuefont valueFont ValueFont -Adobe-helvetica-medium-r-normal-*-12*
+    itk_option define -labelfont labelFont LabelFont TkDefaultFont
+    itk_option define -valuefont valueFont ValueFont TkDefaultFont
 
     # set the width for  displaying the label
     itk_option define -labelwidth labelWidth LabelWidth 5

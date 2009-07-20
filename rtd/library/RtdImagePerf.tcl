@@ -206,10 +206,10 @@ itcl::class rtd::RtdImagePerf {
     }
 
     # font used for labels
-    itk_option define -labelfont labelFont LabelFont -Adobe-helvetica-bold-r-normal-*-12*
+    itk_option define -labelfont labelFont LabelFont TkDefaultFont
 
     # font used for values
-    itk_option define -valuefont valueFont ValueFont -Adobe-helvetica-medium-r-normal-*-12*
+    itk_option define -valuefont valueFont ValueFont TkDefaultFont
 
     # set the width for  displaying labels
     itk_option define -labelwidth labelWidth LabelWidth 21

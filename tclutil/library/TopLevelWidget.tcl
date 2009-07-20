@@ -453,7 +453,7 @@ itcl::class util::TopLevelWidget {
 		-wrap none \
                 -takefocus 0 \
 		-relief groove \
-		-font -Adobe-helvetica-medium-r-normal--14* 
+		-font TkTooltipFont
 	} {
 	    rename -font -helpfont helpFont HelpFont
 	}

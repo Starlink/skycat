@@ -54,5 +54,5 @@ export PATH
 
 test -d $HOME/.skycat || mkdir $HOME/.skycat
 echo "`date`: Starting skycat with: $0 ${1+"$@"}" > $HOME/.skycat/log
-exec wish8.4 $SKYCAT_BASE/lib/skycat@PACKAGE_VERSION@/main.tcl ${1+"$@"} | tee -a $HOME/.skycat/log 2>&1
+exec wish8.5 $SKYCAT_BASE/lib/skycat@PACKAGE_VERSION@/main.tcl ${1+"$@"} | tee -a $HOME/.skycat/log 2>&1
 

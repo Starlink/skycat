@@ -448,8 +448,6 @@ itcl::class skycat::SkySearch {
      #  should be matched to those of the image, iff different).
      protected method imgplot_ {equinox} {
 
-        puts "SkySearch::imgplot_: $equinox..."
-
 	# the plot method was reimplemented in C++ for better performance
 	# See SkySearch.C for the implementation of the astrocat plot subcommand.
 	if {[catch {$w_.cat imgplot $image_ $info_ $equinox $headings_} msg]} {

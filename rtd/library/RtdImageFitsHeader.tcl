@@ -373,7 +373,7 @@ itcl::class rtd::RtdImageFitsHeader {
     }
     
     # Font to use for labels
-    itk_option define -labelfont labelFont LabelFont -Adobe-helvetica-bold-r-normal--10*
+    itk_option define -labelfont labelFont LabelFont TkDefaultFont
     
     # -- protected vars --
     

@@ -42,11 +42,11 @@ proc cat::setXdefaults {} {
     #option add *shelp*Background  FloralWhite
     #option add *plotBackground gray80
 
-    set labelFont -Adobe-Helvetica-Bold-R-Normal--*-120-*-*-*-*-*-*
+    set labelFont TkDefaultFont
 
-    option add *Listbox.font -*-courier-medium-r-*-*-*-140-*-*-*-*-iso8859-* 
-    option add *Entry.font -*-courier-medium-r-*-*-*-140-*-*-*-*-iso8859-* 
-    option add *titleFont -*-courier-Bold-r-*-*-*-140-*-*-*-*-iso8859-* 
+    option add *Listbox.font TkFixedFont
+    option add *Entry.font TkFixedFont
+    option add *titleFont TkDefaultFont
 
     option add *Button.Font $labelFont
     option add *Label.Font $labelFont
@@ -54,14 +54,14 @@ proc cat::setXdefaults {} {
     option add *Menubutton.Font $labelFont
     option add *Message.Font $labelFont
     option add *Scale.Font $labelFont
-    option add *Text.Font "-*-Courier-Medium-R-Normal--*-120-*-*-*-*-*-*"
+    option add *Text.Font TkFixedFont
 
     option add *QueryResult.relief sunken 
     option add *QueryResult.borderwidth 3 
-    option add *QueryResult.font -*-courier-medium-r-*-*-*-120-*-*-*-*-iso8859-* 
-    option add *QueryResult.headingFont -*-courier-bold-r-*-*-*-120-*-*-*-*-iso8859-* 
+    option add *QueryResult.font TkFixedFont
+    option add *QueryResult.headingFont TkDefaultFont
     option add *QueryResult.headingLines 1 
-    option add *QueryResult.titleFont -Adobe-helvetica-bold-r-normal-*-12* 
+    option add *QueryResult.titleFont TkDefaultFont
 
     option add *Menu*background $menuBg
     option add *Menu*foreground $menuFg

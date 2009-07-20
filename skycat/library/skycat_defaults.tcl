@@ -20,8 +20,8 @@ proc skycat::setXdefaults {} {
 
     option add *SkyQueryResult.relief sunken 
     option add *SkyQueryResult.borderwidth 3 
-    option add *SkyQueryResult.font -*-courier-medium-r-*-*-*-120-*-*-*-*-iso8859-* 
-    option add *SkyQueryResult.headingFont -*-courier-bold-r-*-*-*-120-*-*-*-*-iso8859-* 
+    option add *SkyQueryResult.font TkFixedFont
+    option add *SkyQueryResult.headingFont TkDefaultFont
     option add *SkyQueryResult.headingLines 1 
-    option add *SkyQueryResult.titleFont -Adobe-helvetica-bold-r-normal-*-12* 
+    option add *SkyQueryResult.titleFont TkDefaultFont
 }

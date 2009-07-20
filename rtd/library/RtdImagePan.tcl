@@ -397,7 +397,7 @@ itcl::class rtd::RtdImagePan {
     protected variable pi_ 3.14159265358979323846
 
     # compass label fonts
-    protected variable compassfont_ *-Courier-Bold-R-Normal-*-100-*
+    protected variable compassfont_ TkTooltipFont
 
     # current pan coords
     protected variable coords_    

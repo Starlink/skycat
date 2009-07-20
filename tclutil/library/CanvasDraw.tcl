@@ -1889,7 +1889,7 @@ itcl::class util::CanvasDraw {
     itk_option define -outlinecolor outlineColor OutlineColor {grey90} 
 
     # default text item font
-    itk_option define -textfont textFont TextFont {-*-courier-bold-r-*-*-*-120-*-*-*-*-*-*}
+    itk_option define -textfont textFont TextFont TkFixedFont
 
     # default list of fonts for font menu
     itk_option define -fonts fonts Fonts {

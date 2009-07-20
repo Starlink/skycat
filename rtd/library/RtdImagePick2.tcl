@@ -892,9 +892,9 @@ itcl::class rtd::RtdImagePick2 {
     itk_option define -panel_orient panel_orient Panel_orient {horizontal}
 
     # fonts, widths, etc.
-    itk_option define -labelfont  labelFont  LabelFont -Adobe-helvetica-bold-r-normal--12*
-    itk_option define -valuefont  valueFont  ValueFont -Adobe-helvetica-medium-r-normal--12*
-    itk_option define -wcsfont    wcsFont    WcsFont   -*-symbol-*-*-*-*-14-*-*-*-*-*-*-*
+    itk_option define -labelfont  labelFont  LabelFont TkDefaultFont
+    itk_option define -valuefont  valueFont  ValueFont TkDefaultFont
+    itk_option define -wcsfont    wcsFont    WcsFont   {Symbol -14}
     itk_option define -labelwidth labelWidth LabelWidth 15
     itk_option define -valuewidth valueWidth ValueWidth 11
 

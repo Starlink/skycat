@@ -790,13 +790,13 @@ itcl::class rtd::RtdImagePick {
     itk_option define -verbose verbose Verbose {0}
 
     # font to use for labels
-    itk_option define -labelfont labelFont LabelFont -Adobe-helvetica-bold-r-normal--12*
+    itk_option define -labelfont labelFont LabelFont TkDefaultFont
 
     # font to use for values
-    itk_option define -valuefont valueFont ValueFont -Adobe-helvetica-medium-r-normal--12*
+    itk_option define -valuefont valueFont ValueFont TkDefaultFont
 
     # font to use for ra,dec labels (alpha, delta)
-    itk_option define -wcsfont wcsFont WcsFont -*-symbol-*-*-*-*-14-*-*-*-*-*-*-*
+   itk_option define -wcsfont wcsFont WcsFont {Symbol -14}
 
     # set the width for  displaying labels and values
     itk_option define -labelwidth labelWidth LabelWidth 16

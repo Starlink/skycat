@@ -643,10 +643,10 @@ itcl::class cat::CatalogInfo {
     itk_option define -classname classname Classname ""
 
     # font to use for labels
-    itk_option define -labelfont labelFont LabelFont -Adobe-helvetica-bold-r-normal-*-12*
+    itk_option define -labelfont labelFont LabelFont TkDefaultFont
 
     # font to use for values
-    itk_option define -valuefont valueFont ValueFont -adobe-courier-medium-r-*-*-*-120-*-*-*-*-*-*
+    itk_option define -valuefont valueFont ValueFont TkFixedFont
 
     # set the width for  displaying labels
     itk_option define -labelwidth labelWidth LabelWidth 10

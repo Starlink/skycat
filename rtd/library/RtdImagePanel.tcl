@@ -13,6 +13,8 @@
 # P.Biereichel    22/03/99   Added code for bias subtraction
 # P.Biereichel    09/08/99   Added camera status
 # pbiereic        19/03/03   Always update lcut/hcut (method updateValues)
+# Peter W. Draper 20/07/09   Use unicode values for greek alpha and delta.
+#                            Switch to modern fonts.
 
 itk::usual RtdImagePanel {}
 
@@ -178,7 +180,7 @@ itcl::class rtd::RtdImagePanel {
 	    # LabelValue(n) widget for RA coordinate
 	    itk_component add ra {
 		util::LabelValue $w_.ra \
-		    -text "a:" \
+                    -text "\u03b1:" \
 		    -textvariable ${var}(RA) \
 		    -labelfont $itk_option(-wcsfont) \
 		    -valuefont $itk_option(-valuefont) \
@@ -190,7 +192,7 @@ itcl::class rtd::RtdImagePanel {
 	    # LabelValue(n) widget for DEC coordinate
 	    itk_component add dec {
 		util::LabelValue $w_.dec \
-		    -text "d:" \
+                    -text "\u03b4:" \
 		    -textvariable ${var}(DEC) \
 		    -labelfont $itk_option(-wcsfont) \
 		    -valuefont $itk_option(-valuefont) \
@@ -546,13 +548,13 @@ itcl::class rtd::RtdImagePanel {
     
     
     # Font to use for labels
-    itk_option define -labelfont labelFont LabelFont -Adobe-helvetica-bold-r-normal--12*
+    itk_option define -labelfont labelFont LabelFont TkDefaultFont
 
     # Font to use for values.
-    itk_option define -valuefont valueFont ValueFont -Adobe-helvetica-medium-r-normal--12*
+    itk_option define -valuefont valueFont ValueFont TkDefaultFont
 
     # Font to use for RA,DEC (a, b) labels (symbol).
-    itk_option define -wcsfont wcsFont WcsFont -*-symbol-*-*-*-*-14-*-*-*-*-*-*-*
+    itk_option define -wcsfont wcsFont WcsFont TkDefaultFont
 
     # set the width for displaying labels
     itk_option define -labelwidth labelWidth LabelWidth 6

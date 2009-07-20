@@ -273,7 +273,7 @@ itcl::class rtd::RtdImageZoomView {
     itk_option define -usexsync useXsync UseXsync 1
 
     # fonts used
-    itk_option define -labelfont labelFont LabelFont {-Adobe-helvetica-bold-r-normal-*-12*}
+    itk_option define -labelfont labelFont LabelFont TkDefaultFont
 
     # help text displayed when mouse enters widget
     itk_option define -shelp shelp Shelp \
