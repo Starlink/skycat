@@ -16,6 +16,7 @@
 #                            Now only get a footer.
 # Peter W. Draper 21 Aug 02  Added swap of width and height values
 #                            when toggling between portrait and landscape
+#                 05 Aug 09  Tweak footer positions for new fonts.
  
 
 itk::usual RtdImagePrint {}
@@ -298,7 +299,7 @@ itcl::class rtd::RtdImagePrint {
 	    -tags print
 
 	set hx0 $x0
-	set hy0 [expr {$y1+20}]
+	set hy0 [expr {$y1+30}]
 	set hx1 $x1
 	set hy1 [expr {$y1+40}]
 	
