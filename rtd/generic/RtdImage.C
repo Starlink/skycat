@@ -107,6 +107,9 @@
  * Peter W. Draper 16/10/08  Record if user set the levels in setCutLevels
  *                           even if they are not changed. That's makes more
  *                           sense to the user.
+ *                 05/08/09  Add optionModified member to test if a
+ *                           configuration option is given. This functionality
+ *                           is lost in Tk 8.5.
  */
 static const char* const rcsId="@(#) $Id: RtdImage.C,v 1.5 2006/02/02 17:36:47 abrighto Exp $";
 
@@ -1111,7 +1114,7 @@ int RtdImage::configureImage(int argc, char* argv[], int flags)
     // the option is specified. We use the OFFSET macro defined above
     // as an efficient way to compare options)
     for (Tk_ConfigSpec* p=configSpecs_; p->type != TK_CONFIG_END; p++) {
-	if (p->specFlags & TK_CONFIG_OPTION_SPECIFIED) {
+        if ( optionModified(argc, argv, p->argvName) ) {
 	    switch(p->offset) {
 
 	    case RTD_OPTION(usexshm):
@@ -1195,6 +1198,19 @@ int RtdImage::configureImage(int argc, char* argv[], int flags)
     return status;
 }
 
+/*
+ *  test: if an option has been modified during the configureImage
+ *  because it is present in the given argv list.
+ */
+int RtdImage::optionModified( int argc, char *argv[], char* option )
+{
+    for ( int i = 0; i < argc; i +=2 ) {
+        if ( strcmp( argv[i], option ) == 0 ) {
+            return 1;
+        }
+    }
+    return 0;
+}
 
 /* 
  * util: return true if this is an embedded rapid frame

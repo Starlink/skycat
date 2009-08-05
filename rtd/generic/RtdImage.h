@@ -30,6 +30,8 @@
  * P.Biereichel    23/10/02  Made gcc 3.2 happy which complained about RTD_OPTION:
  *                           (invalid offsetof from non-POD type `class RtdImageOptions'; use 
  *                           pointer to member instead). POD means "Plain Old Data".
+ * Peter W. Draper 04/08/09  Added optionModified member to recover
+ *                           functionality lost in Tk 8.5.
  * 
  */
 
@@ -323,6 +325,9 @@ private:
 protected:
     // redefined from parent class to check configuration options
     virtual int configureImage(int argc, char* argv[], int flags);
+
+    // test if an option has been modified during the configureImage.
+    int optionModified(int argc, char *argv[], char* option);
 
     // return true if this is an embedded (not embedded) rapid frame (in master image)
     int isEmbeddedRapidFrame();
