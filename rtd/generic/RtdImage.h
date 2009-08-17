@@ -327,7 +327,7 @@ protected:
     virtual int configureImage(int argc, char* argv[], int flags);
 
     // test if an option has been modified during the configureImage.
-    int optionModified(int argc, char *argv[], char* option);
+    int optionModified(int argc, char *argv[], const char* option);
 
     // return true if this is an embedded (not embedded) rapid frame (in master image)
     int isEmbeddedRapidFrame();

@@ -1202,7 +1202,7 @@ int RtdImage::configureImage(int argc, char* argv[], int flags)
  *  test: if an option has been modified during the configureImage
  *  because it is present in the given argv list.
  */
-int RtdImage::optionModified( int argc, char *argv[], char* option )
+int RtdImage::optionModified( int argc, char *argv[], const char* option )
 {
     for ( int i = 0; i < argc; i +=2 ) {
         if ( strcmp( argv[i], option ) == 0 ) {

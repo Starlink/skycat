@@ -268,7 +268,7 @@ int SkySearch::plot_row(Skycat* image, const QueryResult& r,
     if (strcmp(cond, "1") != 0) {
 	if (Tcl_ExprBoolean(interp_, (char*)cond, &condVal) != TCL_OK)
 	    return fmt_error("error in plot symbol condition: '%s': %s",
-			     cond, interp_->result);
+			     cond, Tcl_GetStringResult(interp_));
     }
 
     // if condition is not true, don't plot this row
@@ -279,7 +279,7 @@ int SkySearch::plot_row(Skycat* image, const QueryResult& r,
     double radiusVal = 0;
     if (Tcl_ExprDouble(interp_, (char*)radius,  &radiusVal) != TCL_OK)
 	return fmt_error("error in plot symbol expression: '%s': %s",
-			 radius, interp_->result);
+			 radius, Tcl_GetStringResult(interp_));
     if (radiusVal < 0.) {
 	// don't want a neg radius
 	radiusVal = 0.;
@@ -290,7 +290,7 @@ int SkySearch::plot_row(Skycat* image, const QueryResult& r,
     if (strcmp(ratio, "1") != 0) {
 	if (Tcl_ExprDouble(interp_, (char*)ratio, &ratioVal) != TCL_OK)
 	    return fmt_error("error in plot symbol ratio expression: '%s': %s",
-			     ratio, interp_->result);
+			     ratio, Tcl_GetStringResult(interp_));
     }
 
     // angle may be an expression with column name variables
@@ -298,7 +298,7 @@ int SkySearch::plot_row(Skycat* image, const QueryResult& r,
     if (strcmp(angle, "0") != 0) {
 	if (Tcl_ExprDouble(interp_, (char*)angle, &angleVal) != TCL_OK)
 	    return fmt_error("error in plot symbol angle expression: '%s': %s",
-			     angle, interp_->result);
+			     angle, Tcl_GetStringResult(interp_));
     }
 
     // label may also contain col name vars, but might not be numeric
@@ -309,9 +309,10 @@ int SkySearch::plot_row(Skycat* image, const QueryResult& r,
         sprintf(buf, "subst %s", label);
 	if (Tcl_Eval(interp_, buf) != TCL_OK)
 	    return fmt_error("error in plot symbol label: '%s': %s",
-			     label, interp_->result);
-	if (strlen(interp_->result))
-	    strncpy(labelVal, interp_->result, sizeof(labelVal)-1);
+			     label, Tcl_GetStringResult(interp_));
+	if (strlen(Tcl_GetStringResult(interp_)))
+	    strncpy(labelVal, Tcl_GetStringResult(interp_), 
+                    sizeof(labelVal)-1);
     }
 
     if (plot_symbol(image, shape, id, rownum, x, y, xy_units,

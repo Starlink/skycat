@@ -226,15 +226,15 @@ int TclAstroImage::getimageCmd(int argc, char* argv[])
 	    while(*value && !isdigit(*value))
 		value++;	// skip "J" in J 2000, or "B" in B 1950
 	    if (Tcl_GetDouble(interp_, value, &equinox_) != TCL_OK)
-		return error("bad value for equinox: ", interp_->result);
+		return error("bad value for equinox: ", Tcl_GetStringResult(interp_));
 	}
 	else if (strcmp(option, "-width") == 0) {
 	    if (Tcl_GetDouble(interp_, value, &width) != TCL_OK)
-		return error("bad value for width: ", interp_->result);
+		return error("bad value for width: ", Tcl_GetStringResult(interp_));
 	}
 	else if (strcmp(option, "-height") == 0) {
 	    if (Tcl_GetDouble(interp_, value, &height) != TCL_OK)
-		return error("bad value for height: ", interp_->result);
+		return error("bad value for height: ", Tcl_GetStringResult(interp_));
 	}
 	else if (strcmp(option, "-nameserver") == 0) {
 	    nameServer = value;

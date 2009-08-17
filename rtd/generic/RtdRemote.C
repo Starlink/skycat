@@ -458,7 +458,9 @@ int RtdRemote::clientEvent(Client* clientPtr)
 #endif
 
     int status = evalClientCmd(buf);
-    return sendToClient(clientPtr->socket, status, strlen(interp_->result), interp_->result);
+    return sendToClient(clientPtr->socket, status, 
+                        strlen(Tcl_GetStringResult(interp_)), 
+                        Tcl_GetStringResult(interp_));
 }
     
 

@@ -1707,7 +1707,7 @@ int RtdImage::mbandCmd(int argc, char* argv[])
     Tcl_Eval(interp_, buf);
 
     double rx0, ry0, rx1, ry1;
-    if (sscanf(interp_->result, "%lf %lf %lf %lf", &rx0, &ry0, &rx1, &ry1) != 4)
+    if (sscanf(Tcl_GetStringResult(interp_), "%lf %lf %lf %lf", &rx0, &ry0, &rx1, &ry1) != 4)
 	return TCL_OK;
 
     sprintf(buf, "%s coords mband_diag_rect %g %g %g %g\n",
@@ -1731,7 +1731,7 @@ int RtdImage::mbandCmd(int argc, char* argv[])
 	sprintf(buf, "%s bbox mband_width_text\n", canvas);
 	Tcl_Eval(interp_, buf);
 
-	if (sscanf(interp_->result, "%lf %lf %lf %lf", &rx0, &ry0, &rx1, &ry1) != 4)
+	if (sscanf(Tcl_GetStringResult(interp_), "%lf %lf %lf %lf", &rx0, &ry0, &rx1, &ry1) != 4)
 	    return TCL_OK;
 	sprintf(buf, "%s coords mband_width_rect %g %g %g %g\n",
 		canvas,  rx0, ry0, rx1, ry1);
@@ -1748,7 +1748,7 @@ int RtdImage::mbandCmd(int argc, char* argv[])
 	sprintf(buf, "%s bbox mband_height_text\n", canvas);
 	Tcl_Eval(interp_, buf);
 
-	if (sscanf(interp_->result, "%lf %lf %lf %lf", &rx0, &ry0, &rx1, &ry1) != 4)
+	if (sscanf(Tcl_GetStringResult(interp_), "%lf %lf %lf %lf", &rx0, &ry0, &rx1, &ry1) != 4)
 	    return TCL_OK;
 	sprintf(buf, "%s coords mband_height_rect %g %g %g %g\n",
 		canvas,  rx0, ry0, rx1, ry1);
@@ -2314,7 +2314,7 @@ int RtdImage::remoteCmd(int argc, char* argv[])
 int RtdImage::remoteTclCmd(int argc, char* argv[])
 {
     Tcl_Eval(interp_, argv[0]);
-    return set_result(interp_->result);
+    return set_result(Tcl_GetStringResult(interp_));
 }
 
 /*
