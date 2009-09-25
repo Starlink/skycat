@@ -25,3 +25,6 @@ tclIndex
 tclutil.sh
 tclutilConfig.sh
 tclutil_version.tcl
+
+*.dSYM
+*.dylib
