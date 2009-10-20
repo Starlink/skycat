@@ -12,6 +12,8 @@
  * --------------  --------  ----------------------------------------
  * Allan Brighton  05/10/95  Created
  * Peter W. Draper 23/06/09  Added parseBlank to get blank value in this type.
+ *                 20/10/09  Don't let lowCut_ and highCut_ wrap when 
+ *                           limits are out of ushort range.
  */
 
 
@@ -20,6 +22,7 @@
 #include <iostream>
 #include <cstring>
 #include <cmath>
+#include <climits>
 #include "UShortImageData.h"
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -33,10 +36,21 @@
  */
 void UShortImageData::initShortConversion() 
 {
-    scaledLowCut_ = (ushort)lowCut_;
-    scaledHighCut_ = (ushort)highCut_;
+    //  Don't let the cuts wrap for unsigned conversions.
+    if ( lowCut_ < 0 ) {
+        scaledLowCut_ = 0;
+    }
+    else {
+        scaledLowCut_ = (ushort)lowCut_;
+    }
+    if ( highCut_ > (int) USHRT_MAX ) {
+        scaledHighCut_ = USHRT_MAX;
+    }
+    else {
+        scaledHighCut_ = (ushort)highCut_;
+    }
     if (haveBlank_)
-	scaledBlankPixelValue_ = LOOKUP_BLANK;
+        scaledBlankPixelValue_ = LOOKUP_BLANK;
 }
 
 /*
