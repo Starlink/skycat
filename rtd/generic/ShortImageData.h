@@ -1,22 +1,24 @@
 // -*-c++-*-
 /*
- * E.S.O. - VLT project 
+ * E.S.O. - VLT project
  *
- * "@(#) $Id: ShortImageData.h,v 1.1.1.1 2006/01/12 16:38:30 abrighto Exp $" 
+ * "@(#) $Id: ShortImageData.h,v 1.1.1.1 2006/01/12 16:38:30 abrighto Exp $"
  *
  * ShortImageData.h - class definitions for class ShortImageData
  *
  * See the man page ImageData(3) for a complete description of this class
  * library.
- * 
+ *
  * who             when      what
  * --------------  --------  ----------------------------------------
  * Allan Brighton  05/10/95  Created
  * T. Herlin       08/12/95  Added color scale functions to avoid sign problem
- * Allan Brighton  14/12/95  reversed above and fixed the real problem 
+ * Allan Brighton  14/12/95  reversed above and fixed the real problem
  * Peter W. Draper 04/03/98  Added llookup
  *                 14/07/98  Added blank checks in lookup.
  * P.Biereichel    22/03/99  Added definitions for bias subtraction
+ * Peter W. Draper 03/11/09  Support lowCut_ and highCut_ out of short range.
+ *                 09/11/09  Use a scaled value for lookup.
  */
 
 #include <sys/types.h>
@@ -30,22 +32,24 @@ class ShortImageData : public ImageData {
 private:
     // value of blank pixel, if known (if haveBlankPixel_ is nonzero)
     short blank_;
-    
+
+    double bias_;              // offset
+    double scale_;             // scale factor
+
+    // local methods used to get short index in lookup table
+    short scaleToShort(int l);
+
     // get value as unsigned short
     ushort convertToUshort(short s) {
-	return (ushort)s;
+        return ushort(scaleToShort(int(s)));
     }
 
     // return X image pixel value for raw image value
     byte lookup(short s) {
-	if ( !haveBlank_ ) return lookup_[(ushort)s];
-	if ( s != blank_ ) return lookup_[(ushort)s];
-	return lookup_[(ushort)LOOKUP_BLANK];
+        return lookup_[convertToUshort(s)];
     }
     unsigned long llookup(short s) {
-	if ( !haveBlank_ ) return lookup_[(ushort)s];
-	if ( s != blank_ ) return lookup_[(ushort)s];
-	return lookup_[(ushort)LOOKUP_BLANK];
+        return lookup_[convertToUshort(s)];
     }
 
     // return NTOH converted value evtl. subtracted with corresponding bias value
@@ -66,7 +70,7 @@ protected:
 public:
     // constructor
     ShortImageData(const char* name, const ImageIO& imio, int verbose)
-	: ImageData(name, imio, verbose), blank_(0) {}
+        : ImageData(name, imio, verbose), blank_(0) {}
 
     // return class name as a string
     virtual const char* classname() { return "ShortImageData"; }

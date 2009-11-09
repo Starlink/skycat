@@ -15,6 +15,7 @@
  * Peter W. Draper 04/03/98  Added llookup.
  *                 14/07/98  Added check for blanks in lookup.
  * P.Biereichel    22/03/99  Added definitions for bias subtraction
+ * Peter W. Draper 09/11/09  Use a scaled value for lookup.
  */
 
 #include "ImageData.h"
@@ -24,25 +25,23 @@
 // unsigned shorts
 
 class UShortImageData : public ImageData {
+
 private:
     // value of blank pixel, if known (if haveBlankPixel_ is nonzero)
     ushort blank_;
 
-    // get value as unsigned short (dummy method)
-    inline ushort convertToUshort(ushort s) {
-	return s;
-    }
+    double bias_;              // offset
+    double scale_;             // scale factor
+
+    // local methods used to get short index in lookup table
+    ushort convertToUshort(int l);
 
     // return X image pixel value for raw image value
     inline byte lookup(ushort s) {
-	if ( !haveBlank_ ) return lookup_[s];
-	if ( s != blank_ ) return lookup_[s];
-	return lookup_[(ushort)LOOKUP_BLANK];
+        return lookup_[convertToUshort(s)];
     }
     inline unsigned long llookup(ushort s) {
-	if ( !haveBlank_ ) return lookup_[s];
-	if ( s != blank_ ) return lookup_[s];
-	return lookup_[(ushort)LOOKUP_BLANK];
+        return lookup_[convertToUshort(s)];
     }
 
     // return NTOH converted value evtl. subtracted with corresponding bias value
@@ -57,7 +56,7 @@ private:
 
 protected:
 
-    // initialize conversion from base type to short,
+    // initialize conversion from base type to (unsigned) short,
     void initShortConversion();
 
 public:

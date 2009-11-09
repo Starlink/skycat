@@ -14,6 +14,11 @@
  * Peter W. Draper 23/06/09  Added parseBlank to get blank value in this type.
  *                 20/10/09  Don't let lowCut_ and highCut_ wrap when 
  *                           limits are out of ushort range.
+ *                 09/11/09  Use a scaled range for this data type. Previously
+ *                           values mapped directly into the lookup table.
+ *                           Now, like other types, they scale between lowCut_
+ *                           and highCut_ which can be outside of the range
+ *                           0 to 65535.
  */
 
 
@@ -29,26 +34,63 @@
 #endif
 #include "define.h"
 
+/*
+ * convert the given value to ushort by adding the integer bias,
+ * scaling, rounding if necessary and checking the range
+ */
+ushort UShortImageData::convertToUshort(int l)
+{
+    //  If have blank pixels then test this against the raw value.
+    if ( haveBlank_ ) {
+        if ( blank_ == (ushort) l ) {
+            return LOOKUP_BLANK;
+        }
+    }
+
+    //  Scale value into range defined by bias_ and scale_. Keep result in
+    //  range of lookup table indices. Note this is already unsigned, so
+    //  limits are 0, LOOKUP_SIZE-1, not the usual LOOKUP_MIN, LOOKUP_MAX.
+    ushort s;
+    double d = (l + bias_) * scale_;
+    if (d < 0.0) {
+        s = 0;
+    }
+    else {
+        if((d += 0.5) > LOOKUP_WIDTH) {
+            s = LOOKUP_WIDTH;
+        }
+        else {
+            s = (ushort)d;
+        }
+    }
+    return s;
+}
 
 /*
- * initialize conversion from base type to short and scale the low and
- * high cut levels to short range.
+ * Initialize conversion from data range to ushort and _scale_ (not clip)
+ * the low and high cut levels to ushort range.
+ *
+ * Method: member variables are set here and used later to convert the ushort
+ * raw image data to another ushort, which is then used as an index in the
+ * lookup table to get the byte value (for colour lookup).
+ *
+ *   bias_  = offset
+ *   scale_  = scale factor
+ * :
  */
-void UShortImageData::initShortConversion() 
+void UShortImageData::initShortConversion()
 {
-    //  Don't let the cuts wrap for unsigned conversions.
-    if ( lowCut_ < 0 ) {
-        scaledLowCut_ = 0;
+    if ( ( highCut_ - lowCut_ ) > 0.0 ) {
+        bias_ = -lowCut_;
+        scale_ = LOOKUP_WIDTH / (highCut_ - lowCut_);
     }
     else {
-        scaledLowCut_ = (ushort)lowCut_;
+        scale_ = 1.0;
+        bias_ = 0.0;
     }
-    if ( highCut_ > (int) USHRT_MAX ) {
-        scaledHighCut_ = USHRT_MAX;
-    }
-    else {
-        scaledHighCut_ = (ushort)highCut_;
-    }
+    scaledLowCut_ = convertToUshort(int(lowCut_));
+    scaledHighCut_ = convertToUshort(int(highCut_));
+
     if (haveBlank_)
         scaledBlankPixelValue_ = LOOKUP_BLANK;
 }
