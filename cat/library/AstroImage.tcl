@@ -183,9 +183,9 @@ itcl::class cat::AstroImage {
 
 	pack [set f [frame $w_.main.top.f -relief groove -borderwidth 2]] \
 	    -side top -fill x -pady 1m
-	blt::table $f
+	blt::blttable $f
 
-	blt::table $f \
+	blt::blttable $f \
 	    [set name_ [LabelEntry $f.name \
 		 -text "Object Name:" \
 		 -command [code $this getimage] \
@@ -269,7 +269,7 @@ itcl::class cat::AstroImage {
 	    -side right -padx 1m -pady 2m
 
 
-	blt::table configure $f C1 -padx 2m
+	blt::blttable configure $f C1 -padx 2m
 
 	# dialog buttons
 	pack [frame $w_.buttons -borderwidth 2 -relief groove] \

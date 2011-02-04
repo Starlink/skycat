@@ -396,7 +396,7 @@ itcl::class rtd::RtdImageHduChooser {
 	    # position the image in the table
 	    set row [expr {$max_row_-$ext_($i,row)}]
 	    set col $ext_($i,col)
-	    blt::table $w $f ${row},${col} -fill both
+	    blt::blttable $w $f ${row},${col} -fill both
 	}
 
         button $w.settings \
@@ -406,7 +406,7 @@ itcl::class rtd::RtdImageHduChooser {
         add_short_help $w.settings \
                 {Set the cut levels and colormap for the preview images to the one used in the main image}
 
-        blt::table $w \
+        blt::blttable $w \
 	    $w.settings [expr {$max_row_ + 1}],0 -fill x -columnspan [expr {$max_col_ + 1}]
 
         update  ; # wait until images are ready (needed)

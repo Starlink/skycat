@@ -260,21 +260,21 @@ itcl::class rtd::RtdRecorderTool {
 
 	# do the packing
 
-	blt::table $itk_component(status) \
+	blt::blttable $itk_component(status) \
 	    $itk_component(progressLabel)      1,0 -anchor w -fill x \
 	    $itk_component(progressBar)        1,1 -anchor e -fill x -columnspan 2 \
 	    $itk_component(imagecount)         2,0 -anchor w -fill x -columnspan 2 \
 	    $itk_component(ncounts)            2,2 -anchor w -fill x
 
-	blt::table $itk_component(fileframe) \
+	blt::blttable $itk_component(fileframe) \
 	    $itk_component(filename)        1,0 -anchor w -fill x \
 	    $itk_component(cameraname)      2,0 -anchor w -fill x
 
-	blt::table $itk_component(pbaction1) \
+	blt::blttable $itk_component(pbaction1) \
 	    $itk_component(direction)   1,0 -anchor w -fill x \
 	    $itk_component(protect)     1,1 -anchor e -fill x	    
 
-	blt::table $itk_component(pbaction2) \
+	blt::blttable $itk_component(pbaction2) \
  	    $itk_component(play)        1,0 -anchor w -fill none \
  	    $itk_component(rewind)      1,1 -anchor w -fill none \
  	    $itk_component(ff)          1,2 -anchor w -fill none \

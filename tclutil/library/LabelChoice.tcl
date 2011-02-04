@@ -27,7 +27,7 @@ itcl::class util::LabelChoice {
 	    keep -background -relief -borderwidth
 	}
 
-	blt::table $itk_component(table)
+	blt::blttable $itk_component(table)
  	eval itk_initialize $args
     }
 
@@ -87,7 +87,7 @@ itcl::class util::LabelChoice {
 		    rename -font -valuefont valueFont Font
 		    rename -width -valuewidth valueWidth Width
 		}
-		blt::table $itk_component(table) $but_($name) $row,$col -fill x
+		blt::blttable $itk_component(table) $but_($name) $row,$col -fill x
 		if {[incr i] == $n} {
 		    break
 		}

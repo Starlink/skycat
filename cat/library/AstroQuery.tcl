@@ -87,7 +87,7 @@ itcl::class cat::AstroQuery {
 	pack [set f [frame $w_.options.f]] \
 	    -side top -fill x
 	
-	set search_opts_ [blt::table $f]
+	set search_opts_ [blt::blttable $f]
 	set search_opts_row_ 0
 
 	# if we are using world coords, display name, equinox, ra, dec
@@ -262,7 +262,7 @@ itcl::class cat::AstroQuery {
 				      -valuefont $itk_option(-valuefont) \
 				      -labelfont $itk_option(-labelfont)]]
 	    }
-	    blt::table configure $f C1 -padx 2m
+	    blt::blttable configure $f C1 -padx 2m
 	} else {
 	    # no options
 	    destroy $w_.options
@@ -277,7 +277,7 @@ itcl::class cat::AstroQuery {
     protected method add_copyright {} {
 	set s [$astrocat copyright]
 	if {"$s" != "" && [winfo exists $search_opts_]} {
-	    blt::table $search_opts_ \
+	    blt::blttable $search_opts_ \
 		[LabelValue $search_opts_.copyright \
 		     -anchor w -relief flat \
 		     -labelwidth 0 -valuewidth 0 \
@@ -297,7 +297,7 @@ itcl::class cat::AstroQuery {
 	set col 0
 	foreach w $args {
 	    if {"$w" != ""} {
-		blt::table $search_opts_ $w $search_opts_row_,$col \
+		blt::blttable $search_opts_ $w $search_opts_row_,$col \
 		    -fill x -pady 1m
 	    }
 	    incr col

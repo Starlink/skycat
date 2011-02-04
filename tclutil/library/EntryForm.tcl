@@ -79,10 +79,10 @@ itcl::class util::EntryForm {
 		    -padx 1m -pady 1m -ipadx 1m -ipady 1m
 	}
 
-	blt::table $f
+	blt::blttable $f
 	set row 0
 	foreach label $itk_option(-labels) {
-	    blt::table $f \
+	    blt::blttable $f \
 		[label $f.label$row -text $label] \
 		$row,0 -anchor e \
 		[set entries_($label) [entry $f.entry$row -relief sunken]] \
@@ -93,9 +93,9 @@ itcl::class util::EntryForm {
 
 	    incr row
 	}
-	blt::table configure $f c1 -resize expand
-        blt::table configure $f c0 -resize none
-        blt::table configure $f r* -resize none
+	blt::blttable configure $f c1 -resize expand
+        blt::blttable configure $f c0 -resize none
+        blt::blttable configure $f r* -resize none
 
 	wm title $w_ {Entry Form}
 	set initialized_ 1

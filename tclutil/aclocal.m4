@@ -26,8 +26,8 @@ AC_DEFUN(TCLUTIL_PATH_BLT, [
        [AC_HELP_STRING([--with-blt=DIR],[link with BLT library installed in DIR])],
        BLT_LIB_DIR=$withval)
 
-    BLT_LIBNAME=libBLTX30${SHLIB_SUFFIX}
-    BLT_LIBFLAG="-lBLTX30 -lBLTCore30"
+    BLT_LIBNAME=libBLT25${SHLIB_SUFFIX}
+    BLT_LIBFLAG="-lBLT25"
 
     if test -z "$BLT_LIB_DIR" ; then
 	# If --with-blt=dir was not specified, try the Tcl lib dir and the exec-prefix/lib dir

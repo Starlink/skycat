@@ -116,7 +116,7 @@ itcl::class rtd::RtdImagePrint {
 	    -text "Page height" \
 	    -value $itk_option(-pageheight) \
 	    -valuewidth 6
-	blt::table $w_.pagesize \
+	blt::blttable $w_.pagesize \
 	    $w_.pagesize.fit      1,0 -anchor w \
 	    $w_.pagesize.footer   1,1 -anchor e \
 	    $w_.pagesize.width    2,0 -anchor w \

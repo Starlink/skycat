@@ -51,13 +51,13 @@
 #  $itk_component(choicef)  - choice frame
 #  $itk_component(buttonf)  - button frame
 #
-# The frames (and all other widgets) are packed with the blt::table geometry
+# The frames (and all other widgets) are packed with the blt::blttable geometry
 # manager. The 'pack' geometry manager should not be used (see LIMITATIONS
 # on man page of table(BLT 2.4).
 #
 # There are options like -with_info, -with_choice which are set to 1 by default
 # to show all frames (see options). They can be set to 0 and the application
-# can re-arrange the frames (via blt::table) as required.
+# can re-arrange the frames (via blt::blttable) as required.
 #
 # NOTES
 # - In contrast to RtdImagePick, RtdImagePick2 does not use tkwait which may
@@ -170,7 +170,7 @@ itcl::class rtd::RtdImagePick2 {
 	}
 	eval $methd $itk_component($compo)
 	if { $map } {
-	    eval blt::table $w $itk_component($compo) $idx $opts
+	    eval blt::blttable $w $itk_component($compo) $idx $opts
 	}
     }
 
@@ -197,7 +197,7 @@ itcl::class rtd::RtdImagePick2 {
 	    [$wdg component entry] config -justify right -highlightthickness 0
 	    [$wdg component label] config -pady 0
 	}
-	blt::table $w $wdg $idx -fill x -anchor e
+	blt::blttable $w $wdg $idx -fill x -anchor e
     }
 
     # Create the widgets for displaying the statistics
@@ -237,7 +237,7 @@ itcl::class rtd::RtdImagePick2 {
 		    -factor        $itk_option(-zoomFact) \
 		    -command       [code $this zoomScaledCb]
 	}
-	blt::table $w $itk_component(zoomView) 0,0
+	blt::blttable $w $itk_component(zoomView) 0,0
     }
 
     # Add a button and add to blt table
@@ -246,7 +246,7 @@ itcl::class rtd::RtdImagePick2 {
 	itk_component add $compo {
 	    button $w.$compo -text $text -command $command
 	}
-	blt::table $w $itk_component($compo) $idx -fill x
+	blt::blttable $w $itk_component($compo) $idx -fill x
     }
 
     # Add an application specific button
@@ -256,13 +256,13 @@ itcl::class rtd::RtdImagePick2 {
 
 	if { "[cget -panel_orient]" == "horizontal" } {
 	    # add button and redo packing
-	    set names [blt::table search $w -pattern *]
+	    set names [blt::blttable search $w -pattern *]
 	    add_button $w $compo $text 0,$idx $command
 	    
 	    set names [linsert $names $idx $itk_component($compo)]
 	    set i -1
 	    foreach name $names {
-		blt::table $w $name 0,[incr i] -fill x
+		blt::blttable $w $name 0,[incr i] -fill x
 	    }
 	} else {
 	    add_button $w $compo $text 1,$idx $command
@@ -312,7 +312,7 @@ itcl::class rtd::RtdImagePick2 {
 		-entrycommand [code $this update_rect]
 	[$sldWdg component label] config -justify left
 
-	blt::table $sldWdg \
+	blt::blttable $sldWdg \
 		[$sldWdg component label]      0,0 -anchor w -fill x \
 		[$sldWdg component entry]      0,1 -anchor e \
 		[$sldWdg component scaleframe] 1,0 -fill x -columnspan 2 -padx 1m
@@ -322,7 +322,7 @@ itcl::class rtd::RtdImagePick2 {
 
     protected method make_sldframe { w } {
 	make_slider $w
-	blt::table $w $itk_component(slider) 0,0 -anchor w -fill x
+	blt::blttable $w $itk_component(slider) 0,0 -anchor w -fill x
     }
 
     # Create pick control frame
@@ -370,13 +370,13 @@ itcl::class rtd::RtdImagePick2 {
 	    label $zoomctrlf.label -text "" -width 3 -font $itk_option(-labelfont) 
 	}
 
-	blt::table $zoomctrlf \
+	blt::blttable $zoomctrlf \
 		$itk_component(pickMark)  0,0  -fill y -anchor w -columnspan 3 \
 		$itk_component(larger)    1,0  -fill x \
 		$itk_component(smaller)   1,1  -fill x \
 		$itk_component(scalelab)  1,2  -fill x
 
-	blt::table $w \
+	blt::blttable $w \
 		$itk_component(rbChoice)  0,0 -fill both \
 		$itk_component(zoomctrlf) 0,1 -fill both
     }

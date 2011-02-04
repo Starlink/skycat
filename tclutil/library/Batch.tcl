@@ -98,7 +98,10 @@ itcl::class util::Batch {
 	    puts $wfd $status
 	    flush $wfd
 	    close $wfd
-	    kill SIGKILL [pid]
+
+            #  The kill command is in Tclx and BLT, only BLT puts
+            #  it into a namespace we can use.
+	    blt::kill [pid] SIGKILL
 	} else {
 	    set bg_pid_ $pid
 	    fileevent $rfd readable [code $this read_pipe $rfd $wfd]

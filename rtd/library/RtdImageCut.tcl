@@ -226,7 +226,7 @@ itcl::class rtd::RtdImageCut {
 	    pack $itk_component(${el}cut) -padx 1m
 	}
 
-        blt::table $itk_component(scales) \
+        blt::blttable $itk_component(scales) \
             $itk_component(lowscale)       1,0 -anchor w -fill x -padx 1m -pady 1m \
             $itk_component(highscale)      1,1 -anchor w -fill x -padx 1m -pady 1m \
             $itk_component(percent)        2,0 -anchor c -fill x -columnspan 2 -padx 1m \
@@ -249,7 +249,7 @@ itcl::class rtd::RtdImageCut {
 	add_button update Update update_graph
 	add_button close Close quit
 	
-        blt::table $itk_component(buttons) \
+        blt::blttable $itk_component(buttons) \
             $itk_component(set)       1,0 -anchor w -fill x -padx 1m -pady 2m \
             $itk_component(reset)     1,1 -anchor w -fill x -padx 1m -pady 2m \
             $itk_component(median)    1,2 -anchor w -fill x -padx 1m -pady 2m \

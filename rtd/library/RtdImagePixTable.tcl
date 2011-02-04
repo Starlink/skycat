@@ -73,13 +73,13 @@ itcl::class rtd::RtdImagePixTable {
 	    set f [frame $w_.tab]
 	}
 	pack $f -side top -fill both -expand 1
-	blt::table $f
+	blt::blttable $f
 	set ncols $itk_option(-ncols)
 	set nrows $itk_option(-nrows)
         for {set col 0} {$col <= $ncols} {incr col} {
             set trow $nrows
             for {set row 0} {$row <= $nrows} {incr row} {
-		blt::table $f \
+		blt::blttable $f \
 		    [label $f.p$row,$col \
 			 -font $itk_option(-valuefont) \
 			 -borderwidth 1 \
@@ -158,7 +158,7 @@ itcl::class rtd::RtdImagePixTable {
 		    -valuewidth $itk_option(-valuewidth) \
 		    -relief groove \
 		    -anchor w}
-	    blt::table $sf $itk_component(pixtab_$lel) \
+	    blt::blttable $sf $itk_component(pixtab_$lel) \
 		$row,$col -fill both
 	    incr col
 	    if {$col >= $ncols} {

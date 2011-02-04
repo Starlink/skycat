@@ -11990,8 +11990,8 @@ if test "${with_blt+set}" = set; then
   BLT_LIB_DIR=$withval
 fi;
 
-    BLT_LIBNAME=libBLTX30${SHLIB_SUFFIX}
-    BLT_LIBFLAG="-lBLTX30 -lBLTCore30"
+    BLT_LIBNAME=libBLT25${SHLIB_SUFFIX}
+    BLT_LIBFLAG="-lBLT25"
 
     if test -z "$BLT_LIB_DIR" ; then
 	# If --with-blt=dir was not specified, try the Tcl lib dir and the exec-prefix/lib dir

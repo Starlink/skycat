@@ -35,18 +35,13 @@ itcl::class util::GraphPrint {
         } else {
            set fit no
         }
-        if { [set $w_.color] == "color" } {
-           set gs no
-        } else {
-           set gs yes
-        }
        
 	# try to fit on a page
 	set width [lindex [$itk_option(-graph) config -width] 4]
 	set height [lindex [$itk_option(-graph) config -height] 4]
 
         $itk_option(-graph) postscript configure \
-		-greyscale $gs \
+		-colormode [set $w_.color] \
 		-paperwidth [$w_.pagesize.width get] \
 		-paperheight [$w_.pagesize.height get] \
 		-landscape [set $w_.rotate] \
