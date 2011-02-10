@@ -161,6 +161,10 @@ itcl::class util::DialogWidget {
 	    focus $w_
 	}
 
+        # If the window is closed by the window manager we need to
+        # get that request as well.
+        wm protocol $w_ WM_DELETE_WINDOW "set ::$variable_ 0"
+
 	# Wait for the user to respond, then restore the focus and
 	# return the index of the selected button.
 
