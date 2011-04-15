@@ -1561,7 +1561,9 @@ char* FitsIO::getTableValue(long row, int col, double scale)
 	    cfitsio_error();
 	    return NULL;
 	}
-	sprintf(buf_, "%.*g", FLT_DIG, f * (float)scale);
+
+        /*  Scaling may need more precision */
+        sprintf(buf_, "%.*g", DBL_DIG, (double)f * scale);
 	break;
 
     case TDOUBLE:
