@@ -10,7 +10,7 @@ cat_version.tcl
 config.*
 configure.lineno
 pkgIndex.tcl
-rtd
+rtd/rtd
 rtdClient
 rtdConfig.sh
 rtdCubeDisplay
