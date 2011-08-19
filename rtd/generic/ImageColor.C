@@ -16,6 +16,7 @@
  *                           user-defined value).
  *                 03/11/09  Initialize all of pixelval_ in constructor.
  *                           Stops valgrind warnings in Tcl color allocs.
+ *                 19/08/11  Don't interpolate when using truecolor visuals.
  */
 static const char* const rcsId="@(#) $Id: ImageColor.C,v 1.1.1.1 2006/01/12 16:39:04 abrighto Exp $";
 
@@ -326,17 +327,16 @@ int ImageColor::loadColorMap(ColorMapInfo* m)
 {
     cmap_ = m;
 
-    // set the color values from the colormap file, but reserve the
-    // first and last colors for special use
-    int n1 = colorCount_-1, n2 = colorCount_-2;
+    //  PWD: use all colours as this avoids actual interpolation under
+    //  truecolor visuals, can give a slightly better effect.
+    m->interpolate(colorCells_, colorCount_);
 
-    // set first color to black
+    // set first color to black, usually used for blank pixels
     colorCells_[0].red = colorCells_[0].green = colorCells_[0].blue =
 	XBlackPixelOfScreen(DefaultScreenOfDisplay(display_));
 
-    m->interpolate(colorCells_+1, n2);
-
     // set last color default to white
+    int n1 = colorCount_ - 1;
     colorCells_[n1].red =  colorCells_[n1].green = colorCells_[n1].blue =
 	XWhitePixelOfScreen(DefaultScreenOfDisplay(display_));
 
