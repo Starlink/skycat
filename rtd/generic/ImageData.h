@@ -37,6 +37,9 @@
  *                 24/04/08  Added growAndShrink().
  *                 19/06/09  Add setBlank member to handle case when BLANK
  *                           isn't set, but should be.
+ *                 19 Aug 11  Make log and sqrt scalings use different
+ *                            powers. This differentiates them and makes
+ *                            them more like other display tools.
  */
 
 #include <sys/types.h>
@@ -175,8 +178,9 @@ protected:
     // (used in color scaling algorithms to generate lookup table)
     int scaledMinValue_;
     
-    // optional exponent for LOGARITHMIC and SQRT color scale (def: 10.0)
-    double expo_;
+    // optional exponents for LOGARITHMIC and SQRT color scale (def: 6 & 2)
+    double logexpo_;
+    double sqrtexpo_;
 
     // X,Y amount image should be scaled
     int xScale_, yScale_;
@@ -466,8 +470,11 @@ public:
 
     void setBiasInfo(biasINFO* ptr) {biasInfo_ = ptr;}
 
-    void expo(double e) {expo_ = e;}
-    double expo() {return expo_;}
+    void logexpo(double e) {logexpo_ = e;}
+    double logexpo() {return logexpo_;}
+
+    void sqrtexpo(double e) {sqrtexpo_ = e;}
+    double sqrtexpo() {return sqrtexpo_;}
 
     int width() {return width_;}
     int height() {return height_;}

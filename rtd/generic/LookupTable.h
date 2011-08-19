@@ -108,13 +108,13 @@ public:
     }
 
     void logScale(int lcut, int hcut, int isSigned, int ncolors, 
-		  unsigned long* colors, double expo = 10.0) {
+		  unsigned long* colors, double expo = 6.0) {
 	if (rep_) 
 	    rep_->logScale(lcut, hcut, isSigned, ncolors, colors, expo);
     }
 
     void sqrtScale(int lcut, int hcut, int isSigned, int ncolors, 
-		   unsigned long* colors, double expo = 10.0) {
+		   unsigned long* colors, double expo = 2.0) {
 	if (rep_) 
 	    rep_->sqrtScale(lcut, hcut, isSigned, ncolors, colors, expo);
     }

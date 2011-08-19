@@ -20,6 +20,9 @@
  * who             when       what
  * --------------  --------   ----------------------------------------
  * Allan Brighton  09 Aug 96  Created
+ * Peter W. Draper 19 Aug 11  Make log and sqrt scalings use different
+ *                            powers. This differentiates them and makes
+ *                            them more like other display tools.
  */
 static const char* const rcsId="@(#) $Id: LookupTable.C,v 1.1.1.1 2006/01/12 16:38:54 abrighto Exp $";
 
@@ -238,7 +241,7 @@ void LookupTableRep::linearScale(int lcut, int hcut, int isSigned,
  * lcut and hcut are the low and high cut levels (scaled to the short range).
  * isSigned is a flag: should be set to true if the pixel values are signed.
  * ncolors is the number of pixel color values in the colors[] array.
- * expo is the optional exponent (def: 10.0).
+ * expo is the optional exponent (def: 6.0).
  */
 void LookupTableRep::logScale(int lcut, int hcut, int isSigned, 
 			      int ncolors, unsigned long* colors, 
@@ -291,7 +294,7 @@ void LookupTableRep::logScale(int lcut, int hcut, int isSigned,
  * lcut and hcut are the low and high cut levels (scaled to the short range).
  * isSigned is a flag: should be set to true if the pixel values are signed.
  * ncolors is the number of pixel color values in the colors[] array.
- * expo is the optional exponent (def: 10.0).
+ * expo is the optional exponent (def: 2.0).
  */
 void LookupTableRep::sqrtScale(int lcut, int hcut, int isSigned, 
 			       int ncolors, unsigned long* colors, 

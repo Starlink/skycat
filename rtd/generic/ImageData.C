@@ -67,6 +67,9 @@
  *                           getDist treat bin width factor differently for
  *                           integers and others. Wasn't right for either case.
  *                 23/06/09  Initialise new blankValue_ member.
+ *                 19/08/11  Make log and sqrt scalings use different
+ *                           powers. This differentiates them and makes
+ *                           them more like other display tools.
  */
 static const char* const rcsId="@(#) $Id: ImageData.C,v 1.1.1.1 2006/01/12 16:38:59 abrighto Exp $";
 
@@ -147,7 +150,8 @@ ImageData::ImageData(const char* imageName, const ImageIO& image,
       scaledBlankPixelValue_(0),
       minValue_(0.0),
       maxValue_(0.0),
-      expo_(10.0),
+      logexpo_(6.0),
+      sqrtexpo_(2.0),
       xScale_(1),
       yScale_(1),
       rotate_(0),
@@ -209,7 +213,8 @@ ImageData::ImageData(const ImageData& im)
       scaledBlankPixelValue_(im.scaledBlankPixelValue_),
       minValue_(im.minValue_),
       maxValue_(im.maxValue_),
-      expo_(im.expo_),
+      logexpo_(im.logexpo_),
+      sqrtexpo_(im.sqrtexpo_),
       xScale_(im.xScale_),
       yScale_(im.yScale_),
       rotate_(im.rotate_),
@@ -665,10 +670,12 @@ void ImageData::colorScale(int ncolors, unsigned long* colors)
 	lookup_.linearScale(scaledLowCut_, scaledHighCut_, isSigned(), ncolors_, colors_);
 	break;
     case LOG_SCALE:
-	lookup_.logScale(scaledLowCut_, scaledHighCut_, isSigned(), ncolors_, colors_, expo_);
+	lookup_.logScale(scaledLowCut_, scaledHighCut_, isSigned(), ncolors_,
+                         colors_, logexpo_);
 	break;
     case SQRT_SCALE:
-	lookup_.sqrtScale(scaledLowCut_, scaledHighCut_, isSigned(), ncolors_, colors_, expo_);
+	lookup_.sqrtScale(scaledLowCut_, scaledHighCut_, isSigned(), ncolors_,
+                          colors_, sqrtexpo_);
 	break;
     case HISTEQ_SCALE:
 	ImageDataHistogram h;
