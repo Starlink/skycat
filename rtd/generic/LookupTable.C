@@ -356,6 +356,11 @@ void LookupTableRep::histeqScale(int lcut, int hcut, int isSigned,
 	return;
     }
 
+    //  Since we don't know how many colours will be used exactly
+    //  fill all lookup table with hcut.
+    int llcut = lcut;
+    fillLookup(colors[ncolors-1], llcut, isSigned);
+
     // int scaleOffset = SHORT_SIZE/2;  // offset from allocated array to zero
     histogram_equalize(lookup_, histogram, area, lcut, hcut, ncolors, colors);
 }
