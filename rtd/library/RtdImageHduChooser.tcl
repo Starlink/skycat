@@ -253,10 +253,10 @@ itcl::class rtd::RtdImageHduChooser {
 		} else {
 		    if {$naxis1 != $NAXIS1 || $naxis2 != $NAXIS2} {
                        #  PWD: allow for slight rounding error or trim of a
-                       #  couple of pixels.
+                       #  small number of pixels, let's say 10.
                        set dx [expr abs($naxis1 - $NAXIS1)]
                        set dy [expr abs($naxis2 - $NAXIS2)]
-                       if { $dx > 2 || $dy > 2 } {
+                       if { $dx > 10 || $dy > 10 } {
                           set use_crpix 0
                        }
 		    }
