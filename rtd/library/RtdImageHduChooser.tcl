@@ -1,10 +1,10 @@
-# E.S.O. - VLT project 
+# E.S.O. - VLT project
 # "@(#) $Id: RtdImageHduChooser.tcl,v 1.1.1.1 2006/01/12 16:38:21 abrighto Exp $"
 #
 # RtdImageHduChooser.tcl - Itcl widget for displaying FITS extensions
-# 
+#
 # See man page RtdImageHduChooser(n) for a complete description.
-# 
+#
 # who             when       what
 # --------------  ---------  ----------------------------------------
 # Allan Brighton  09/11/98   Created
@@ -17,8 +17,8 @@
 itk::usual RtdImageHduChooser {}
 
 # This class defines a widget for displaying the HDUs in the current FITS
-# image. The user can select an image extension to display 
-# by clicking on an entry the list or on one of the small images displayed 
+# image. The user can select an image extension to display
+# by clicking on an entry the list or on one of the small images displayed
 # in a table.
 
 itcl::class rtd::RtdImageHduChooser {
@@ -45,16 +45,16 @@ itcl::class rtd::RtdImageHduChooser {
 	make_table
 	make_buttons
 	make_short_help
-	
+
 	show_hdu_list
     }
-    
+
     # Quit this widget
 
     public method quit { } {
         destroy $w_
     }
-    
+
     # Make the table component for displaying the HDU info
 
     protected method make_table {} {
@@ -67,20 +67,20 @@ itcl::class rtd::RtdImageHduChooser {
 		    -width [string length $headings]]
 	}
 	pack $itk_component(table) \
-		-side top -fill both -expand 1 
+		-side top -fill both -expand 1
 
 	bind $table_.listbox <ButtonRelease-1> [code $this select_hdu]
 	bind $table_.listbox <Double-ButtonPress-1> [code $this set_hdu]
     }
 
-    
+
     # Make a subwindow for displaying miniature versions of image extensions
-    
+
     protected method make_image_table {} {
 	# Frame (BLT table) used to display images in FITS extensions
 	itk_component add image_table {
 	    set imagetab_ [frame $w_.imagetab]
-	}	
+	}
 	pack $itk_component(image_table) \
 		-side top -fill both -expand 1
     }
@@ -124,12 +124,12 @@ itcl::class rtd::RtdImageHduChooser {
 	pack $w_.buttons.open $w_.buttons.display $w_.buttons.show $w_.buttons.delete \
 		$w_.buttons.close \
 		-side left -expand 1 -fill x -padx 1m -ipadx 1m
-	
+
 	pack $itk_component(buttons) \
 		-side top -fill x
     }
 
-    
+
     # Set the cut levels for the image extensions to the given percent
 
     method auto_set_cut_levels {{percent 99}} {
@@ -192,7 +192,7 @@ itcl::class rtd::RtdImageHduChooser {
 		{Show/Hide the display of the miniature versions of the image extensions}
     }
 
-    
+
     # Update the list of HDUs and the image displays, if needed
 
     public method show_hdu_list {} {
@@ -215,7 +215,7 @@ itcl::class rtd::RtdImageHduChooser {
 	# cleanup first
         delete_images
 	destroy $w_.bintable
-	
+
 	if {"$filename_" == ""} {
 	    return
 	}
@@ -233,10 +233,10 @@ itcl::class rtd::RtdImageHduChooser {
 	    eval lassign [list $hdu] $headings
             if {"$CRPIX1" == ""} {
                 set CRPIX1 0
-            } 
+            }
             if {"$CRPIX2" == ""} {
                 set CRPIX2 0
-            } 
+            }
 	    if {"$Type" == "image" && "$NAXIS" >= 2 && "$NAXIS1" > 0 && "$NAXIS2" > 0} {
 		set ext_($num_images_,HDU) $HDU
 		set ext_($num_images_,ExtName) $ExtName
@@ -252,7 +252,13 @@ itcl::class rtd::RtdImageHduChooser {
 		    set naxis2 $NAXIS2
 		} else {
 		    if {$naxis1 != $NAXIS1 || $naxis2 != $NAXIS2} {
-			set use_crpix 0
+                       #  PWD: allow for slight rounding error or trim of a
+                       #  couple of pixels.
+                       set dx [expr abs($naxis1 - $NAXIS1)]
+                       set dy [expr abs($naxis2 - $NAXIS2)]
+                       if { $dx > 2 || $dy > 2 } {
+                          set use_crpix 0
+                       }
 		    }
 		    if {$CRPIX1 > $max_crpix1} {
 			set max_crpix1 $CRPIX1
@@ -262,7 +268,7 @@ itcl::class rtd::RtdImageHduChooser {
 		    }
 		}
 		incr num_images_
-	    } 
+	    }
 	}
 
 	if {$num_images_ < 1} {
@@ -271,7 +277,7 @@ itcl::class rtd::RtdImageHduChooser {
 
 	# determine the table index for each image
 	if {$use_crpix} {
-	    # put images in correct order based on crpix values 
+	    # put images in correct order based on crpix values
 	    set max_row_ 0
 	    set max_col_ 0
 	    for {set i 0} {$i < $num_images_} {incr i} {
@@ -296,7 +302,7 @@ itcl::class rtd::RtdImageHduChooser {
 		set max_row_ [max $max_row_ $row]
 		set max_col_ [max $max_col_ $col]
 	    }
-	} 
+	}
 
 	if {! $use_crpix} {
 	    # different sized images: put in sequential order
@@ -425,10 +431,10 @@ itcl::class rtd::RtdImageHduChooser {
 	    }
 	}
     }
-    
+
     # This method is called when the user clicks on an image HDU icon.
     # Display the selected image and disable the delete button.
-    
+
     protected method select_image_hdu {hdu} {
 	catch "$table_ select_row [expr {$hdu-1}]"
 	$w_.buttons.delete config -state disabled
@@ -453,9 +459,9 @@ itcl::class rtd::RtdImageHduChooser {
 	busy { $image_ hdu $hdu }
     }
 
-    
-    # Add bindings to the given RtdImage itcl class object and set it to 
-    # display the given HDU when clicked on. 
+
+    # Add bindings to the given RtdImage itcl class object and set it to
+    # display the given HDU when clicked on.
     # The image's extension name is also given.
 
     protected method add_image_bindings {im hdu name} {
@@ -503,7 +509,7 @@ itcl::class rtd::RtdImageHduChooser {
 	    }
 	}
     }
-    
+
 
     # This method is called when a line in the HDU list is selected.
     # Update the states of the buttons depending on the selection.
@@ -519,9 +525,9 @@ itcl::class rtd::RtdImageHduChooser {
 	    }
 	}
     }
-    
 
-    # Display all of the image extensions as a single image (combine based 
+
+    # Display all of the image extensions as a single image (combine based
     # on CRPIX1 and CRPIX2 keywords).
 
     protected method display_as_one_image {} {
@@ -587,7 +593,7 @@ itcl::class rtd::RtdImageHduChooser {
             destroy $bintbl
             return
         }
-        
+
         if { ! [winfo exists $bintbl] } {
             # TableList(n) widget for displaying the binary table
             util::TableList $bintbl \
@@ -603,16 +609,16 @@ itcl::class rtd::RtdImageHduChooser {
         $bintbl config -title $name -headings $headings -info $info
     }
 
-    
+
     # -- options  --
 
     # target SkyCatCtrl itcl class object
     itk_option define -image image Image {}
 
-    # flag: if true, images are "subsampled" when shrinking, 
+    # flag: if true, images are "subsampled" when shrinking,
     # otherwise the pixels are averaged
     itk_option define -subsample subsample Subsample 1
-    
+
     # X shared memory option
     itk_option define -usexshm useXshm UseXshm 1
 
@@ -629,7 +635,7 @@ itcl::class rtd::RtdImageHduChooser {
     itk_option define -shorthelpwin shortHelpWin ShortHelpWin {}
 
     # -- protected vars --
-    
+
     # internal rtdimage object
     protected variable image_
 
