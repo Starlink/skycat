@@ -18,6 +18,10 @@
  *                           that other ImageIORep implementations can be
  *                           used.
  *                 25/04/08  Add growAndShrink().
+ *                 19/01/12  change setCutLevels to define highCut_ and
+ *                           lowCut_ to be the same as the first extension,
+ *                           otherwise we assume primary HDU has same bscale
+ *                           and bzero.
  */
 
 
@@ -319,6 +323,18 @@ void CompoundImageData::setCutLevels(double low, double high, int scaled)
 
     for(int i = 0; i < numImages_; i++) {
 	images_[i]->setCutLevels(low, high, scaled);
+    }
+
+    //  Unscaling of cuts uses first extension HDU methods, so match those
+    //  (otherwise we assume primary HDU has same bscale and bzero as first
+    //  extension).
+    if (scaled) {
+	highCut_ = images_[0]->unScaleValue(high);
+	lowCut_ = images_[0]->unScaleValue(low);
+    }
+    else {
+	highCut_ = high;
+	lowCut_ = low;
     }
 }
 
