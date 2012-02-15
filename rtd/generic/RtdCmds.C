@@ -32,6 +32,8 @@
 *                          coordinates can be reported in degrees (J2000).
 *                 24/04/08 Allow scales to have differing signs.
 *                 21/05/08 Extend statisticsCmd to append the FWHM in arcsecs.
+*                 15/02/12 Round spectrum end points to nearest integers so
+*                          that pixel boundaries are respected.
 */
 
 /************************************************************************
@@ -2643,7 +2645,7 @@ int RtdImage::spectrumCmd(int argc, char* argv[])
 	return TCL_ERROR;
 
     // get distance between endpoints (add a little to be safe)
-    int x0 = int(rx0), y0 = int(ry0), x1 = int(rx1), y1 = int(ry1);
+    int x0 = int(rx0+0.5), y0 = int(ry0+0.5), x1 = int(rx1+0.5), y1 = int(ry1+0.5);
     int w = abs(x1-x0) + 1;
     int h = abs(y1-y0) + 1;
     int dist = (int)sqrt((double)w*w + h*h) + 2;
