@@ -6,7 +6,7 @@
 # who         when       what
 # --------   ---------   ----------------------------------------------
 # A.Brighton 11 Oct 95   created
-
+# P.W.Draper 18 Mar 2012 Comment out text bindings, these are broken.
 
 # set general widget defaults
 
@@ -122,8 +122,9 @@ proc util::setXdefaults {} {
 	# tk8.4+ version
 	bind Entry <Delete> {::tk::EntryBackspace %W}
 	bind Entry <BackSpace> {::tk::EntryBackspace %W}
-	bind Text <Delete> {::tk::EntryBackspace %W}
-	bind Text <BackSpace> {::tk::EntryBackspace %W}
+        #  APIs are now incompatible. Is this used?
+	#bind Text <Delete> {::tk::EntryBackspace %W}
+	#bind Text <BackSpace> {::tk::EntryBackspace %W}
 	bind Button <Return> { ::tk::ButtonInvoke %W }
 	bind Radiobutton <Return> { ::tk::CheckRadioInvoke %W }
 	bind Checkbutton <Return> { ::tk::CheckRadioInvoke %W }
