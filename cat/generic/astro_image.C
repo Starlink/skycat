@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project/ESO Archive
- * $Id: astro_image.C,v 1.1.1.1 2006/01/12 16:36:40 abrighto Exp $
+ * $Id: astro_image.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
  *
  * astroImage.C - C interface implementation for C++ class AstroImage
  * 
@@ -12,7 +12,7 @@
  *                 02/01/06  Renamed astroImage.C to astro_image.C to avoid
  *                           name conflict on file systems that ignore case
  */
-static const char* const rcsId="@(#) $Id: astro_image.C,v 1.1.1.1 2006/01/12 16:36:40 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: astro_image.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 
 

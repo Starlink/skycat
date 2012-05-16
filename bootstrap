@@ -1,0 +1,44 @@
+#!/bin/sh
+
+#******************************************************************************
+# European Southern Observatory / Data Management and Operations Division
+# Data Flow System department
+# "@(#) $Id: bootstrap,v 1.1 2010/07/01 15:40:17 cguirao Exp $"
+#******************************************************************************
+
+# #############################################################################
+# HEADER
+# #############################################################################
+
+# -------
+# CHANGES
+# -------
+# WHO          WHAT                                         WHEN          WHERE
+# cguirao      created                                      2006/02/20    1_0
+#
+
+
+# -------------------
+# GENERAL DESCRIPTION
+# -------------------
+# Bootstrap script for packages with Autotools.
+# The execution of this script generates the Autotools scripts (i.e. configure)
+# To be executed after a complet check-out of project from CVS  
+# and after the execution of a "make clean-maintainer" 
+
+
+# #############################################################################
+# MAIN
+# #############################################################################
+
+# This is to filter out annoying messages. But it failed to exit with the
+# same error code
+#autoreconf -i -s --force 2>&1 | egrep -v "libgcrypt.m4:23" | egrep -v "Extending" | egrep -v "ao.m4:9"
+
+autoreconf -i -s --force >/dev/null 2>&1
+result=$?
+if [ $result -ne 0 ]; then
+  echo "bootstrap: \"autoreconf -i -s --force\" failed."
+  echo "bootstrap: execute it by hand to get more info" 
+fi
+exit $result

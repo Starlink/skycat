@@ -1,5 +1,5 @@
 # E.S.O. - VLT project/ ESO Archive
-# "@(#) $Id: LabelValue2.tcl,v 1.1.1.1 2006/01/12 16:38:19 abrighto Exp $"
+# "@(#) $Id: LabelValue2.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 #
 # LabelValue2.tcl - Widget displaying a label and two values
 #

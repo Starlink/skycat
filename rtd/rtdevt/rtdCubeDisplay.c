@@ -1,6 +1,6 @@
 /*************************************************************************
 * E.S.O. - VLT project
-* "@(#) $Id: rtdCubeDisplay.c,v 1.1.1.1 2006/01/12 16:39:59 abrighto Exp $"
+* "@(#) $Id: rtdCubeDisplay.c,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 *  rtdClient.c
 *
 * who       when      what
@@ -9,7 +9,7 @@
 * P.W. Draper 16/12/97  Modified to use fd_set as a type rather than
 *                       struct.
 */
-static const char* const rcsId="@(#) $Id: rtdCubeDisplay.c,v 1.1.1.1 2006/01/12 16:39:59 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: rtdCubeDisplay.c,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 /************************************************************************
 *   NAME

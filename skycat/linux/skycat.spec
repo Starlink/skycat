@@ -1,12 +1,25 @@
+# CG. 14/07/2010
+# Add the following to your ~/.rpmmacros
+# %_includedir %(echo $TCLTK_ROOT)/include
+# %_libdir %(echo $TCLTK_ROOT)/lib
+# %_prefix %(echo $TCLTK_ROOT)
+#
+# Before executing any rpmbuild, define the env TCLTK_ROOT as the
+# location where TCL+TK+ITCL+TCLX+BLT+TKIMG is installed, e.g.
+#  export TCLTK_ROOT=/opt/tcltk 
+#  export TCLTK_ROOT=/vlt/VLT2010/tlctk
+#
 Summary: FITS Image Display and Catalog Search Tool for Astronomy
 Name: skycat
-Version: 3.0.2
+Version: 3.1.1
 Release: 1
 License: GNU General Public License
 Group: Applications/Engineering
-URL: http://archive.eso.org/skycat/
+URL: http://archive.eso.org/cms/tools-documentation/skycat
 Source0: %{name}-%{version}.tar.gz
-Requires: tcl, tk, itcl, tclx, blt, tkimg
+#Requires: tcl, tk, itcl, tclx, blt, tkimg
+# The binary RPM requires the tcltk RPM
+Requires: tcltk
 BuildRequires: %{_includedir}/tk.h, %{_includedir}/tcl.h
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
@@ -35,7 +48,7 @@ mkdir build
 cd build
 ../configure \
 	--prefix=%_prefix \
-	--exec-prefix=%_prefix \
+	--exec_prefix=%_prefix \
 	--libdir=%_libdir \
 	--mandir=%_mandir \
 	--with-tcl=%_libdir \
@@ -43,6 +56,7 @@ cd build
 make
 
 %install
+rm -rf $RPM_BUILD_ROOT
 cd build
 make install DESTDIR=%buildroot
 
@@ -51,23 +65,23 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc CHANGES COPYING README
+#%doc CHANGES COPYING README
 %{_bindir}/skycat
 %{_bindir}/rtd
 %{_bindir}/tRtd
 %{_bindir}/rtdServer
 %{_bindir}/rtdClient
 %{_bindir}/rtdCubeDisplay
-%{_libdir}/tclutil2.0
-%{_libdir}/astrotcl2.0
-%{_libdir}/rtd3.0
-%{_libdir}/cat4.0
-%{_libdir}/skycat3.0.2
-%{_libdir}/libtclutil2.0.so
-%{_libdir}/libastrotcl2.0.so
-%{_libdir}/librtd3.0.so
-%{_libdir}/libcat4.0.so
-%{_libdir}/libskycat3.0.2.so
+%{_libdir}/tclutil2.1.0
+%{_libdir}/astrotcl2.1.0
+%{_libdir}/rtd3.2.1
+%{_libdir}/cat4.1.0
+%{_libdir}/skycat3.1.1
+%{_libdir}/libtclutil2.1.0.so
+%{_libdir}/libastrotcl2.1.0.so
+%{_libdir}/librtd3.2.1.so
+%{_libdir}/libcat4.1.0.so
+%{_libdir}/libskycat3.1.1.so
 %{_libdir}/librtdImgEvt.a
 %{_libdir}/librtdRemote.a
 %{_libdir}/tclutilConfig.sh
@@ -82,6 +96,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/skycat
 
 %changelog
+* Thu Jul 14 2010 Carlos Guirao <cguirao@eso.org> -
+- Modified and tested with SL53
+
 * Mon Jan 30 2006 Allan Brighton <abrighto@eso.org> - 
 - Initial rpm build.
 

@@ -1,7 +1,7 @@
 /*
  * E.S.O. - VLT project / ESO Archive
  *
- * "@(#) $Id: WCSRep.C,v 1.1.1.1 2006/01/12 16:43:57 abrighto Exp $" 
+ * "@(#) $Id: WCSRep.C,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $" 
  *
  * WCS.C - method definitions for class WCS, a reference counting
  *         wrapper class for managing world coordinates for an image.
@@ -15,7 +15,7 @@
  * abrighto        02/01/06   Renamed WCS.C to WCSRep.C to avoid name conflict
  *                            with wcs.c on file systems that ignore case
  */
-static const char* const rcsId="@(#) $Id: WCSRep.C,v 1.1.1.1 2006/01/12 16:43:57 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: WCSRep.C,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $";
 
 
 #include <cstdlib>

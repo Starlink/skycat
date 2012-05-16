@@ -1,7 +1,7 @@
 #*******************************************************************************
 # E.S.O. - VLT project
 #
-# "@(#) $Id: RtdImageFrame.tcl,v 1.1.1.1 2006/01/12 16:38:23 abrighto Exp $"
+# "@(#) $Id: RtdImageFrame.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 #
 # RtdImageFrame.tcl - itcl widget for displaying a section of an rtdimage 
 # at a given position in a canvas window
@@ -106,8 +106,6 @@ itcl::class rtd::RtdImageFrame {
 	# handle interaction between zoom window and rapid frame
 	$canvas_ bind $rectId_ <Any-Enter> "+[code $target_image_ view enter $image_]"
 	$canvas_ bind $rectId_ <Any-Leave> "+[code $target_image_ view leave $image_]"
-
-	$image_ config -newimagecmd [code $this notify_cmd resize]
     }
 
 

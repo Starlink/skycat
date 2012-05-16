@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project 
- * "@(#) $Id: tcl_findLibrary.h,v 1.2 2006/01/21 01:06:54 abrighto Exp $"
+ * "@(#) $Id: tcl_findLibrary.h,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
  *
  * Replacement for Tcl's tcl_findLibrary script (This version is taken 
  * from tcl-8.4.11/auto.tcl).
@@ -11,7 +11,7 @@
  * --------------  --------   ----------------------------------------
  * Allan Brighton  11/01/06   created
  */
-static const char* const rcsId="@(#) $Id: tcl_findLibrary.h,v 1.2 2006/01/21 01:06:54 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: tcl_findLibrary.h,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 char* tcl_findLibrary = 
 "proc tcl_findLibrary {basename version patch initScript enVarName varName} {\n"

@@ -1,7 +1,7 @@
 /*
  * E.S.O. - VLT project 
  *
- * "@(#) $Id: RtdPerf.C,v 1.1.1.1 2006/01/12 16:39:21 abrighto Exp $" 
+ * "@(#) $Id: RtdPerf.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $" 
  *
  * RtdPerf.C - member functions for class RtdPerf
  *
@@ -82,8 +82,8 @@ RtdPerf::RtdPerf(Tcl_Interp* interp)
 	accXtime_(0.0),
 	accFREQtime_(0.0)
 {
-    name("");
-    dbl_ = new RtdDebugLog("RtdPerf", (int)0);
+    name((char *)"");
+    dbl_ = new RtdDebugLog((char *)"RtdPerf", (int)0);
     reset();
 }
 

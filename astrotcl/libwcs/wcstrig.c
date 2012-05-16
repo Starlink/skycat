@@ -30,7 +30,7 @@
 *   The functions defined herein are trigonometric or inverse trigonometric
 *   functions which take or return angular arguments in decimal degrees.
 *
-*   $Id: wcstrig.c,v 1.1.1.1 2006/01/12 16:44:56 abrighto Exp $
+*   $Id: wcstrig.c,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $
 *---------------------------------------------------------------------------*/
 
 #include <math.h>

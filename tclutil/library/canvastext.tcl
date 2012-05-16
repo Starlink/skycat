@@ -1,7 +1,7 @@
 # canvastext.tcl - utility routines for working with canvase text items
 #
 # Author: Allan Brighton
-# "@(#) $Id: canvastext.tcl,v 1.1.1.1 2006/01/12 16:40:56 abrighto Exp $"
+# "@(#) $Id: canvastext.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 
 
 proc ct_move_to_char {canvas item index} {

@@ -1,7 +1,7 @@
 /*******************************************************************************
 * E.S.O. - VLT project
 *
-* "@(#) $Id: RtdCoords.C,v 1.1.1.1 2006/01/12 16:39:20 abrighto Exp $"
+* "@(#) $Id: RtdCoords.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 *
  * who             when      what
  * --------------  --------  ----------------------------------------
@@ -36,9 +36,7 @@
 *------------------------------------------------------------------------
 */
 
-static char *rcsId="@(#) $Id: RtdCoords.C,v 1.1.1.1 2006/01/12 16:39:20 abrighto Exp $";
- 
-static void *use_rcsId = ((void)&use_rcsId,(void *) &rcsId);
+static const char *rcsId="@(#) $Id: RtdCoords.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 #include "RtdImage.h"
 
@@ -236,7 +234,7 @@ int RtdImage::convertCoords(int dist_flag, double& x, double& y,
     if (in == out) 
 	return TCL_OK;
 
-    char* msg = "unknown coordinate type";
+    char* msg = (char *)"unknown coordinate type";
 
     switch(in) {
 

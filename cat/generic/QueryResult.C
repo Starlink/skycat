@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project/ESO Archive 
- * $Id: QueryResult.C,v 1.1.1.1 2006/01/12 16:36:40 abrighto Exp $
+ * $Id: QueryResult.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
  *
  * QueryResult.C - method definitions for class QueryResult
  *
@@ -10,7 +10,7 @@
  * --------------  --------   ----------------------------------------
  * Allan Brighton  07 Nov 95  Created
  */
-static const char* const rcsId="@(#) $Id: QueryResult.C,v 1.1.1.1 2006/01/12 16:36:40 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: QueryResult.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 
 using namespace std;

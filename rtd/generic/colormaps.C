@@ -1,7 +1,7 @@
 
 /*
  * E.S.O. - VLT project 
- * "@(#) $Id: colormaps.C,v 1.1.1.1 2006/01/12 16:38:52 abrighto Exp $"
+ * "@(#) $Id: colormaps.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
  *
  * Colormap definitions for RTD
  *
@@ -271,7 +271,7 @@ void defineColormaps() {
 		{0.99608, 0.99608, 1.00000},
 		{1.00000, 1.00000, 1.00000},
 	};
-	new ColorMapInfo("idl2.lasc", idl2_lasc);
+	new ColorMapInfo((char *)"idl2.lasc", idl2_lasc);
 
 	static RGBColor rainbow4_lasc[] = {
 		{0.00000, 0.00000, 0.01176},
@@ -531,7 +531,7 @@ void defineColormaps() {
 		{1.00000, 0.95686, 1.00000},
 		{1.00000, 1.00000, 1.00000},
 	};
-	new ColorMapInfo("rainbow4.lasc", rainbow4_lasc);
+	new ColorMapInfo((char *)"rainbow4.lasc", rainbow4_lasc);
 
 	static RGBColor idl4_lasc[] = {
 		{0.00000, 0.00000, 0.00000},
@@ -791,7 +791,7 @@ void defineColormaps() {
 		{1.00000, 0.99216, 0.00000},
 		{1.00000, 1.00000, 0.00000},
 	};
-	new ColorMapInfo("idl4.lasc", idl4_lasc);
+	new ColorMapInfo((char *)"idl4.lasc", idl4_lasc);
 
 	static RGBColor idl5_lasc[] = {
 		{0.00000, 0.00000, 0.00000},
@@ -1051,7 +1051,7 @@ void defineColormaps() {
 		{1.00000, 1.00000, 0.98431},
 		{1.00000, 1.00000, 1.00000},
 	};
-	new ColorMapInfo("idl5.lasc", idl5_lasc);
+	new ColorMapInfo((char *)"idl5.lasc", idl5_lasc);
 
 	static RGBColor idl6_lasc[] = {
 		{0.00000, 0.00000, 0.00000},
@@ -1311,7 +1311,7 @@ void defineColormaps() {
 		{0.00000, 0.00000, 0.01961},
 		{0.00000, 0.00000, 0.00000},
 	};
-	new ColorMapInfo("idl6.lasc", idl6_lasc);
+	new ColorMapInfo((char *)"idl6.lasc", idl6_lasc);
 
 	static RGBColor smooth1_lasc[] = {
 		{0.30980, 0.29020, 0.22353},
@@ -1571,7 +1571,7 @@ void defineColormaps() {
 		{0.83529, 0.78039, 0.73333},
 		{0.87059, 0.82353, 0.78431},
 	};
-	new ColorMapInfo("smooth1.lasc", smooth1_lasc);
+	new ColorMapInfo((char *)"smooth1.lasc", smooth1_lasc);
 
 	static RGBColor smooth_lasc[] = {
 		{0.00000, 0.00000, 1.00000},
@@ -1831,7 +1831,7 @@ void defineColormaps() {
 		{0.00000, 0.00000, 0.00000},
 		{0.00000, 0.00000, 0.00000},
 	};
-	new ColorMapInfo("smooth.lasc", smooth_lasc);
+	new ColorMapInfo((char *)"smooth.lasc", smooth_lasc);
 
 	static RGBColor isophot_lasc[] = {
 		{0.00000, 0.00000, 0.00000},
@@ -2091,7 +2091,7 @@ void defineColormaps() {
 		{1.00000, 0.95686, 1.00000},
 		{1.00000, 1.00000, 1.00000},
 	};
-	new ColorMapInfo("isophot.lasc", isophot_lasc);
+	new ColorMapInfo((char *)"isophot.lasc", isophot_lasc);
 
 	static RGBColor smooth2_lasc[] = {
 		{0.00000, 0.00000, 0.00000},
@@ -2351,7 +2351,7 @@ void defineColormaps() {
 		{1.00000, 1.00000, 0.86667},
 		{1.00000, 1.00000, 1.00000},
 	};
-	new ColorMapInfo("smooth2.lasc", smooth2_lasc);
+	new ColorMapInfo((char *)"smooth2.lasc", smooth2_lasc);
 
 	static RGBColor heat_lasc[] = {
 		{0.00000, 0.00000, 0.00000},
@@ -2611,7 +2611,7 @@ void defineColormaps() {
 		{1.00000, 0.99608, 1.00000},
 		{1.00000, 1.00000, 1.00000},
 	};
-	new ColorMapInfo("heat.lasc", heat_lasc);
+	new ColorMapInfo((char *)"heat.lasc", heat_lasc);
 
 	static RGBColor smooth3_lasc[] = {
 		{0.00000, 0.00000, 0.00784},
@@ -2871,7 +2871,7 @@ void defineColormaps() {
 		{0.75749, 1.00000, 1.00000},
 		{0.00000, 1.00000, 1.00000},
 	};
-	new ColorMapInfo("smooth3.lasc", smooth3_lasc);
+	new ColorMapInfo((char *)"smooth3.lasc", smooth3_lasc);
 
 	static RGBColor rainbow_lasc[] = {
 		{0.00000, 0.00000, 0.16471},
@@ -3131,7 +3131,7 @@ void defineColormaps() {
 		{0.98824, 0.92941, 0.92941},
 		{1.00000, 1.00000, 1.00000},
 	};
-	new ColorMapInfo("rainbow.lasc", rainbow_lasc);
+	new ColorMapInfo((char *)"rainbow.lasc", rainbow_lasc);
 
 	static RGBColor manycol_lasc[] = {
 		{0.34902, 0.34902, 0.34902},
@@ -3391,7 +3391,7 @@ void defineColormaps() {
 		{0.72549, 0.00000, 0.72549},
 		{0.72549, 0.00000, 0.72549},
 	};
-	new ColorMapInfo("manycol.lasc", manycol_lasc);
+	new ColorMapInfo((char *)"manycol.lasc", manycol_lasc);
 
 	static RGBColor ramp_lasc[] = {
 		{0.00000, 0.00000, 0.00000},
@@ -3651,7 +3651,7 @@ void defineColormaps() {
 		{0.99608, 0.99608, 0.99608},
 		{1.00000, 1.00000, 1.00000},
 	};
-	new ColorMapInfo("ramp.lasc", ramp_lasc);
+	new ColorMapInfo((char *)"ramp.lasc", ramp_lasc);
 
 	static RGBColor pastel_lasc[] = {
 		{0.00000, 0.00000, 0.00000},
@@ -3911,7 +3911,7 @@ void defineColormaps() {
 		{1.00000, 0.98039, 0.00000},
 		{1.00000, 0.99216, 0.00000},
 	};
-	new ColorMapInfo("pastel.lasc", pastel_lasc);
+	new ColorMapInfo((char *)"pastel.lasc", pastel_lasc);
 
 	static RGBColor light_lasc[] = {
 		{0.00000, 0.00392, 0.00000},
@@ -4171,7 +4171,7 @@ void defineColormaps() {
 		{1.00000, 1.00000, 1.00000},
 		{1.00000, 1.00000, 1.00000},
 	};
-	new ColorMapInfo("light.lasc", light_lasc);
+	new ColorMapInfo((char *)"light.lasc", light_lasc);
 
 	static RGBColor random1_lasc[] = {
 		{0.00000, 0.00000, 0.16471},
@@ -4431,7 +4431,7 @@ void defineColormaps() {
 		{0.78824, 0.00000, 0.00000},
 		{0.78824, 0.00000, 0.00000},
 	};
-	new ColorMapInfo("random1.lasc", random1_lasc);
+	new ColorMapInfo((char *)"random1.lasc", random1_lasc);
 
 	static RGBColor random2_lasc[] = {
 		{0.00000, 0.00000, 0.00000},
@@ -4691,7 +4691,7 @@ void defineColormaps() {
 		{1.00000, 1.00000, 1.00000},
 		{1.00000, 1.00000, 1.00000},
 	};
-	new ColorMapInfo("random2.lasc", random2_lasc);
+	new ColorMapInfo((char *)"random2.lasc", random2_lasc);
 
 	static RGBColor random3_lasc[] = {
 		{0.00000, 0.00000, 0.00000},
@@ -4951,7 +4951,7 @@ void defineColormaps() {
 		{1.00000, 1.00000, 1.00000},
 		{1.00000, 1.00000, 1.00000},
 	};
-	new ColorMapInfo("random3.lasc", random3_lasc);
+	new ColorMapInfo((char *)"random3.lasc", random3_lasc);
 
 	static RGBColor random4_lasc[] = {
 		{0.00000, 0.00000, 0.00000},
@@ -5211,7 +5211,7 @@ void defineColormaps() {
 		{1.00000, 1.00000, 1.00000},
 		{1.00000, 1.00000, 1.00000},
 	};
-	new ColorMapInfo("random4.lasc", random4_lasc);
+	new ColorMapInfo((char *)"random4.lasc", random4_lasc);
 
 	static RGBColor random5_lasc[] = {
 		{0.00000, 0.00000, 1.00000},
@@ -5471,7 +5471,7 @@ void defineColormaps() {
 		{0.99216, 0.85098, 0.00000},
 		{1.00000, 1.00000, 0.00000},
 	};
-	new ColorMapInfo("random5.lasc", random5_lasc);
+	new ColorMapInfo((char *)"random5.lasc", random5_lasc);
 
 	static RGBColor random6_lasc[] = {
 		{0.00000, 0.00000, 0.00000},
@@ -5731,7 +5731,7 @@ void defineColormaps() {
 		{0.98824, 0.84706, 0.98824},
 		{0.98824, 0.98824, 0.98824},
 	};
-	new ColorMapInfo("random6.lasc", random6_lasc);
+	new ColorMapInfo((char *)"random6.lasc", random6_lasc);
 
 	static RGBColor color_lasc[] = {
 		{0.00000, 0.00000, 0.00000},
@@ -5991,7 +5991,7 @@ void defineColormaps() {
 		{0.74902, 0.00000, 0.30980},
 		{0.74902, 0.00000, 0.30980},
 	};
-	new ColorMapInfo("color.lasc", color_lasc);
+	new ColorMapInfo((char *)"color.lasc", color_lasc);
 
 	static RGBColor standard_lasc[] = {
 		{0.00392, 0.00392, 0.33333},
@@ -6251,7 +6251,7 @@ void defineColormaps() {
 		{0.99216, 0.33333, 0.33333},
 		{1.00000, 0.33725, 0.33725},
 	};
-	new ColorMapInfo("standard.lasc", standard_lasc);
+	new ColorMapInfo((char *)"standard.lasc", standard_lasc);
 
 	static RGBColor blulut_lasc[] = {
 		{0.00000, 0.00000, 0.00000},
@@ -6511,7 +6511,7 @@ void defineColormaps() {
 		{0.98441, 0.98441, 0.99608},
 		{1.00000, 1.00000, 1.00000},
 	};
-	new ColorMapInfo("blulut.lasc", blulut_lasc);
+	new ColorMapInfo((char *)"blulut.lasc", blulut_lasc);
 
 	static RGBColor green_lasc[] = {
 		{0.00000, 0.00000, 0.00000},
@@ -6771,7 +6771,7 @@ void defineColormaps() {
 		{0.00000, 0.99608, 0.00392},
 		{0.00000, 1.00000, 0.00784},
 	};
-	new ColorMapInfo("green.lasc", green_lasc);
+	new ColorMapInfo((char *)"green.lasc", green_lasc);
 
 	static RGBColor staircase_lasc[] = {
 		{0.00392, 0.00392, 0.31373},
@@ -7031,7 +7031,7 @@ void defineColormaps() {
 		{0.99216, 0.80000, 0.80000},
 		{1.00000, 1.00000, 1.00000},
 	};
-	new ColorMapInfo("staircase.lasc", staircase_lasc);
+	new ColorMapInfo((char *)"staircase.lasc", staircase_lasc);
 
 	static RGBColor random_lasc[] = {
 		{0.00000, 0.00000, 0.00000},
@@ -7291,7 +7291,7 @@ void defineColormaps() {
 		{0.00000, 0.00000, 0.00000},
 		{0.00000, 0.00000, 0.00000},
 	};
-	new ColorMapInfo("random.lasc", random_lasc);
+	new ColorMapInfo((char *)"random.lasc", random_lasc);
 
 	static RGBColor blue_lasc[] = {
 		{0.00000, 0.00000, 0.00000},
@@ -7551,7 +7551,7 @@ void defineColormaps() {
 		{0.00000, 0.01569, 0.99608},
 		{0.00000, 0.00392, 1.00000},
 	};
-	new ColorMapInfo("blue.lasc", blue_lasc);
+	new ColorMapInfo((char *)"blue.lasc", blue_lasc);
 
 	static RGBColor red_lasc[] = {
 		{0.00000, 0.00000, 0.00000},
@@ -7811,7 +7811,7 @@ void defineColormaps() {
 		{0.99608, 0.00000, 0.00392},
 		{1.00000, 0.00000, 0.00784},
 	};
-	new ColorMapInfo("red.lasc", red_lasc);
+	new ColorMapInfo((char *)"red.lasc", red_lasc);
 
 	static RGBColor aips0_lasc[] = {
 		{0.00000, 0.00000, 0.00000},
@@ -8071,7 +8071,7 @@ void defineColormaps() {
 		{1.00000, 0.00000, 0.00000},
 		{1.00000, 0.00000, 0.00000},
 	};
-	new ColorMapInfo("aips0.lasc", aips0_lasc);
+	new ColorMapInfo((char *)"aips0.lasc", aips0_lasc);
 
 	static RGBColor stairs8_lasc[] = {
 		{0.76471, 0.00000, 1.00000},
@@ -8331,7 +8331,7 @@ void defineColormaps() {
 		{1.00000, 1.00000, 1.00000},
 		{1.00000, 1.00000, 1.00000},
 	};
-	new ColorMapInfo("stairs8.lasc", stairs8_lasc);
+	new ColorMapInfo((char *)"stairs8.lasc", stairs8_lasc);
 
 	static RGBColor idl11_lasc[] = {
 		{0.00000, 0.00000, 0.00000},
@@ -8591,7 +8591,7 @@ void defineColormaps() {
 		{1.00000, 0.00000, 0.00000},
 		{1.00000, 0.00000, 0.00000},
 	};
-	new ColorMapInfo("idl11.lasc", idl11_lasc);
+	new ColorMapInfo((char *)"idl11.lasc", idl11_lasc);
 
 	static RGBColor stairs9_lasc[] = {
 		{0.00000, 0.00000, 0.00000},
@@ -8851,7 +8851,7 @@ void defineColormaps() {
 		{0.00000, 0.00000, 1.00000},
 		{0.00000, 0.00000, 1.00000},
 	};
-	new ColorMapInfo("stairs9.lasc", stairs9_lasc);
+	new ColorMapInfo((char *)"stairs9.lasc", stairs9_lasc);
 
 	static RGBColor backgr_lasc[] = {
 		{0.00000, 0.00000, 0.00000},
@@ -9111,7 +9111,7 @@ void defineColormaps() {
 		{1.00000, 0.01587, 0.00000},
 		{1.00000, 0.00000, 0.00000},
 	};
-	new ColorMapInfo("backgr.lasc", backgr_lasc);
+	new ColorMapInfo((char *)"backgr.lasc", backgr_lasc);
 
 	static RGBColor idl12_lasc[] = {
 		{0.00000, 0.00000, 0.00000},
@@ -9371,7 +9371,7 @@ void defineColormaps() {
 		{1.00000, 1.00000, 1.00000},
 		{1.00000, 1.00000, 1.00000},
 	};
-	new ColorMapInfo("idl12.lasc", idl12_lasc);
+	new ColorMapInfo((char *)"idl12.lasc", idl12_lasc);
 
 	static RGBColor rainbow1_lasc[] = {
 		{0.00000, 0.00000, 0.16471},
@@ -9631,7 +9631,7 @@ void defineColormaps() {
 		{0.74118, 0.00000, 0.00000},
 		{0.73333, 0.00000, 0.00000},
 	};
-	new ColorMapInfo("rainbow1.lasc", rainbow1_lasc);
+	new ColorMapInfo((char *)"rainbow1.lasc", rainbow1_lasc);
 
 	static RGBColor idl14_lasc[] = {
 		{0.00000, 0.00000, 0.00000},
@@ -9891,7 +9891,7 @@ void defineColormaps() {
 		{1.00000, 0.97255, 0.96863},
 		{1.00000, 1.00000, 1.00000},
 	};
-	new ColorMapInfo("idl14.lasc", idl14_lasc);
+	new ColorMapInfo((char *)"idl14.lasc", idl14_lasc);
 
 	static RGBColor rainbow2_lasc[] = {
 		{0.00000, 0.00000, 0.00000},
@@ -10151,7 +10151,7 @@ void defineColormaps() {
 		{1.00000, 0.94118, 0.94118},
 		{1.00000, 0.97255, 0.97255},
 	};
-	new ColorMapInfo("rainbow2.lasc", rainbow2_lasc);
+	new ColorMapInfo((char *)"rainbow2.lasc", rainbow2_lasc);
 
 	static RGBColor real_lasc[] = {
 		{0.00784, 0.00392, 0.00000},
@@ -10411,7 +10411,7 @@ void defineColormaps() {
 		{1.00000, 1.00000, 0.99608},
 		{1.00000, 1.00000, 1.00000},
 	};
-	new ColorMapInfo("real.lasc", real_lasc);
+	new ColorMapInfo((char *)"real.lasc", real_lasc);
 
 	static RGBColor idl15_lasc[] = {
 		{0.00000, 0.00000, 0.00000},
@@ -10671,7 +10671,7 @@ void defineColormaps() {
 		{0.99608, 0.99608, 0.98431},
 		{1.00000, 1.00000, 1.00000},
 	};
-	new ColorMapInfo("idl15.lasc", idl15_lasc);
+	new ColorMapInfo((char *)"idl15.lasc", idl15_lasc);
 
 	static RGBColor rainbow3_lasc[] = {
 		{0.00000, 0.00000, 0.00000},
@@ -10931,7 +10931,7 @@ void defineColormaps() {
 		{1.00000, 0.95686, 1.00000},
 		{1.00000, 1.00000, 1.00000},
 	};
-	new ColorMapInfo("rainbow3.lasc", rainbow3_lasc);
+	new ColorMapInfo((char *)"rainbow3.lasc", rainbow3_lasc);
 
 	static double lasritt_iasc[] = {
 		0.05882,
@@ -11191,7 +11191,7 @@ void defineColormaps() {
 		1.00000,
 		1.00000,
 	};
-	new ITTInfo("lasritt.iasc", lasritt_iasc);
+	new ITTInfo((char *)"lasritt.iasc", lasritt_iasc);
 
 	static double expo_iasc[] = {
 		0.00458,
@@ -11451,7 +11451,7 @@ void defineColormaps() {
 		1.00000,
 		1.00000,
 	};
-	new ITTInfo("expo.iasc", expo_iasc);
+	new ITTInfo((char *)"expo.iasc", expo_iasc);
 
 	static double jigsaw_iasc[] = {
 		0.00000,
@@ -11711,7 +11711,7 @@ void defineColormaps() {
 		0.98039,
 		0.99608,
 	};
-	new ITTInfo("jigsaw.iasc", jigsaw_iasc);
+	new ITTInfo((char *)"jigsaw.iasc", jigsaw_iasc);
 
 	static double ramp_iasc[] = {
 		0.00000,
@@ -11971,7 +11971,7 @@ void defineColormaps() {
 		0.99608,
 		1.00000,
 	};
-	new ITTInfo("ramp.iasc", ramp_iasc);
+	new ITTInfo((char *)"ramp.iasc", ramp_iasc);
 
 	static double neg_iasc[] = {
 		1.00000,
@@ -12231,7 +12231,7 @@ void defineColormaps() {
 		0.00392,
 		0.00000,
 	};
-	new ITTInfo("neg.iasc", neg_iasc);
+	new ITTInfo((char *)"neg.iasc", neg_iasc);
 
 	static double stairs_iasc[] = {
 		0.00000,
@@ -12491,7 +12491,7 @@ void defineColormaps() {
 		1.00000,
 		1.00000,
 	};
-	new ITTInfo("stairs.iasc", stairs_iasc);
+	new ITTInfo((char *)"stairs.iasc", stairs_iasc);
 
 	static double equa_iasc[] = {
 		0.06275,
@@ -12751,7 +12751,7 @@ void defineColormaps() {
 		1.00000,
 		1.00000,
 	};
-	new ITTInfo("equa.iasc", equa_iasc);
+	new ITTInfo((char *)"equa.iasc", equa_iasc);
 
 	static double neglog_iasc[] = {
 		1.00000,
@@ -13011,7 +13011,7 @@ void defineColormaps() {
 		0.00000,
 		0.00000,
 	};
-	new ITTInfo("neglog.iasc", neglog_iasc);
+	new ITTInfo((char *)"neglog.iasc", neglog_iasc);
 
 	static double log_iasc[] = {
 		0.00000,
@@ -13271,7 +13271,7 @@ void defineColormaps() {
 		1.00000,
 		1.00000,
 	};
-	new ITTInfo("log.iasc", log_iasc);
+	new ITTInfo((char *)"log.iasc", log_iasc);
 
 	static double gamma_iasc[] = {
 		0.11285,
@@ -13531,7 +13531,7 @@ void defineColormaps() {
 		1.00000,
 		1.00000,
 	};
-	new ITTInfo("gamma.iasc", gamma_iasc);
+	new ITTInfo((char *)"gamma.iasc", gamma_iasc);
 
 	static double null_iasc[] = {
 		0.00000,
@@ -13791,6 +13791,6 @@ void defineColormaps() {
 		0.00000,
 		0.00000,
 	};
-	new ITTInfo("null.iasc", null_iasc);
+	new ITTInfo((char *)"null.iasc", null_iasc);
 
 }

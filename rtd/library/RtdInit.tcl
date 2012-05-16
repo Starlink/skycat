@@ -1,6 +1,6 @@
 # E.S.O. - VLT project
 #
-# "@(#) $Id: RtdInit.tcl,v 1.2 2006/01/25 10:55:38 abrighto Exp $"
+# "@(#) $Id: RtdInit.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 #
 # RtdInit.tcl
 #

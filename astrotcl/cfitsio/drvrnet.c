@@ -119,14 +119,17 @@
 
    Once the file is closed then the socket is closed.
 
-$Id: drvrnet.c,v 1.1.1.1 2006/01/12 16:45:54 abrighto Exp $
+$Id: drvrnet.c,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $
 
 $Log: drvrnet.c,v $
-Revision 1.1.1.1  2006/01/12 16:45:54  abrighto
-Import of Skycat-3.0
+Revision 1.1.1.1  2009/03/31 14:11:53  cguirao
+skycat-3.1.1
 
-Revision 1.1  2006/01/04 22:39:53  abrighto
-new checkin
+Revision 3.45  2005/12/21 18:18:01  pence
+New beta 3.005 release.  Contains new cfortran.h to support integer*8
+parameters when calling cfitsio from Fortran tasks.  Also has modified
+fitsio.h file that now assumes that the 'long long' data type is supported
+by the C compiler (which may not be the case for older compilers).
 
 Revision 1.56  2000/01/04 11:58:31  oneel
 Updates so that compressed network files are dealt with regardless of
@@ -169,7 +172,11 @@ Baltimore MD 21218 USA              ¦ http://faxafloi.stsci.edu:4547/
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <unistd.h>
+
+#if defined(unix) || defined(__unix__)  || defined(__unix)
+#include <unistd.h>  
+#endif
+
 #include <signal.h>
 #include <setjmp.h>
 #include "fitsio2.h"
@@ -813,15 +820,15 @@ static int http_open_network(char *url, FILE **httpfile, char *contentencoding,
      hosts) */
 
   if (proxy)
-    sprintf(tmpstr,"GET http://%s:%-d%s HTTP/1.0\n",host,port,fn);
+    sprintf(tmpstr,"GET http://%s:%-d%s HTTP/1.0\r\n",host,port,fn);
   else
-    sprintf(tmpstr,"GET %s HTTP/1.0\n",fn);
+    sprintf(tmpstr,"GET %s HTTP/1.0\r\n",fn);
 
-  sprintf(tmpstr1,"User-Agent: HEASARC/CFITSIO/%-8.3f\n",ffvers(&version));
+  sprintf(tmpstr1,"User-Agent: HEASARC/CFITSIO/%-8.3f\r\n",ffvers(&version));
   strcat(tmpstr,tmpstr1);
 
   /* HTTP 1.1 servers require the following 'Host: ' string */
-  sprintf(tmpstr1,"Host: %s:%-d\n\n",host,port);
+  sprintf(tmpstr1,"Host: %s:%-d\r\n\r\n",host,port);
   strcat(tmpstr,tmpstr1);
 
   status = NET_SendRaw(sock,tmpstr,strlen(tmpstr),NET_DEFAULT);

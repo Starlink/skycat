@@ -1,7 +1,7 @@
 /*******************************************************************************
 * E.S.O. - VLT project
 *
-* "@(#) $Id: rtdCLNT.C,v 1.1.1.1 2006/01/12 16:39:59 abrighto Exp $"
+* "@(#) $Id: rtdCLNT.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 *
 * who       when      what
 * --------  --------  ----------------------------------------------
@@ -68,7 +68,6 @@
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
-#include "define.h"
 
 #ifdef HAVE_SYS_FILIO_H
 #include <sys/filio.h>
@@ -76,8 +75,7 @@
 
 #include "rtdCLNT.h"
 
-static char *rcsId="@(#) $Id: rtdCLNT.C,v 1.1.1.1 2006/01/12 16:39:59 abrighto Exp $"; 
-static void *use_rcsId = ((void)&use_rcsId,(void *) &rcsId);
+static const char *rcsId="@(#) $Id: rtdCLNT.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"; 
 
 rtdCLNT::rtdCLNT(int verbose, int index)
     : rtdLOG(verbose),
@@ -191,14 +189,14 @@ char *rtdCLNT::TypeName()
 {
     switch(Type()) {
     case RTDWIDGET:
-	return("RTDWIDGET");
+	return((char *)"RTDWIDGET");
     case IMAGETRANS:
-	return("IMAGETRANS");
+	return((char *)"IMAGETRANS");
     case EAVESDROP:
-	return("EAVESDROP");
+	return((char *)"EAVESDROP");
     case OTHER:
-	return("OTHER");
+	return((char *)"OTHER");
     default:
-	return("UNKNOWN");
+	return((char *)"UNKNOWN");
     }
 }

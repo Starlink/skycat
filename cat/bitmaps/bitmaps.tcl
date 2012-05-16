@@ -2,7 +2,7 @@
 #
 # E.S.O. - VLT project/ ESO Archive
 #
-# "@(#) $Id: bitmaps.tcl,v 1.2 2006/01/20 23:36:27 abrighto Exp $"
+# "@(#) $Id: bitmaps.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 #
 # script to generate C code declaring X bitmaps so that the (binary) application
 # doesn't have to be delivered with the bitmap files.
@@ -14,7 +14,7 @@
 puts {
 /*
  * E.S.O. - VLT project / ESO Archive
- * "@(#) $Id: bitmaps.tcl,v 1.2 2006/01/20 23:36:27 abrighto Exp $"
+ * "@(#) $Id: bitmaps.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
  *
  * Tk Bitmap/Pixmap definitions
  *

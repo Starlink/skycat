@@ -9,7 +9,7 @@
 # See the file "license.terms" for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 #
-# RCS: @(#) $Id: tcl.m4,v 1.15 2006/02/01 22:10:36 abrighto Exp $
+# RCS: @(#) $Id: tcl.m4,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
 
 AC_PREREQ(2.50)
 
@@ -2268,7 +2268,7 @@ AC_DEFUN(TEA_PATH_UNIX_X, [
 	XLIBSW=nope
 	dirs="/usr/unsupported/lib /usr/local/lib /usr/X386/lib /usr/X11R6/lib /usr/X11R5/lib /usr/lib/X11R5 /usr/lib/X11R4 /usr/openwin/lib /usr/X11/lib /usr/sww/X11/lib"
 	for i in $dirs ; do
-	    if test -r $i/libX11.a -o -r $i/libX11.so -o -r $i/libX11.sl; then
+	    if test -r $i/libX11.dylib -o -r $i/libX11.a -o -r $i/libX11.so -o -r $i/libX11.sl; then
 		AC_MSG_RESULT([$i])
 		XLIBSW="-L$i -lX11"
 		x_libraries="$i"

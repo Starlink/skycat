@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project 
- * "@(#) $Id: Tclutil.C,v 1.5 2006/01/25 22:21:38 abrighto Exp $"
+ * "@(#) $Id: Tclutil.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
  *
  * Tclutil.C - Initialize Tclutil package
  * 
@@ -11,7 +11,7 @@
  * pbiereic        17/02/03   Added 'using namespace std'.
  * Allan Brighton  28/12/05   Replaced init script
  */
-static const char* const rcsId="@(#) $Id: Tclutil.C,v 1.5 2006/01/25 22:21:38 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: Tclutil.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 using namespace std;
 #include <cstdlib>

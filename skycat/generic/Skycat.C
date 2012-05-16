@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project 
- * "@(#) $Id: Skycat.C,v 1.3 2006/03/26 14:03:13 abrighto Exp $"
+ * "@(#) $Id: Skycat.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
  *
  * Skycat.C - Initialize Skycat package
  * 
@@ -13,7 +13,7 @@
  *
  *                 21/02/00  Moved HDU command to bass class RtdImage                 
  */
-static const char* const rcsId="@(#) $Id: Skycat.C,v 1.3 2006/03/26 14:03:13 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: Skycat.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 #include <cstring>
 #include <cstdlib>
@@ -77,7 +77,7 @@ public:
     int min_args;    // minimum number of args
     int max_args;    // maximum number of args
 } subcmds_[] = { 
-    {"symbol", &Skycat::symbolCmd,  9,  13}
+    {(char *)"symbol", &Skycat::symbolCmd,  9,  13}
 };
 
 
@@ -86,7 +86,7 @@ public:
  * functions
  */
 static Tk_ImageType skycatImageType = {
-    "rtdimage",			/* name */
+    (char *)"rtdimage",			/* name */
     Skycat::CreateImage,	/* createProc */
     TkImage::GetImage,	        /* getProc */
     TkImage::DisplayImage,      /* displayProc */
@@ -273,16 +273,16 @@ int Skycat::draw_symbol(const char* shape,
 			    double ratio, double angle,
 			    const char* label, const char* label_tags);
     } symbols[] = {
-	{"circle", &Skycat::draw_circle},
-	{"square", &Skycat::draw_square},
-	{"plus", &Skycat::draw_plus},
-	{"cross", &Skycat::draw_cross},
-	{"triangle", &Skycat::draw_triangle},
-	{"diamond", &Skycat::draw_diamond},
-	{"ellipse", &Skycat::draw_ellipse},
-	{"compass", &Skycat::draw_compass},
-	{"line", &Skycat::draw_line},
-	{"arrow", &Skycat::draw_arrow}
+	{(char *)"circle", &Skycat::draw_circle},
+	{(char *)"square", &Skycat::draw_square},
+	{(char *)"plus", &Skycat::draw_plus},
+	{(char *)"cross", &Skycat::draw_cross},
+	{(char *)"triangle", &Skycat::draw_triangle},
+	{(char *)"diamond", &Skycat::draw_diamond},
+	{(char *)"ellipse", &Skycat::draw_ellipse},
+	{(char *)"compass", &Skycat::draw_compass},
+	{(char *)"line", &Skycat::draw_line},
+	{(char *)"arrow", &Skycat::draw_arrow}
     };
     static int nsymbols = sizeof(symbols)/sizeof(SymbolTab);
    

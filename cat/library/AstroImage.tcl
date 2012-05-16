@@ -1,5 +1,5 @@
 # E.S.O. - VLT project/ESO Archive
-# @(#) $Id: AstroImage.tcl,v 1.1.1.1 2006/01/12 16:36:22 abrighto Exp $
+# @(#) $Id: AstroImage.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
 #
 # AstroImage.tcl - user interface class for accessing image servers
 #                     such as DSS (Digitized Sky Survey) 

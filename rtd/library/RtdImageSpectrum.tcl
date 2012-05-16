@@ -1,7 +1,7 @@
 #*******************************************************************************
 # E.S.O. - VLT project
 #
-# "@(#) $Id: RtdImageSpectrum.tcl,v 1.1.1.1 2006/01/12 16:38:26 abrighto Exp $"
+# "@(#) $Id: RtdImageSpectrum.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 #
 # RtdImageSpectrum.tcl - itcl widget for displaying graph of image data values 
 #                        along a line

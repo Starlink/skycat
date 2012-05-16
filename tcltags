@@ -3,7 +3,7 @@
 #
 # Make Emacs-style TAGS file for Tcl source.
 # Tom Tromey <tromey@cns.caltech.edu> Mon Feb 15 1993
-# $Id: tcltags,v 1.1.1.1 2006/01/12 16:35:31 abrighto Exp $
+# $Id: tcltags,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
 #
 
 # tcltags is not part of GNU Emacs, but is distributed under the same

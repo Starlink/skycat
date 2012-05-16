@@ -1,7 +1,7 @@
 /*
  * TkWidget.C - base class definitions for Tk widgets implemented in C++
  *
- * "@(#) $Id: TkWidget.C,v 1.1.1.1 2006/01/12 16:41:04 abrighto Exp $"
+ * "@(#) $Id: TkWidget.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
  *
  * See the man page for a complete description.
  *
@@ -11,7 +11,7 @@
  * pbiereic        17/02/03  Added 'using namespace std'. Removed ::std specs.
  */
 
-static const char* const rcsId="@(#) $Id: TkWidget.C,v 1.1.1.1 2006/01/12 16:41:04 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: TkWidget.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 
 

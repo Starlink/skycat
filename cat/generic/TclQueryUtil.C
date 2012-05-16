@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project/Archive
- * $Id: TclQueryUtil.C,v 1.2 2006/03/26 13:22:33 abrighto Exp $
+ * $Id: TclQueryUtil.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
  *
  * TclQueryUtil.C - utility routines used by TclAstroCat and TclTcsCat
  * 
@@ -10,7 +10,7 @@
  * --------------  --------   ----------------------------------------
  * Allan Brighton  14 Jun 96  Created
  */
-static const char* const rcsId="@(#) $Id: TclQueryUtil.C,v 1.2 2006/03/26 13:22:33 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: TclQueryUtil.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 
 using namespace std;
@@ -133,13 +133,13 @@ int genAstroQuery(Tcl_Interp* interp, int argc, char* argv[],
     double radius1 = 0.0, radius2 = 0.0;
     double mag1 = 0.0, mag2 = 0.0;
     double width = 0.0, height = 0.0;
-    char* id = "";
-    char* nameServer = "simbad@eso";
+    char* id = (char *)"";
+    char* nameServer = (char *)"simbad@eso";
   
     // for sorting
     int numSortCols = 0; 
     char** sortCols = NULL; 
-    char* sortOrder = "increasing";
+    char* sortOrder = (char *)"increasing";
     int nrows = 0;  // no default limit...
 
     // column selection
@@ -172,7 +172,7 @@ int genAstroQuery(Tcl_Interp* interp, int argc, char* argv[],
 	else if (strcmp(option, "-sortorder") == 0) {
 	    sortOrder = value;
 	    if (strlen(value) == 0)
-		sortOrder = "increasing";
+		sortOrder = (char *)"increasing";
 	    else if (strcmp(sortOrder, "increasing") != 0 && strcmp(sortOrder, "decreasing") != 0)
 		return error("expected -sortorder increasing (or decreasing), not: ", sortOrder);
 	}

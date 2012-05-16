@@ -1,7 +1,7 @@
 /*
  * E.S.O. - VLT project / ESO Archive
  *
- * "@(#) $Id: ImageIO.C,v 1.2 2006/01/18 17:56:53 abrighto Exp $" 
+ * "@(#) $Id: ImageIO.C,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $" 
  *
  * ImageIO.C - method definitions for class ImageIO, for managing image
  *             I/O and storage
@@ -13,14 +13,15 @@
  *                 12/03/98  Remove dependency on FitsIO (delegated to
  *                           class FitsIO or other class derived from
  *                           ImageIORep.
+ * pbiereic        12/08/07  added support for data types double and long long int
  */
-static const char* const rcsId="@(#) $Id: ImageIO.C,v 1.2 2006/01/18 17:56:53 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: ImageIO.C,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $";
 
 
 #include <netinet/in.h>
-#include <arpa/inet.h>
 #include <cmath>
 #include <cstdlib>
+#include "define.h"
 #include "error.h"
 #include "ImageIO.h"
 
@@ -127,6 +128,15 @@ int ImageIORep::byteSwapData()
 	    *to++ = ntohl(*from);
 	    from++;
 	}
+    }
+    else if (dsize == 8) {
+        // copy long longs (doubles)
+        unsigned long long* from = (unsigned long long*)data_.ptr();
+        unsigned long long* to = (unsigned long long*)data.ptr(); 
+        while(n--) {
+            *to++ = SWAP64(*from);
+            from++;
+        }
     }
     else {
 	return fmt_error("ImageIO: unexpected value for bitpix: %d", bitpix_);

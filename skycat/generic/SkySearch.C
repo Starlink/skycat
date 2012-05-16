@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project/Archive
- * $Id: SkySearch.C,v 1.2 2006/03/26 13:22:33 abrighto Exp $
+ * $Id: SkySearch.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
  *
  * SkySearch.C - method definitions for class SkySearch
  *
@@ -15,7 +15,7 @@
  * --------------  --------   ----------------------------------------
  * Allan Brighton  10 Feb 98  Created
  */
-static const char* const rcsId="@(#) $Id: SkySearch.C,v 1.2 2006/03/26 13:22:33 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: SkySearch.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 
 #include <cstring>
@@ -77,16 +77,16 @@ int SkySearch::parse_symbol(const QueryResult& r, int argc, char** argv,
 			    char*& angle, char*& label, char*& cond)
 {
     static char* symbols[] = {
-	"circle",
-	"square",
-	"plus",
-	"cross",
-	"triangle",
-	"diamond",
-	"ellipse",
-	"compass",
-	"line",
-	"arrow"
+	(char *)"circle",
+	(char *)"square",
+	(char *)"plus",
+	(char *)"cross",
+	(char *)"triangle",
+	(char *)"diamond",
+	(char *)"ellipse",
+	(char *)"compass",
+	(char *)"line",
+	(char *)"arrow"
     };
     static int nsymbols = sizeof(symbols)/sizeof(char*);
     int found = 0;
@@ -376,13 +376,13 @@ int SkySearch::plot_objects(Skycat* image, const QueryResult& r,
 	    break;
     
 	// default values
-	char* shape = "";
-	char* fg = "white"; // if no color is specified, use 2: b&w
-	char* bg = "black";
-	char* ratio = "1";  // these may be Tcl expressions
-	char* angle = "0";
-	char* label = "";
-	char* cond = "1";
+	char* shape = (char *)"";
+	char* fg = (char *)"white"; // if no color is specified, use 2: b&w
+	char* bg = (char *)"black";
+	char* ratio = (char *)"1";  // these may be Tcl expressions
+	char* angle = (char *)"0";
+	char* label = (char *)"";
+	char* cond = (char *)"1";
 	if ((status = parse_symbol(r, nsymb, (char**)symb, shape, fg, bg, ratio, 
 				   angle, label, cond)) != TCL_OK) 
 	    break;
@@ -395,7 +395,7 @@ int SkySearch::plot_objects(Skycat* image, const QueryResult& r,
 	    break;
 	}
 	char* size = (char*)exprList[0];
-	char* units = "image";
+	char* units = (char *)"image";
 	if (nexpr > 1 && strlen(exprList[1]))
 	    units = (char*)exprList[1];
 

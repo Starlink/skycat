@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project/Archive
- * $Id: TclAstroCat.C,v 1.3 2006/03/26 13:22:33 abrighto Exp $
+ * $Id: TclAstroCat.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
  *
  * TclAstroCat.C - method definitions for class TclAstroCat
  * 
@@ -11,7 +11,7 @@
  * Allan Brighton  26 Sep 95  Created
  * pbiereic        26/08/99   Changed Cat_Init()
  */
-static const char* const rcsId="@(#) $Id: TclAstroCat.C,v 1.3 2006/03/26 13:22:33 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: TclAstroCat.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 
 using namespace std;
@@ -80,48 +80,48 @@ public:
     int min_args;    // minimum number of args
     int max_args;    // maximum number of args
 } subcmds_[] = { 
-    {"authorize",   &TclAstroCat::authorizeCmd,    0,  4},
-    {"check",       &TclAstroCat::checkCmd,        1,  1},
-    {"checkrow",    &TclAstroCat::checkrowCmd,     1,  1},
-    {"close",       &TclAstroCat::closeCmd,        0,  0},
-    {"copyright",   &TclAstroCat::copyrightCmd,    0,  0},
-    {"dec_col",     &TclAstroCat::dec_colCmd,      0,  0},
-    {"entry",       &TclAstroCat::entryCmd,        1,  4},
-    {"feedback",    &TclAstroCat::feedbackCmd,     1,  1},
-    {"getcol",      &TclAstroCat::getcolCmd,       2,  2},
-    {"getidpos",    &TclAstroCat::getidposCmd,     1,  1},
-    {"getimage",    &TclAstroCat::getimageCmd,     0,  99},
-    {"getpreview",  &TclAstroCat::getpreviewCmd,   2,  4},
-    {"hascol",      &TclAstroCat::hascolCmd,       1,  1},
-    {"headings",    &TclAstroCat::headingsCmd,     0,  0},
-    {"help",        &TclAstroCat::helpCmd,         0,  0},
-    {"id_col",      &TclAstroCat::id_colCmd,       0,  0},
-    {"info",        &TclAstroCat::infoCmd,         1,  2},
-    {"is_tcs",      &TclAstroCat::is_tcsCmd,       0,  2},
-    {"ispix",       &TclAstroCat::ispixCmd,        0,  0},
-    {"iswcs",       &TclAstroCat::iswcsCmd,        0,  0},
-    {"load",        &TclAstroCat::loadCmd,         1,  2},
-    {"longname",    &TclAstroCat::longnameCmd,     0,  2},
-    {"more",        &TclAstroCat::moreCmd,         0,  0},
-    {"open",        &TclAstroCat::openCmd,         1,  2},
-    {"plot",        &TclAstroCat::plotCmd,         5,  5},
-    {"query",       &TclAstroCat::queryCmd,        0,  99},
-    {"querypos",    &TclAstroCat::queryposCmd,     0,  0},
-    {"ra_col",      &TclAstroCat::ra_colCmd,       0,  0},
-    {"reload",      &TclAstroCat::reloadCmd,       0,  0},
-    {"remove",      &TclAstroCat::removeCmd,       1,  4},
-    {"root",        &TclAstroCat::rootCmd,         0,  0},
-    {"save",        &TclAstroCat::saveCmd,         1,  5},
-    {"searchcols",  &TclAstroCat::searchcolsCmd,   0,  1},
-    {"servtype",    &TclAstroCat::servtypeCmd,     0,  2},
-    {"shortname",   &TclAstroCat::shortnameCmd,    0,  2},
-    {"showcols",    &TclAstroCat::showcolsCmd,     0,  1},
-    {"sortcols",    &TclAstroCat::sortcolsCmd,     0,  1},
-    {"sortorder",   &TclAstroCat::sortorderCmd,    0,  1},
-    {"symbol",      &TclAstroCat::symbolCmd,       0,  1},
-    {"url",         &TclAstroCat::urlCmd,          0,  2},
-    {"x_col",       &TclAstroCat::x_colCmd,        0,  0},
-    {"y_col",       &TclAstroCat::y_colCmd,        0,  0},
+    {(char *)"authorize",   &TclAstroCat::authorizeCmd,    0,  4},
+    {(char *)"check",       &TclAstroCat::checkCmd,        1,  1},
+    {(char *)"checkrow",    &TclAstroCat::checkrowCmd,     1,  1},
+    {(char *)"close",       &TclAstroCat::closeCmd,        0,  0},
+    {(char *)"copyright",   &TclAstroCat::copyrightCmd,    0,  0},
+    {(char *)"dec_col",     &TclAstroCat::dec_colCmd,      0,  0},
+    {(char *)"entry",       &TclAstroCat::entryCmd,        1,  4},
+    {(char *)"feedback",    &TclAstroCat::feedbackCmd,     1,  1},
+    {(char *)"getcol",      &TclAstroCat::getcolCmd,       2,  2},
+    {(char *)"getidpos",    &TclAstroCat::getidposCmd,     1,  1},
+    {(char *)"getimage",    &TclAstroCat::getimageCmd,     0,  99},
+    {(char *)"getpreview",  &TclAstroCat::getpreviewCmd,   2,  4},
+    {(char *)"hascol",      &TclAstroCat::hascolCmd,       1,  1},
+    {(char *)"headings",    &TclAstroCat::headingsCmd,     0,  0},
+    {(char *)"help",        &TclAstroCat::helpCmd,         0,  0},
+    {(char *)"id_col",      &TclAstroCat::id_colCmd,       0,  0},
+    {(char *)"info",        &TclAstroCat::infoCmd,         1,  2},
+    {(char *)"is_tcs",      &TclAstroCat::is_tcsCmd,       0,  2},
+    {(char *)"ispix",       &TclAstroCat::ispixCmd,        0,  0},
+    {(char *)"iswcs",       &TclAstroCat::iswcsCmd,        0,  0},
+    {(char *)"load",        &TclAstroCat::loadCmd,         1,  2},
+    {(char *)"longname",    &TclAstroCat::longnameCmd,     0,  2},
+    {(char *)"more",        &TclAstroCat::moreCmd,         0,  0},
+    {(char *)"open",        &TclAstroCat::openCmd,         1,  2},
+    {(char *)"plot",        &TclAstroCat::plotCmd,         5,  5},
+    {(char *)"query",       &TclAstroCat::queryCmd,        0,  99},
+    {(char *)"querypos",    &TclAstroCat::queryposCmd,     0,  0},
+    {(char *)"ra_col",      &TclAstroCat::ra_colCmd,       0,  0},
+    {(char *)"reload",      &TclAstroCat::reloadCmd,       0,  0},
+    {(char *)"remove",      &TclAstroCat::removeCmd,       1,  4},
+    {(char *)"root",        &TclAstroCat::rootCmd,         0,  0},
+    {(char *)"save",        &TclAstroCat::saveCmd,         1,  5},
+    {(char *)"searchcols",  &TclAstroCat::searchcolsCmd,   0,  1},
+    {(char *)"servtype",    &TclAstroCat::servtypeCmd,     0,  2},
+    {(char *)"shortname",   &TclAstroCat::shortnameCmd,    0,  2},
+    {(char *)"showcols",    &TclAstroCat::showcolsCmd,     0,  1},
+    {(char *)"sortcols",    &TclAstroCat::sortcolsCmd,     0,  1},
+    {(char *)"sortorder",   &TclAstroCat::sortorderCmd,    0,  1},
+    {(char *)"symbol",      &TclAstroCat::symbolCmd,       0,  1},
+    {(char *)"url",         &TclAstroCat::urlCmd,          0,  2},
+    {(char *)"x_col",       &TclAstroCat::x_colCmd,        0,  0},
+    {(char *)"y_col",       &TclAstroCat::y_colCmd,        0,  0},
 };
 
 
@@ -436,7 +436,7 @@ int TclAstroCat::saveCmd(int argc, char* argv[])
     char** colNames = NULL;
     int freeColNames = 0;
 
-    char* equinoxStr = "J2000";
+    char* equinoxStr = (char *)"J2000";
     if (argc >= 4) 
 	equinoxStr = argv[3];
 
@@ -547,7 +547,7 @@ int TclAstroCat::removeCmd(int argc, char* argv[])
     int freeColNames = 0;
 
     double equinox = 2000.;
-    char* equinoxStr = "J2000";
+    char* equinoxStr = (char *)"J2000";
     if (argc >= 3) 
 	equinoxStr = argv[2];
     
@@ -729,7 +729,7 @@ int TclAstroCat::queryCmd(int argc, char* argv[])
 		// put the column values in a list
 		for (j = 0; j < ncols; j++) {
 		    if (result_->get(i, j, s) != 0) 
-			s = "";
+			s = (char *)"";
 		    if (j == ra_col)
 			Tcl_AppendElement(interp_, ra_buf) ;
 		    else if (j == dec_col)
@@ -742,7 +742,7 @@ int TclAstroCat::queryCmd(int argc, char* argv[])
 		// put the column values in a list
 		for (j = 0; j < ncols; j++) {
 		    if (result_->get(i, j, s) != 0) 
-			s = "";
+			s = (char *)"";
 		    Tcl_AppendElement(interp_, s) ;
 		}
 	    }

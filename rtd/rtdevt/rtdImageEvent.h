@@ -1,7 +1,7 @@
 /*************************************************************************
 * E.S.O. - VLT project 
 *
-* "@(#) $Id: rtdImageEvent.h,v 1.1.1.1 2006/01/12 16:39:58 abrighto Exp $"
+* "@(#) $Id: rtdImageEvent.h,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 *
 * rtdImageEvent.h
 *
@@ -17,6 +17,7 @@
 *                        semaphore locking is not used. Note that semaphore Id=0
 *                        is indeed a valid number.
 * pbiereic     05/02/03  Added shmEndian flag to image event structure.
+* pbiereic     12/08/07  added support for data types double and long long int
 */
 /*************************************************************************
  *
@@ -81,7 +82,8 @@ extern "C" {
 	USHORT = 	-16, 	/* 16 bit unsigned */ 
 	INT = 		32, 	/* 32 bit integer */ 
 	FLOAT = 	-32, 	/* 32 bit floating point */ 
-	DOUBLE = 	-64 	/* NOT SUPPORTED: 64 bit double precision */ 
+        LONG64 =        64,     /* 64 bit integer (long long int) */ 
+        DOUBLE =        -64     /* 64 bit double precision */ 
     } rtdIMAGE_TYPE;
 
 /*

@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project/ESO Archive
- * "@(#) $Id: RtdRemote.C,v 1.3 2006/03/26 13:22:33 abrighto Exp $"
+ * "@(#) $Id: RtdRemote.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
  *
  * RtdRemote.C - member routines for class RtdRemote, manages remote access 
  *               to RtdImage (server side, see ../../rtdrmt/... for client access)
@@ -16,7 +16,7 @@
  * Allan Brighton  18/03/99  Added #ifdef in RtdRemote.h, since Tcl_File
  *                           is no longer supported in tcl8...
  */
-static const char* const rcsId="@(#) $Id: RtdRemote.C,v 1.3 2006/03/26 13:22:33 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: RtdRemote.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 
 

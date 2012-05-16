@@ -4,7 +4,7 @@
 
 /*
  * E.S.O. - VLT project / ESO Archive
- * "@(#) $Id: Skycat.h,v 1.1.1.1 2006/01/12 16:42:01 abrighto Exp $"
+ * "@(#) $Id: Skycat.h,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
  *
  * Skycat.h - class definitions for class Skycat, which extends the
  *            RtdImage class to add methods for drawing symbols in

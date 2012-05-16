@@ -4,6 +4,17 @@ CHANGES to the RTD Sources
 This file contains a list of changes to the RTD software and user
 interface. The latest changes are at the top.
 
+--------------- 20.10.08 released rtd-3.2.1 -----------------
+
+* Revised RtdImageHduChooser.tcl
+
+--------------- 20.10.08 released rtd-3.2.0 -----------------
+
+* Added support for data types double and long long int.
+
+--------------- 10.09.07 released rtd-3.1 -------------------
+
+* Increased maximum number of views of an image from 8 to 64
 
 --------------- 03.02.06 released rtd-3.0 -------------------
 

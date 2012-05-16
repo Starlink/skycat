@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project 
- * "@(#) $Id: ImageData.C,v 1.1.1.1 2006/01/12 16:38:59 abrighto Exp $" 
+ * "@(#) $Id: ImageData.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $" 
  *
  * ImageData.C - member functions for class ImageData
  *
@@ -46,8 +46,9 @@
  * pbiereic        27/06/01  Added method 'noiseStatistics'
  * pbiereic        10/07/04  Added method 'getXline4' with specified x ranges
  * pbiereic        09/10/05  fixed bug in 'getYline4'
+ * pbiereic        12/08/07  added support for data types double and long long int
  */
-static const char* const rcsId="@(#) $Id: ImageData.C,v 1.1.1.1 2006/01/12 16:38:59 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: ImageData.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 
 #include <cstdio>
@@ -70,6 +71,8 @@ static const char* const rcsId="@(#) $Id: ImageData.C,v 1.1.1.1 2006/01/12 16:38
 #include "UShortImageData.h"
 #include "LongImageData.h"
 #include "FloatImageData.h"
+#include "LongLongImageData.h"
+#include "DoubleImageData.h"
 #include "CompoundImageData.h"
 #include "ImageDisplay.h"
 
@@ -431,6 +434,18 @@ ImageData* ImageData::makeImage(const char* name, const ImageIO& imio, biasINFO*
 	else
 	    image = new FloatImageData(name, imio, verbose);
 	break;
+    case LONGLONG_IMAGE:
+        if (native)
+            image = new NativeLongLongImageData(name, imio, verbose);
+        else
+            image = new LongLongImageData(name, imio, verbose);
+        break;
+    case DOUBLE_IMAGE:
+        if (native)
+            image = new NativeDoubleImageData(name, imio, verbose);
+        else
+            image = new DoubleImageData(name, imio, verbose);
+        break;
     default:
 	char buf[32];
 	sprintf(buf, "%d", imio.bitpix());

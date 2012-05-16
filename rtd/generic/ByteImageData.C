@@ -1,7 +1,7 @@
 /*
  * E.S.O. - VLT project 
  *
- * "@(#) $Id: ByteImageData.C,v 1.1.1.1 2006/01/12 16:39:03 abrighto Exp $" 
+ * "@(#) $Id: ByteImageData.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $" 
  *
  * ByteImageData.C - member functions for class ByteImageData
  *
@@ -14,7 +14,7 @@
  * Peter W. Draper 15/03/99  Blank bin is always 128
  * pbiereic        17/02/03  Added 'using namespace std'.
  */
-static const char* const rcsId="@(#) $Id: ByteImageData.C,v 1.1.1.1 2006/01/12 16:39:03 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: ByteImageData.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 
 using namespace std;

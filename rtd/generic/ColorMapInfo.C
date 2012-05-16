@@ -1,7 +1,7 @@
 /*
  * E.S.O. - VLT project 
  *
- * "@(#) $Id: ColorMapInfo.C,v 1.1.1.1 2006/01/12 16:39:22 abrighto Exp $"
+ * "@(#) $Id: ColorMapInfo.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
  *
  * ColorMapInfo.C - member routines for class ColorMapInfo
  * 
@@ -14,7 +14,7 @@
  *                           (so pure white/black is available in principle).
  * pbiereic        17/02/03  Added 'using namespace std'. Removed ::std specs.
  */
-static const char* const rcsId="@(#) $Id: ColorMapInfo.C,v 1.1.1.1 2006/01/12 16:39:22 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: ColorMapInfo.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 
 using namespace std;

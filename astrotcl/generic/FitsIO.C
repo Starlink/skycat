@@ -1,7 +1,7 @@
 /*
  * E.S.O. - VLT project / ESO Archive
  *
- * "@(#) $Id: FitsIO.C,v 1.1.1.1 2006/01/12 16:43:57 abrighto Exp $" 
+ * "@(#) $Id: FitsIO.C,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $" 
  *
  * FitsIO.C - method definitions for class FitsIO, for operating on
  *            Fits files.
@@ -20,8 +20,14 @@
  * abrighto        02/01/05  Renamed .h file to avoid conflict with cfitsio's 
  *                           "fitsio.h" on case-ignoring file systems, such as 
  *                           Mac OSX.
+ * pbiereic        10/07/07  FitsIO::reallocFile returns the client data pointer when there
+ *                           is no current FitsIO object.
+ * pbiereic        10/08/07  FitsIO::write: using ISO date string (VLTSW20070156)
+ * pbiereic        12/08/07  added support for data types double and long long int
+ * pbiereic        07/09/07  added support for tiled-image compressed files
+ * pbiereic        26/11/08  FitsIO::write: add basic FITS keys to HDU data
  */
-static const char* const rcsId="@(#) $Id: FitsIO.C,v 1.1.1.1 2006/01/12 16:43:57 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: FitsIO.C,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $";
 
 
 using namespace std;
@@ -226,7 +232,7 @@ const char* FitsIO::check_compress(const char* filename, char* buf, int bufsz, i
 
 	if (decompress_flag) {
 	    // don't use file's dir when decompressing, since it might not be writable
-	    sprintf(tmpfile, "/tmp/fio%d%d.fits", getpid(), count++);
+	    sprintf(tmpfile, "/tmp/fio-%s-%d.%d.fits", getenv("USER"), getpid(), count++); // unique filename
 	    status = c.decompress(filename, tmpfile, ctype);
 	}
 	else {
@@ -234,20 +240,71 @@ const char* FitsIO::check_compress(const char* filename, char* buf, int bufsz, i
 	    sprintf(tmpfile, "%s.tmp", filename);
 	    status = c.compress(filename, tmpfile, ctype);
 	}
+        
+        if (istemp || status != 0)
+            unlink(filename);
 
-	if (istemp)
-	    unlink(filename);
-
-	if (status != 0) {
-	    unlink(tmpfile);
-	    return NULL;
-	}
+        if (status != 0)
+            return NULL;
 
 	istemp = 1;
 	strncpy(buf, tmpfile, bufsz);
 	return buf;
     }
     return filename;
+}
+
+/*
+ * Check if FITS binary table extension contains a compressed image
+ */
+const char* FitsIO::check_cfitsio_compress(char* filename, char* buf, int bufsz, int& istemp)
+{
+    fitsfile* fitsio = NULL;
+    int num = 0, zimage = 0, status = 0;
+
+    fits_open_file(&fitsio, filename, READONLY, &status);
+    if (status != 0) {    
+        cfitsio_error();
+        return NULL;
+    }
+
+    if (fits_get_num_hdus(fitsio, &num, &status) != 0) {
+        cfitsio_error();
+        fits_close_file(fitsio, &status);
+        return NULL;
+    }
+
+    if (num < 2) {
+        fits_close_file(fitsio, &status);
+        return filename;  // no binary table
+    }
+
+    if (fits_movrel_hdu(fitsio, 1, NULL, &status) != 0) { // move to next HDU
+        cfitsio_error();
+        fits_close_file(fitsio, &status);
+        return NULL;
+    }
+
+    fits_read_key(fitsio, TLOGICAL, (char *)"ZIMAGE", &zimage, NULL, &status); // check compressed image
+    fits_close_file(fitsio, &status);
+
+    if (!zimage)
+        return filename;  // no binary table
+
+    char tmpfile[1024];
+    static int count = 0;  // for unique filename
+
+    sprintf(tmpfile, "/tmp/cfio-%s-%d.%d.fits", getenv("USER"), getpid(), count++); // unique filename
+
+    unlink(tmpfile);
+    if (imcopy((char *)filename, tmpfile) != 0) {
+        unlink(tmpfile);
+        return NULL;
+    }
+
+    istemp = 1;
+    strncpy(buf, tmpfile, bufsz);
+    return buf;
 }
 
 
@@ -262,37 +319,58 @@ const char* FitsIO::check_compress(const char* filename, char* buf, int bufsz, i
  */
 FitsIO* FitsIO::read(const char* filename, int mem_options)
 {
-    FILE *f;
-    char  tmpfile[1024];
-    int istemp = 0;
+    char tmpfile[1024], tmpfile2[1024], cfile[1024];
+    int istemp = 0, istemp2 = 0;
     
     tmpfile[0] = '\0';
     if (strcmp(filename, "-") == 0) { // use stdin
-	// we have to use seek later, so copy to a temp file first
-	filename =  getFromStdin(tmpfile);
-	if (filename == NULL)
-	    return NULL;
-	istemp++;
+        // we have to use seek later, so copy to a temp file first
+        filename =  getFromStdin(tmpfile);
+        if (filename == NULL)
+            return NULL;
+        istemp++;
     }
     
     // check the file extension for recognized compression types
     filename = check_compress(filename, tmpfile, sizeof(tmpfile), istemp, 1, 0);
     if (filename == NULL) {
- 	if (istemp)
-	    unlink(tmpfile);
-	return NULL;
+        if (istemp)
+            unlink(tmpfile);
+        return NULL;
     }
+    
+    // check if the file is internally tiled-image compressed (cfitsio)
+    if (!istemp)
+        strcpy(cfile, (char *)filename);
+    else
+        strcpy(cfile, tmpfile);
+
+    filename = check_cfitsio_compress(cfile, tmpfile2, sizeof(tmpfile2), istemp2);
+    if (filename == NULL) {
+        if (istemp)
+            unlink(tmpfile);
+        if (istemp2)
+            unlink(tmpfile2);
+        return NULL;
+    }
+    if (istemp && istemp2)
+        unlink(tmpfile);
     
     // map image file to memory to speed up image loading
     if (mem_options == 0 && access(filename, W_OK) == 0)
-	mem_options = Mem::FILE_RDWR;
+        mem_options = Mem::FILE_RDWR;
 
     Mem header(filename, mem_options, 0);
-    if (header.status() != 0) 
-	return NULL;
 
-    if (istemp)
- 	unlink(filename);	// will be deleted by the OS later
+    if (istemp) {
+        unlink(filename);       // will be deleted by the OS later
+    }
+    if (istemp2) {
+        unlink(tmpfile2);
+    }
+
+    if (header.status() != 0) 
+        return NULL;
 
     return initialize(header);
 }
@@ -383,6 +461,152 @@ fitsfile* FitsIO::openFitsMem(Mem& header)
 
 
 /* 
+ * Copy a compressed input image to an uncompressed output image.
+ * The code for this method was taken from imcopy.c (cfitsio)
+ */
+int FitsIO::imcopy(char *infile, char *outfile)
+{
+    fitsfile *infptr, *outfptr;   /* FITS file pointers defined in fitsio.h */
+    int status = 0, ii = 1, iteration = 0, hdupos, extend = 0;
+    int hdutype, bitpix, bytepix, naxis = 0, nkeys, datatype = 0, anynul, num = 0;
+    long naxes[9] = {1, 1, 1, 1, 1, 1, 1, 1, 1};
+    long first, totpix = 0, npix;
+    double *array, bscale = 1.0, bzero = 0.0, nulval = 0.;
+    char card[81];
+    
+    /* Open the input file and create output file */
+    fits_open_file(&infptr, infile, READONLY, &status);
+    if (status != 0) {    
+        cfitsio_error();
+        return status;
+    }
+
+    fits_create_file(&outfptr, outfile, &status);
+    if (status != 0) {    
+        cfitsio_error();
+        return status;
+    }
+
+    fits_get_num_hdus(infptr, &num, &status);
+    fits_get_hdu_num(infptr, &hdupos);  /* Get the current HDU position */
+
+    get(infptr, "NAXIS", naxis);
+    get(infptr, "EXTEND", extend);
+    if (naxis == 0 && extend && num == 2) {        // check if image is contained in the 2'nd HDU
+        fits_movrel_hdu(infptr, 1, NULL, &status); // move to next HDU
+    }
+
+    for (; !status; hdupos++)  /* Main loop through each extension */
+    {
+        fits_get_hdu_type(infptr, &hdutype, &status);
+
+        if (hdutype == IMAGE_HDU) {
+
+            /* get image dimensions and total number of pixels in image */
+            for (ii = 0; ii < 9; ii++)
+                naxes[ii] = 1;
+
+            fits_get_img_param(infptr, 9, &bitpix, &naxis, naxes, &status);
+
+            totpix = naxes[0] * naxes[1] * naxes[2] * naxes[3] * naxes[4]
+                * naxes[5] * naxes[6] * naxes[7] * naxes[8];
+        }
+
+        if (hdutype != IMAGE_HDU || naxis == 0 || totpix == 0) { 
+
+            /* just copy tables and null images */
+            fits_copy_hdu(infptr, outfptr, 0, &status);
+
+        } else {
+
+            /* Explicitly create new image, to support compression */
+            fits_create_img(outfptr, bitpix, naxis, naxes, &status);
+            if (status) {
+                cfitsio_error();
+                return(status);
+            }
+                    
+            /* copy all the user keywords (not the structural keywords) */
+            fits_get_hdrspace(infptr, &nkeys, NULL, &status); 
+
+            for (ii = 1; ii <= nkeys; ii++) {
+                fits_read_record(infptr, ii, card, &status);
+                if (fits_get_keyclass(card) > TYP_CMPRS_KEY)
+                    fits_write_record(outfptr, card, &status);
+            }
+
+            switch(bitpix) {
+            case BYTE_IMG:
+                datatype = TBYTE;
+                break;
+            case SHORT_IMG:
+                datatype = TSHORT;
+                break;
+            case LONG_IMG:
+                datatype = TINT;
+                break;
+            case FLOAT_IMG:
+                datatype = TFLOAT;
+                break;
+            case DOUBLE_IMG:
+                datatype = TDOUBLE;
+                break;
+            }
+
+            bytepix = abs(bitpix) / 8;
+
+            npix = totpix;
+            iteration = 0;
+
+            /* try to allocate memory for the entire image */
+            /* use double type to force memory alignment */
+            array = (double *) calloc(npix, bytepix);
+
+            /* if allocation failed, divide size by 2 and try again */
+            while (!array && iteration < 10)  {
+                iteration++;
+                npix = npix / 2;
+                array = (double *) calloc(npix, bytepix);
+            }
+
+            if (!array)  {
+                printf("Memory allocation error\n");
+                return(0);
+            }
+
+            /* turn off any scaling so that we copy the raw pixel values */
+            fits_set_bscale(infptr,  bscale, bzero, &status);
+            fits_set_bscale(outfptr, bscale, bzero, &status);
+
+            first = 1;
+            while (totpix > 0 && !status)
+            {
+                /* read all or part of image then write it back to the output file */
+                fits_read_img(infptr, datatype, first, npix, 
+                              &nulval, array, &anynul, &status);
+
+                fits_write_img(outfptr, datatype, first, npix, array, &status);
+                totpix = totpix - npix;
+                first  = first  + npix;
+            }
+            free(array);
+        }
+        fits_movrel_hdu(infptr, 1, NULL, &status);  /* try to move to next HDU */
+    }
+
+    if (status == END_OF_FILE)
+        status = 0;                                 /* Reset after normal error */
+
+    fits_close_file(outfptr,  &status);
+    fits_close_file(infptr, &status);
+
+    if (status)
+        cfitsio_error();                            /* if error occurred, show error message */
+    return status;
+}
+
+
+/* 
  * Check that this object represents a FITS file (and not just some kind of memory)
  * and return 0 if it does. If not, return an error message.
  */
@@ -409,9 +633,9 @@ FitsIO* FitsIO::initialize(Mem& header)
     if (!fitsio)
 	return NULL;
 
-    long headStart = 0, dataStart = 0, dataEnd = 0;
+    long long headStart = 0, dataStart = 0, dataEnd = 0;
     int status = 0;
-    if (fits_get_hduaddr(fitsio, &headStart, &dataStart, &dataEnd, &status) != 0) {
+    if (fits_get_hduaddrll(fitsio, &headStart, &dataStart, &dataEnd, &status) != 0) {
 	cfitsio_error();
 	return NULL;
     }
@@ -448,7 +672,7 @@ FitsIO* FitsIO::initialize(Mem& header, Mem& data, fitsfile* fitsio)
     get(fitsio, "BITPIX", bitpix);
     get(fitsio, "BSCALE", bscale);
     get(fitsio, "BZERO", bzero);
-    
+   
     return new FitsIO(width, height, bitpix, bzero, bscale, header, data, fitsio);
 }
 
@@ -502,7 +726,7 @@ FitsIO* FitsIO::blankImage(double ra, double dec, double equinox,
     // generate the fits header
     double r = radius/60.0;	// radius in degrees
     
-    put_keyword(os, "SIMPLE", "T");          //FITS header    
+    put_keyword(os, "SIMPLE", (char *)"T");          //FITS header    
     put_keyword(os, "BITPIX", 8);	     // No.Bits per pixel  
     put_keyword(os, "NAXIS ", 2);	     // No.dimensions                                   
     put_keyword(os, "NAXIS1", width);        // Length X axis                                   
@@ -516,8 +740,8 @@ FitsIO* FitsIO::blankImage(double ra, double dec, double equinox,
     if (ra >= 0) {
 	double cdelt2 = sqrt((r*r)/2.0)/(width/2.0);
 	double cdelt1 = -cdelt2;
-	put_keyword(os, "CTYPE1", "RA---TAN");   // R.A. in tangent plane projection                
-	put_keyword(os, "CTYPE2", "DEC--TAN");   // DEC. in tangent plane projection                
+	put_keyword(os, "CTYPE1", (char *)"RA---TAN");   // R.A. in tangent plane projection                
+	put_keyword(os, "CTYPE2", (char *)"DEC--TAN");   // DEC. in tangent plane projection                
 	put_keyword(os, "CRPIX1", width/2+0.5);  // Refpix of first axis                            
 	put_keyword(os, "CRPIX2", height/2+0.5); // Refpix of second axis                           
 	put_keyword(os, "CRVAL1", ra);           // RA at Ref pix in decimal degrees                
@@ -525,7 +749,7 @@ FitsIO* FitsIO::blankImage(double ra, double dec, double equinox,
 	put_keyword(os, "CDELT1", cdelt1);       // RA pixel step (deg)                             
 	put_keyword(os, "CDELT2", cdelt2);       // DEC pixel step (deg) 
 	put_keyword(os, "EQUINOX", 2000.0);      // default equinox 
-	put_keyword(os, "RADECSYS", "FK5");      // J2000...
+	put_keyword(os, "RADECSYS", (char *)"FK5");      // J2000...
     }
 
     //put_keyword(os, "BLANK", (int)color0);   // blank pixel value
@@ -693,9 +917,21 @@ int FitsIO::write(const char *filename) const
     // if we have a FITS header, use it, otherwise create one from what we know
     // and add some "blank cards" at the end for application use
     int header_length = header_.length();
+    int cnt = 0;
     if (header_length > 0) {
+	if (strncmp((char*)header_.ptr(), "SIMPLE", 6) != 0) {
+	    put_keyword(f, "SIMPLE", 'T'); cnt+=80;
+	    int bitpix = bitpix_;
+	    if (bitpix == -16)
+		bitpix = 16;
+	    put_keyword(f, "BITPIX", bitpix); cnt+=80;
+	    put_keyword(f, "NAXIS", 2); cnt+=80;
+	    put_keyword(f, "NAXIS1", width_); cnt+=80;
+	    put_keyword(f, "NAXIS2", height_); cnt+=80;
+	}
+
 	fwrite((char*)header_.ptr(), 1, header_length, f);
-	padFile(f, header_length);
+	padFile(f, header_length + cnt);
     }
     else {
 	// create a FITS header
@@ -720,7 +956,7 @@ int FitsIO::write(const char *filename) const
 	// add a timestamp
 	char buf2[50];
 	time_t clock = time(0);
-	strftime(buf2, sizeof(buf2), "%d/%m/%y", localtime(&clock));
+        strftime(buf2, sizeof(buf2), "%Y-%m-%d", localtime(&clock));
 	put_keyword(f, "DATE", buf2); size--;
     
 	// leave some "blank cards" for later modification by other applications
@@ -744,6 +980,8 @@ int FitsIO::write(const char *filename) const
     case 16:
     case 32:
     case -32:
+    case 64:
+    case -64:
 	fwriteNBO((char*)data_.ptr(), tsize, width_*height_, f);
 	break;
     case -16:
@@ -835,6 +1073,15 @@ int FitsIO::fwriteNBO(char *data, int tsize, int size, FILE *f) const
         unsigned long *to   = (unsigned long *) dbuf.ptr();
         while (n--) {
             *to++ = SWAP32(*from);
+            from++;
+        }
+    }
+
+    else if (tsize == 8) {
+        unsigned long long *from = (unsigned long long *) data;
+        unsigned long long *to   = (unsigned long long *) dbuf.ptr();
+        while (n--) {
+            *to++ = SWAP64(*from);
             from++;
         }
     }
@@ -1034,6 +1281,16 @@ int FitsIO::get(const char* keyword, long& val) const {
     int status = 0;
     if (fits_read_key(fitsio_, TLONG, (char*)keyword, &val, NULL, &status) != 0)
 	return cfitsio_error();
+    return 0;
+}
+
+
+int FitsIO::get(const char* keyword, long long& val) const {
+    if (! fitsio_)
+        return error(noHdrErrMsg);
+    int status = 0;
+    if (fits_read_key(fitsio_, TLONGLONG, (char*)keyword, &val, NULL, &status) != 0)
+        return cfitsio_error();
     return 0;
 }
 
@@ -1265,8 +1522,8 @@ int FitsIO::setHDU(int num)
     if (fits_movabs_hdu(fitsio_, num, &type, &status) != 0) 
 	return cfitsio_error();
 
-    long headStart = 0, dataStart = 0, dataEnd = 0;
-    if (fits_get_hduaddr(fitsio_, &headStart, &dataStart, &dataEnd, &status) != 0) {
+    long long headStart = 0, dataStart = 0, dataEnd = 0;
+    if (fits_get_hduaddrll(fitsio_, &headStart, &dataStart, &dataEnd, &status) != 0) {
 	return cfitsio_error();
     }
 

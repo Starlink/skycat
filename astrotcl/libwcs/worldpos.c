@@ -1,6 +1,6 @@
 /*  worldpos.c -- WCS Algorithms from Classic AIPS.
- *  February 3, 2004
- *  Copyright (C) 1994-2004
+ *  June 20, 2006
+ *  Copyright (C) 1994-2006
  *  Associated Universities, Inc. Washington DC, USA.
  *  With code added by Doug Mink, Smithsonian Astrophysical Observatory
  *                 and Allan Brighton and Andreas Wicenec, ESO
@@ -108,7 +108,9 @@ double	*ypos;		/* y (dec) coordinate (deg) */
 
 {
   double cosr, sinr, dx, dy, dz, tx;
-  double sins, coss, dect, rat, dt, l, m, mg, da, dd, cos0, sin0;
+  double sins, coss, dt, l, m, mg, da, dd, cos0, sin0;
+  double rat = 0.0;
+  double dect = 0.0;
   double mt, a, y0, td, r2;  /* allan: for COE */
   double dec0, ra0, decout, raout;
   double geo1, geo2, geo3;
@@ -448,6 +450,17 @@ double	*ypix;		/* y pixel number  (dec or lat without rotation) */
     l = sin(ra-ra0) * coss;
     sint = sins * sin(dec0) + coss * cos(dec0) * cos(ra-ra0);
     }
+  else {
+    l = 0.0;
+    sint = 0.0;
+    sins = 0.0;
+    coss = 0.0;
+    ra = 0.0;
+    dec = 0.0;
+    ra0 = 0.0;
+    dec0 = 0.0;
+    m = 0.0;
+    }
 
   /* Process by case  */
   switch (itype) {
@@ -666,4 +679,6 @@ double	*ypix;		/* y pixel number  (dec or lat without rotation) */
  * Apr  3 2002	Use GLS and SFL interchangeably
  *
  * Feb  3 2004	Let ra be >180 in worldpix() if ref pixel is >180 deg away
+ *
+ * Jun 20 2006	Initialize uninitialized variables
  */

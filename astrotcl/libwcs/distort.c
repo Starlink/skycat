@@ -1,9 +1,13 @@
+/* 
+ * pbiereic  16.07.08  Added routine getfilesize() and system includes 
+ */
+
 /*** File libwcs/distort.c
- *** January 9, 2004
+ *** January 4, 2007
  *** By Doug Mink, dmink@cfa.harvard.edu, 
  *** Based on code written by Jing Li, IPAC
  *** Harvard-Smithsonian Center for Astrophysics
- *** Copyright (C) 2004
+ *** Copyright (C) 2004-2007
  *** Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 
     This library is free software; you can redistribute it and/or
@@ -41,12 +45,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include "wcs.h"
 
 void
 distortinit (wcs, hstring)
 struct WorldCoor *wcs;  /* World coordinate system structure */
-char	*hstring;	/* character string containing FITS header information
+const char *hstring;	/* character string containing FITS header information
 			   in the format <keyword>= <value> [/ <comment>] */
 {
     int i, j, m;
@@ -206,14 +213,14 @@ int verbose;
 	fprintf (stderr,"%d keywords deleted\n", n);
 
     /* Remove WCS distortion code from CTYPEi in FITS header */
-    if (hgets (header, "CTYPE1", str)) {
+    if (hgets (header, "CTYPE1", 31, str)) {
 	lctype = strlen (str);
 	if (lctype > 8) {
 	    str[8] = (char) 0;
 	    hputs (header, "CTYPE1", str);
 	    }
 	}
-    if (hgets (header, "CTYPE2", str)) {
+    if (hgets (header, "CTYPE2", 31, str)) {
 	lctype = strlen (str);
 	if (lctype > 8) {
 	    str[8] = (char) 0;
@@ -394,10 +401,25 @@ struct WorldCoor *wcs;  /* World coordinate system structure */
     return (dcode);
 }
 
+int
+getfilesize (filename)
+
+char    *filename;      /* Name of file for which to find size */
+{
+    struct stat statbuff;
+
+    if (stat (filename, &statbuff))
+        return (0);
+    else
+        return ((int) statbuff.st_size);
+}
+
 /* Apr  2 2003	New subroutines
  * Nov  3 2003	Add getdistcode to return distortion code string
  * Nov 10 2003	Include unistd.h to get definition of NULL
  * Nov 18 2003	Include string.h to get strlen()
  *
  * Jan  9 2004	Add DelDistort() to delete distortion keywords
+ *
+ * Jan  4 2007	Declare header const char*
  */

@@ -1,7 +1,7 @@
 /*
  * E.S.O. - VLT project 
  *
- * "@(#) $Id: BiasData.C,v 1.1.1.1 2006/01/12 16:38:53 abrighto Exp $" 
+ * "@(#) $Id: BiasData.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $" 
  *
  * BiasData.C - member functions for class BiasData
  *
@@ -12,6 +12,7 @@
  * --------  --------  ----------------------------------------
  * pbiereic  22/03/99  Created
  * pbiereic  16/10/02  Byte order for shm data
+ * pbiereic  14/09/07  Fixed: BiasData::file keeps the filename in a buffer again
  */
 
 #include <fcntl.h>
@@ -172,6 +173,7 @@ int BiasData::file(char *file, int nr)
 	biasinfo_.on = on;
 	select(nr);
     }
+    strcpy(&files_[nr][0], file);
     return 0;
 }
 

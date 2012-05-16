@@ -4,7 +4,7 @@
 /*
  * E.S.O. - VLT project / ESO Archive
  *
- * "@(#) $Id: ImageIO.h,v 1.1.1.1 2006/01/12 16:43:54 abrighto Exp $" 
+ * "@(#) $Id: ImageIO.h,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $" 
  *
  * ImageIO.h - declarations for class ImageIO, an abstract base class 
  *             representing the contents of an image file (or other
@@ -22,11 +22,13 @@
  *                           ImageIORep.
  *                           Added WCS class, for optional World Coords
  *                           support.
+ * pbiereic        12/08/07  added support for data types double and long long int
  */
 
 
 #include <iostream>
 #include <cmath>
+#include <cstdlib>
 #include "WCSRep.h"
 #include "Mem.h"
 
@@ -39,7 +41,9 @@ enum ImageDataType {
     SHORT_IMAGE = 16,		// 16 bit signed                
     USHORT_IMAGE = -16,		// 16 bit unsigned              
     LONG_IMAGE = 32,		// 32 bit integer               
-    FLOAT_IMAGE = -32		// 32 bit floating point        
+    FLOAT_IMAGE = -32,		// 32 bit floating point        
+    LONGLONG_IMAGE = 64,        // 64 bit integer               
+    DOUBLE_IMAGE = -64          // 64 bit double       
 };
 
 
@@ -96,6 +100,7 @@ public:
     virtual int get(const char* keyword, float& val) const = 0;
     virtual int get(const char* keyword, int& val) const = 0;
     virtual int get(const char* keyword, long& val) const = 0;
+    virtual int get(const char* keyword, long long& val) const = 0;
     virtual int get(const char* keyword, unsigned char& val) const = 0;
     virtual int get(const char* keyword, unsigned short& val) const = 0;
     virtual int get(const char* keyword, short& val) const = 0;
@@ -130,10 +135,6 @@ public:
     Mem& data() {return data_;}
     int status() const {return status_;}
     void status(int s) {status_ = s;}
-
-    // return true if this class uses native byte ordering
-    // (FITS uses network byte order, so FitsIO would return 0 here).
-    //int usingNetBO() const = 0;
 
     // class uses network byte ordering (=big Endian)
     int usingNetBO() const {return usingNetBO_;}
@@ -207,6 +208,9 @@ public:
     int get(const char* keyword, long& val) const {
 	return rep_->get(keyword, val);
     }
+    int get(const char* keyword, long long& val) const {
+        return rep_->get(keyword, val);
+    }
     int get(const char* keyword, unsigned char& val) const {
 	return rep_->get(keyword, val);
     }
@@ -235,6 +239,9 @@ public:
     }
     int get(const char* keyword, long& val, long defVal) const {
 	if (rep_->get(keyword, val) != 0) val = defVal; return 0;
+    }
+    int get(const char* keyword, long long& val, long defVal) const {
+        if (rep_->get(keyword, val) != 0) val = defVal; return 0;
     }
     int get(const char* keyword, unsigned char& val, unsigned char defVal) const {
 	if (rep_->get(keyword, val) != 0) val = defVal; return 0;

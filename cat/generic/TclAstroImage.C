@@ -1,7 +1,7 @@
 
 /*
  * E.S.O. - VLT project/Archive
- * $Id: TclAstroImage.C,v 1.2 2006/03/26 13:22:33 abrighto Exp $
+ * $Id: TclAstroImage.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
  *
  * StarCat.C - method definitions for class TclAstroImage
  * 
@@ -14,7 +14,7 @@
  * --------------  --------   ----------------------------------------
  * Allan Brighton  26 Sep 95  Created
  */
-static const char* const rcsId="@(#) $Id: TclAstroImage.C,v 1.2 2006/03/26 13:22:33 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: TclAstroImage.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 
 using namespace std;
@@ -43,19 +43,19 @@ public:
     int min_args;    // minimum number of args
     int max_args;    // maximum number of args
 } subcmds_[] = { 
-    {"authorize",  &TclAstroImage::authorizeCmd,  0,  4},
-    {"open",       &TclAstroImage::openCmd,       1,  1},
-    {"close",      &TclAstroImage::closeCmd,      0,  0},
-    {"getimage",   &TclAstroImage::getimageCmd,   6,  99},
-    {"info",       &TclAstroImage::infoCmd,       1,  1},
-    {"centerpos",  &TclAstroImage::centerposCmd,  0,  0},
-    {"copyright",  &TclAstroImage::copyrightCmd,  0,  0},
-    {"help",       &TclAstroImage::helpCmd,       0,  0},
-    {"iswcs",      &TclAstroImage::iswcsCmd,      0,  0},
-    {"ispix",      &TclAstroImage::ispixCmd,      0,  0},
-    {"feedback",   &TclAstroImage::feedbackCmd,   1,  1},
-    {"longname",   &TclAstroImage::longnameCmd,   1,  1},
-    {"shortname",  &TclAstroImage::shortnameCmd,  1,  1}
+    {(char *)"authorize",  &TclAstroImage::authorizeCmd,  0,  4},
+    {(char *)"open",       &TclAstroImage::openCmd,       1,  1},
+    {(char *)"close",      &TclAstroImage::closeCmd,      0,  0},
+    {(char *)"getimage",   &TclAstroImage::getimageCmd,   6,  99},
+    {(char *)"info",       &TclAstroImage::infoCmd,       1,  1},
+    {(char *)"centerpos",  &TclAstroImage::centerposCmd,  0,  0},
+    {(char *)"copyright",  &TclAstroImage::copyrightCmd,  0,  0},
+    {(char *)"help",       &TclAstroImage::helpCmd,       0,  0},
+    {(char *)"iswcs",      &TclAstroImage::iswcsCmd,      0,  0},
+    {(char *)"ispix",      &TclAstroImage::ispixCmd,      0,  0},
+    {(char *)"feedback",   &TclAstroImage::feedbackCmd,   1,  1},
+    {(char *)"longname",   &TclAstroImage::longnameCmd,   1,  1},
+    {(char *)"shortname",  &TclAstroImage::shortnameCmd,  1,  1}
 };
 
 
@@ -192,7 +192,7 @@ int TclAstroImage::getimageCmd(int argc, char* argv[])
 
     // option variables
     double width = 0.0, height = 0.0;
-    char* nameServer = "simbad@eso";
+    char* nameServer = (char *)"simbad@eso";
     int got_pos = 0;		// flag: true if we read the position arg
 
     equinox_ = 2000.0;

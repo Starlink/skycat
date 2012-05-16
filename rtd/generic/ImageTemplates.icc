@@ -1,7 +1,7 @@
 /*
  * E.S.O. - VLT project 
  *
- * "@(#) $Id: ImageTemplates.icc,v 1.1.1.1 2006/01/12 16:39:16 abrighto Exp $" 
+ * "@(#) $Id: ImageTemplates.icc,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $" 
  *
  * ImageTemplates.C - template member functions for classes derived from
  *                    class ImageData (not C++ templates, uses cpp macros)
@@ -22,6 +22,7 @@
  * pbiereic        21/06/00  Fixed "array out of bounds" in getMinMax()
  * pbiereic        17/02/03  Native byte order routines revised
  * pbiereic        18/06/04  Added experimental sampling methods
+ * pbiereic        12/08/07  added support for data types double and long long int
  *
  * This file is included in the .C files for classes derived from class
  * ImageData. The file defines a number of member functions that are
@@ -99,6 +100,10 @@ inline DATA_TYPE CLASS_NAME::getVal(DATA_TYPE* p, int idx)
 	    return (DATA_TYPE)NTOH(*(p + idx)) - (DATA_TYPE)((int)(*((int *)bias->ptr       + biasIdx)));
 	case FLOAT_IMAGE:
 	    return (DATA_TYPE)NTOH(*(p + idx)) - (DATA_TYPE)((float)(*((float *)bias->ptr   + biasIdx)));
+        case DOUBLE_IMAGE:
+            return (DATA_TYPE)NTOH(*(p + idx)) - (DATA_TYPE)((double)(*((double *)bias->ptr + biasIdx)));
+        case LONGLONG_IMAGE:
+            return (DATA_TYPE)NTOH(*(p + idx)) - (DATA_TYPE)((long long)(*((long long *)bias->ptr + biasIdx)));
 	default:
 	    return (DATA_TYPE)NTOH(*(p + idx));
 	}
@@ -128,6 +133,10 @@ inline DATA_TYPE CLASS_NAME::getVal(DATA_TYPE* p, int idx)
 	    return (DATA_TYPE)NTOH(*(p + idx)) - (DATA_TYPE)((int)SWAP32(*((int *)bias->ptr         + biasIdx)));
 	case FLOAT_IMAGE:
 	    return (DATA_TYPE)NTOH(*(p + idx)) - (DATA_TYPE)((float)SWAP_FLOAT(*((float *)bias->ptr + biasIdx)));
+        case DOUBLE_IMAGE:
+            return (DATA_TYPE)NTOH(*(p + idx)) - (DATA_TYPE)((double)SWAP_DOUBLE(*((double *)bias->ptr + biasIdx)));
+        case LONGLONG_IMAGE:
+            return (DATA_TYPE)NTOH(*(p + idx)) - (DATA_TYPE)((long long)SWAP64(*((long long *)bias->ptr + biasIdx)));
 	default:
 	    return (DATA_TYPE)NTOH(*(p + idx));
 	}

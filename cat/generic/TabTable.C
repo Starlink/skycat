@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project/ESO Archive 
- * $Id: TabTable.C,v 1.1.1.1 2006/01/12 16:36:37 abrighto Exp $
+ * $Id: TabTable.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
  *
  * TabTable.C - method definitions for class TabTable
  *
@@ -10,7 +10,7 @@
  * --------------  --------   ----------------------------------------
  * Allan Brighton  08 Jan 96  Created
  */
-static const char* const rcsId="@(#) $Id: TabTable.C,v 1.1.1.1 2006/01/12 16:36:37 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: TabTable.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 
 using namespace std;
@@ -328,7 +328,7 @@ int TabTable::splitList(char* line, char** colValues)
 	char* p = strchr(val, sep_);
 	if (!p) {
 	    colValues[col] = trim(val);
-	    val = "";
+	    val = (char *)"";
 	    continue;		// fill any missing cols with empty values
 	}
 	*p++ = '\0';
@@ -1186,7 +1186,7 @@ int TabTable::get(int row, int col, int& value) const
     if (get(row, col, p) != 0)
 	return 1;		// error
     if (sscanf(p, "%d", &value) != 1)
-	return tab_error(row, col, "int", p);
+	return tab_error(row, col, (char *)"int", p);
     return 0;
 }
 
@@ -1200,7 +1200,7 @@ int TabTable::get(int row, int col, double& value) const
     if (get(row, col, p) != 0)
 	return 1;
     if (sscanf(p, "%lf", &value) != 1)
-	return tab_error(row, col, "double", p);
+	return tab_error(row, col, (char *)"double", p);
     return 0;
 }
 
@@ -1215,7 +1215,7 @@ int TabTable::get(int row, int col, float& value) const
     if (get(row, col, p) != 0)
 	return 1;		// error
     if (sscanf(p, "%f", &value) != 1)
-	return tab_error(row, col, "float", p);
+	return tab_error(row, col, (char *)"float", p);
     return 0;
 }
 
@@ -1230,7 +1230,7 @@ int TabTable::get(int row, int col, short& value) const
     if (get(row, col, p) != 0)
 	return 1;		// error
     if (sscanf(p, "%d", &i) != 1)
-	return tab_error(row, col, "short", p);
+	return tab_error(row, col, (char *)"short", p);
     value = i;
     return 0;
 }

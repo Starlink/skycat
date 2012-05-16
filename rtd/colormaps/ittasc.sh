@@ -1,4 +1,4 @@
-#  "@(#) $Id: ittasc.sh,v 1.1.1.1 2006/01/12 16:37:41 abrighto Exp $" 
+#  "@(#) $Id: ittasc.sh,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $" 
 # @(#)ittasc.sh	8.1.1.1 (ESO-IPG) 8/31/94 15:51:58
 # Bourne shell script  ittasc.sh
 # to delete lines 1-4 and last line of ascii table file

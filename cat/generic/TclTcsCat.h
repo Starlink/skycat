@@ -4,7 +4,7 @@
 
 /*
  * E.S.O. - VLT project/ESO Archive
- * $Id: TclTcsCat.h,v 1.1.1.1 2006/01/12 16:36:41 abrighto Exp $
+ * $Id: TclTcsCat.h,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
  *
  * TclTcsCat.h - Tcl interface to the TcsCatalog C++ class for 
  * 	 	 accessing TCS catalogs

@@ -1,5 +1,5 @@
 # E.S.O. - VLT project/ ESO Archive
-# "@(#) $Id: RtdImagePick.tcl,v 1.1.1.1 2006/01/12 16:38:09 abrighto Exp $"
+# "@(#) $Id: RtdImagePick.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 #
 # RtdImagePick.tcl - widget to select an object in an image using a centroid alg.
 #
@@ -360,7 +360,7 @@ itcl::class rtd::RtdImagePick {
         $itk_component(zoomView) config -command {}
         $itk_component(zoomView) enter_image $target_image_
         $itk_component(zoomView) config -command [code $this scale_changed]
-        $w_ configure -cursor cross
+        $w_ configure -cursor cross_reverse
         $itk_component(pick) config -state disabled
         set_values {}
 
@@ -398,7 +398,7 @@ itcl::class rtd::RtdImagePick {
     
     protected  method pick_object_in_image {} {
         set cursor [$target_canvas_ cget -cursor]
-        $target_canvas_ configure -cursor cross
+        $target_canvas_ configure -cursor cross_reverse
 
         set bindtags [bindtags $target_canvas_]
         set tag pick$w_

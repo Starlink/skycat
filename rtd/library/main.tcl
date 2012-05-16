@@ -2,7 +2,7 @@
 #
 # E.S.O. - VLT project
 #
-# "@(#) $Id: main.tcl,v 1.1 2006/01/28 23:03:26 abrighto Exp $" 
+# "@(#) $Id: main.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $" 
 #
 # rtd - main entry point for real-time image display application
 #
@@ -23,7 +23,7 @@
 
 package require Rtd
 
-set rtd_versionId {@(#) $Id: main.tcl,v 1.1 2006/01/28 23:03:26 abrighto Exp $}
+set rtd_versionId {@(#) $Id: main.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $}
 
 set rtd_usage {
 Usage: rtd ?fitsFile? ?-option value ...?

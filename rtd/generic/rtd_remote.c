@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project 
- * "@(#) $Id: rtd_remote.c,v 1.1.1.1 2006/01/12 16:39:03 abrighto Exp $"
+ * "@(#) $Id: rtd_remote.c,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
  *
  * rtdRemote.c - client library for remote control of an RtdImage
  *               widget, communicates over a socket with a remote
@@ -17,7 +17,7 @@
  * Allan Brighton  02/01/06  Renamed rtdRemote.c to rtd_remote.c to avoid
  *                           name conflict on file systems that ignore case
  */
-static const char* const rcsId="@(#) $Id: rtd_remote.c,v 1.1.1.1 2006/01/12 16:39:03 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: rtd_remote.c,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 
 

@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project 
- * "@(#) $Id: Astrotcl.C,v 1.1.1.1 2006/01/12 16:44:01 abrighto Exp $"
+ * "@(#) $Id: Astrotcl.C,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $"
  *
  * Astrotcl.C - Initialize Astrotcl package
  * 
@@ -9,7 +9,7 @@
  * Allan Brighton  21 Nov 97  Created
  * pbiereic        26/08/99   Changed Astrotcl_Init()
  */
-static const char* const rcsId="@(#) $Id: Astrotcl.C,v 1.1.1.1 2006/01/12 16:44:01 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: Astrotcl.C,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $";
 
 #include <cstdlib>
 #include <cstring>

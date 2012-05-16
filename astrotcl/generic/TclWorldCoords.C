@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project/Archive
- * $Id: TclWorldCoords.C,v 1.1.1.1 2006/01/12 16:44:02 abrighto Exp $
+ * $Id: TclWorldCoords.C,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $
  *
  * TclWorldCoords.C - method definitions for class TclWorldCoords
  *                    (Tcl interface to the WorldCoords class)
@@ -12,7 +12,7 @@
  * Allan Brighton  09 Nov 95  Created
  * pbiereic        17/02/03  Added 'using namespace std'. Removed ::std specs.
  */
-static const char* const rcsId="@(#) $Id: TclWorldCoords.C,v 1.1.1.1 2006/01/12 16:44:02 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: TclWorldCoords.C,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $";
 
 
 using namespace std;
@@ -39,8 +39,8 @@ public:
     int min_args;    // minimum number of args
     int max_args;    // maximum number of args
 } subcmds_[] = { 
-    {"dtohms",         &TclWorldCoords::dtohmsCmd,          1,  2},
-    {"hmstod",         &TclWorldCoords::hmstodCmd,          1,  2}
+    {(char *)"dtohms",         &TclWorldCoords::dtohmsCmd,          1,  2},
+    {(char *)"hmstod",         &TclWorldCoords::hmstodCmd,          1,  2}
 };
 
 

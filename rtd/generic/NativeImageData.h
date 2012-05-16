@@ -3,12 +3,13 @@
 /*
  * E.S.O. - VLT project 
  *
- * "@(#) $Id: NativeImageData.h,v 1.1.1.1 2006/01/12 16:38:29 abrighto Exp $" 
+ * "@(#) $Id: NativeImageData.h,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $" 
  *
  * who             when      what
  * --------------  --------  ----------------------------------------
  * Allan Brighton  20/03/98  Created
  * pbiereic        17/02/03  Native byte order routines revised
+ * pbiereic        12/08/07  added data types double and long long int
  */
 
 #define ShortImageData NativeShortImageData
@@ -26,5 +27,13 @@
 #define FloatImageData NativeFloatImageData
 #include "FloatImageData.h"
 #undef FloatImageData
+
+#define LongLongImageData NativeLongLongImageData
+#include "LongLongImageData.h"
+#undef LongLongImageData
+
+#define DoubleImageData NativeDoubleImageData
+#include "DoubleImageData.h"
+#undef DoubleImageData
 
 #endif /* _NativeImageData_h_ */

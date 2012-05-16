@@ -1,7 +1,7 @@
 #*******************************************************************************
 # E.S.O. - VLT project
 #
-# "@(#) $Id: RtdImageTrans.tcl,v 1.1.1.1 2006/01/12 16:38:24 abrighto Exp $"
+# "@(#) $Id: RtdImageTrans.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 #
 # RtdImageTrans.tcl - itcl widget for scaling, rotating and flipping an RtdImage widget
 # 

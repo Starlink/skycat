@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project 
- * $Id: tRtd.C,v 1.1.1.1 2006/01/12 16:38:02 abrighto Exp $
+ * $Id: tRtd.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
  *
  * tRtd.C - test RTD real-time updates by sending image and rapid frame
  *          
@@ -218,7 +218,7 @@ void parseInput(int argc, char** argv, opts *opt)
     opt->shmEndian = -1;
     opt->delay = 500;
     opt->rtd_camera = getenv("RTD_CAMERA");
-    opt->fitsFile = "../images/ngc1275.fits";
+    opt->fitsFile = (char *)"../images/ngc1275.fits";
     opt->dataType = 16;
     opt->lock = 1;
     opt->numShm = 2;

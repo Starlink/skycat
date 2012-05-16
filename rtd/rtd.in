@@ -1,11 +1,12 @@
 #!/bin/sh
 # Start script for rtd
 #
-# "@(#) $Id: rtd.in,v 1.5 2006/02/02 19:48:38 abrighto Exp $"
+# "@(#) $Id: rtd.in,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 #
 # who         when       what
 # --------   ---------   ----------------------------------------------
 # A.Brighton 28 Jan 06   created
+# pbiereic   29/12/08    ignore error output from 'ps -x'
 
 # Determine rtd base dir, following any symbolic links, if needed.
 PRG="$0"
@@ -27,7 +28,7 @@ cd $cwd
 # If we're NOT ssh'd in
 if [ ! ${SSH_TTY} ]; then
     # make sure X is running (on Mac OS X)
-    if [ `uname` = "Darwin" -a "`ps -x | awk '{print $5}' | grep X11`" = "" ]; then
+    if [ `uname` = "Darwin" -a "`ps -x 2>/dev/null | awk '{print $5}' | grep X11`" = "" ]; then
 	for i in /Applications/Utilities $HOME/Desktop ; do
 	    if [ -e $i/X11.app ] ; then
 		open $i/X11.app &

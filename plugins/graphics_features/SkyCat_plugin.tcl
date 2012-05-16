@@ -1,6 +1,6 @@
 #-*-tcl-*-
 # E.S.O. - VLT project/ESO Archive
-# $Id: SkyCat_plugin.tcl,v 1.1.1.1 2006/01/12 16:42:12 abrighto Exp $
+# $Id: SkyCat_plugin.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
 #
 # SkyCat_plugin.tcl - example SkyCat plug-in script
 #

@@ -4,7 +4,7 @@
 
 /*
  * E.S.O. - VLT project/ESO Archive
- * $Id: QueryResult.h,v 1.1.1.1 2006/01/12 16:36:40 abrighto Exp $
+ * $Id: QueryResult.h,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
  *
  * QueryResult.h - class definitions for accessing results of a catalog
  * 		   query

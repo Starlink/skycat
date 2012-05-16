@@ -1,5 +1,5 @@
 # E.S.O. - VLT project/ ESO Archive
-# "@(#) $Id: CheckEntryNumber.tcl,v 1.1.1.1 2006/01/12 16:40:46 abrighto Exp $"
+# "@(#) $Id: CheckEntryNumber.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 #
 # CheckEntry.tcl - Itcl widget combining a checkbutton and an number entry 
 #

@@ -3,7 +3,7 @@
 #define _ImageDisplay_H_
 /*
  * E.S.O. - VLT project 
- * "@(#) $Id: ImageDisplay.h,v 1.1.1.1 2006/01/12 16:39:29 abrighto Exp $" 
+ * "@(#) $Id: ImageDisplay.h,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $" 
  *
  * ImageDisplay.h - class managing XImage to Pixmap display including
  *                  optional X shared memory extension usage

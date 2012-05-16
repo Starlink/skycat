@@ -1,5 +1,5 @@
 # E.S.O. - VLT project 
-# "@(#) $Id: RtdImage.tcl,v 1.1.1.1 2006/01/12 16:38:19 abrighto Exp $"
+# "@(#) $Id: RtdImage.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 #
 # RtdImage.tcl - itcl widget wrapper for the rtdimage type extension
 #
@@ -836,7 +836,6 @@ itcl::class rtd::RtdImage {
     # (for updates, see camera command)
 
     protected method new_image_cmd {} {
-
 	# only runs the first time, if the user chose a different color scale
 	if {"$itk_option(-color_scale)" != "linear"} {
 	    if {[catch {$image_ colorscale $itk_option(-color_scale)} msg]} {

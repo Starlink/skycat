@@ -1,5 +1,5 @@
 # E.S.O. - VLT project/ESO Archive
-# @(#) $Id: SkyQueryResult.tcl,v 1.1.1.1 2006/01/12 16:41:57 abrighto Exp $
+# @(#) $Id: SkyQueryResult.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
 #
 # SkyQueryResult.tcl - Widget for viewing query results with skycat image support.
 #

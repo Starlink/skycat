@@ -2,7 +2,7 @@
 #
 # E.S.O. - VLT project
 #
-# "@(#) $Id: tclutil.sh.in,v 1.2 2006/01/21 01:06:54 abrighto Exp $" 
+# "@(#) $Id: tclutil.sh.in,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $" 
 #
 # Startup script for Tcl/Tk applications.
 #

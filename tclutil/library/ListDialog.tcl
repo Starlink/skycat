@@ -1,5 +1,5 @@
 # E.S.O. - VLT project/ ESO Archive
-# "@(#) $Id: ListDialog.tcl,v 1.1.1.1 2006/01/12 16:40:37 abrighto Exp $"
+# "@(#) $Id: ListDialog.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 #
 # ListDialog.tcl - Dialog to display a listbox window and some text
 #

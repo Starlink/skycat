@@ -5,10 +5,13 @@ This file contains a list of changes to the Skycat software and user
 interface. The latest changes are at the top.
 
 
---------------- 09.06.08 released skycat-3.0.2 -----------------
+--------------- 26.11.08 released skycat-3.1.1 -----------------
 
-* Added fix for VLTSW20080117 ticket. Increase the number of of MAX_VIEWS
-  from 8 to 64 in file RtdImage.h 
+* Improved FITS HDU images display
+
+--------------- 20.10.08 released skycat-3.1.0 -----------------
+
+* Fixes for gcc version 4.2.4.
 
 --------------- 03.02.06 released skycat-3.0 -------------------
 

@@ -4,7 +4,7 @@
 /*
  * E.S.O. - VLT project / ESO Archive
  *
- * "@(#) $Id: Mem.h,v 1.1.1.1 2006/01/12 16:41:00 abrighto Exp $" 
+ * "@(#) $Id: Mem.h,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $" 
  *
  * Mem.h - declarations for class Mem, a class for managing memory areas,
  *         which may or may not be shared memory.

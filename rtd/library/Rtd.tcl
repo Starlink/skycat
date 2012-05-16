@@ -1,5 +1,5 @@
 # E.S.O. - VLT project
-# "@(#) $Id: Rtd.tcl,v 1.1.1.1 2006/01/12 16:38:15 abrighto Exp $"
+# "@(#) $Id: Rtd.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 #
 # Rtd.tcl - real-time image display application class
 # See man page Rtd(n) for a complete description.
@@ -233,7 +233,7 @@ itcl::class rtd::Rtd {
 
 	add_menuitem $m command "Open..." \
 		{Open and display an image file} \
-		-command [code $image_ open] \
+		-command [code $this busy "$image_ open"] \
 		-accelerator "Control-o"
 
 	add_menuitem $m command "Reopen" \

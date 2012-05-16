@@ -1,6 +1,6 @@
 #******************************************************************************
 # E.S.O. - VLT project
-# "@(#) $Id: RtdImageBias.tcl,v 1.1.1.1 2006/01/12 16:38:16 abrighto Exp $"
+# "@(#) $Id: RtdImageBias.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 #
 # RtdImageBias.tcl - class for bias data subtraction
 #
@@ -203,6 +203,7 @@ itcl::class rtd::RtdImageBias {
 			-relief groove \
 			-orient horizontal
 	    }
+            $itk_component(filename$i) component entry config -highlightthickness 0 -takefocus 0
 
 	    blt::table $itk_component(status) \
 		    $itk_component(labelnr$i)     $n,0 \

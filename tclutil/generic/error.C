@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project 
- * "@(#) $Id: error.C,v 1.1.1.1 2006/01/12 16:41:03 abrighto Exp $"
+ * "@(#) $Id: error.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
  *
  * error.C - error reporting routines
  * 
@@ -16,7 +16,7 @@
  *                 20/01/03  Updated for gcc-3.2.1
  * pbiereic        17/02/03  Added 'using namespace std'. Removed ::std specs.
  */
-static const char* const rcsId="@(#) $Id: error.C,v 1.1.1.1 2006/01/12 16:41:03 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: error.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 
 using namespace std;

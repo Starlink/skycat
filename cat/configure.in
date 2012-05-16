@@ -1,5 +1,5 @@
 # E.S.O. - VLT project 
-# $Id: configure.in,v 1.6 2006/02/03 10:29:48 abrighto Exp $
+# $Id: configure.in,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
 #
 # This file is used with GNU autoconf to generate a configure script
 #
@@ -27,7 +27,7 @@
 # so you can encode the package version directly into the source files.
 #-----------------------------------------------------------------------
 
-AC_INIT([cat], [4.0])
+AC_INIT([cat], [4.1.0])
 
 #--------------------------------------------------------------------
 # Do application specific checks (see aclocal.m4)

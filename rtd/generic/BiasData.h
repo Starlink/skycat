@@ -3,7 +3,7 @@
 /*
  * E.S.O. - VLT project 
  *
- * "@(#) $Id: BiasData.h,v 1.1.1.1 2006/01/12 16:38:53 abrighto Exp $" 
+ * "@(#) $Id: BiasData.h,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $" 
  *
  * BiasData.h - class definitions for managing bias subtraction
  *

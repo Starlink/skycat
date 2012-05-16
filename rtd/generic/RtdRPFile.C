@@ -10,6 +10,7 @@
  * --------------  --------  ----------------------------------------
  * D.Hopkinson     17/04/97  Created
  * P.Biereichel    23/07/97  Bug fixed. Revised
+ * pbiereic        10/08/07  RtdFITSCube::writeFITSHeader: using ISO date string (VLTSW20070156)
  */
 
 #include <ctime>
@@ -281,10 +282,10 @@ RtdRPFile *RtdRPFile::makeFileObject(Tcl_Interp* interp, char* instname, char *f
     fclose(file);
 
     if (strncmp(buffer, "compressed", 10) == 0) {
-	newInstance = (RtdFITSComp *)new RtdFITSComp(interp, instname, fileName, "r", 5.);
+	newInstance = (RtdFITSComp *)new RtdFITSComp(interp, instname, fileName, (char *)"r", 5.);
     }
     else {
-	newInstance = (RtdFITSCube *)new RtdFITSCube(interp, instname, fileName, "r", 5.);
+	newInstance = (RtdFITSCube *)new RtdFITSCube(interp, instname, fileName, (char *)"r", 5.);
     }
 
     // Set up the file pointer and timestamp array.
@@ -372,7 +373,7 @@ int RtdFITSCube::writeFITSHeader(const rtdIMAGE_INFO *imageInfo, int subImage,
 
     // add the date to the cube header.
     time_t clock = time(0);
-    strftime(buf2, sizeof(buf2), "%d/%m/%y", localtime(&clock));
+    strftime(buf2, sizeof(buf2), "%Y-%m-%d", localtime(&clock));
     sprintf(buf, "%-8s= \'%s\'", "DATE", buf2);
     fprintf(fPtr, "%-80s", buf); size--;
     

@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project/ESO Archive
- * $Id: TcsCatalogObject.C,v 1.1.1.1 2006/01/12 16:36:27 abrighto Exp $
+ * $Id: TcsCatalogObject.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
  *
  * TcsCatalogObject.C - method definitions for class TcsCatalogObject
  * 
@@ -11,7 +11,7 @@
  * Allan Brighton  13 Jun 96  Created
  * pbiereic        20/10/03   method printTableRow (VLTSW20030366, cmagagna)
  */
-static const char* const rcsId="@(#) $Id: TcsCatalogObject.C,v 1.1.1.1 2006/01/12 16:36:27 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: TcsCatalogObject.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 
 using namespace std;
@@ -27,9 +27,9 @@ using namespace std;
 
 // static array of column names
 static char* colNames_[] = {
-    "id", "ra", "dec", "cooSystem", "epoch", "pma", "pmd", 
-    "radvel", "parallax", "cooType", "band", "mag", "more", 
-    "preview", "distance", "pa"
+    (char *)"id", (char *)"ra", (char *)"dec", (char *)"cooSystem", (char *)"epoch", (char *)"pma", (char *)"pmd", 
+    (char *)"radvel", (char *)"parallax", (char *)"cooType", (char *)"band", (char *)"mag", (char *)"more", 
+    (char *)"preview", (char *)"distance", (char *)"pa"
 };
 
 

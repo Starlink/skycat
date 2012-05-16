@@ -3,7 +3,7 @@
 /*******************************************************************************
 * E.S.O. - VLT project
 *
-* "@(#) $Id: rtdCLNT.h,v 1.1.1.1 2006/01/12 16:40:00 abrighto Exp $"
+* "@(#) $Id: rtdCLNT.h,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 *
 * who       when      what
 * --------  --------  ----------------------------------------------
@@ -20,6 +20,7 @@
 #include "rtdImageEvent.h"
 #include "rtdSem.h"
 #include "rtdLOG.h"
+#include "define.h"
 
 #include <string.h>
 #include <unistd.h>

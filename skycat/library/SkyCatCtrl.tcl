@@ -1,5 +1,5 @@
 # E.S.O. - VLT project/ESO Archive
-# $Id: SkyCatCtrl.tcl,v 1.3 2006/02/02 18:34:51 abrighto Exp $
+# $Id: SkyCatCtrl.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
 #
 # SkyCatCtrl.tcl - image display widget with catalog extensions
 #
@@ -146,7 +146,6 @@ itcl::class skycat::SkyCatCtrl {
 	}
 
 	utilReUseWidget skycat::SkyCatHduChooser $w_.hdu \
-	    -center 0 \
             -image $this \
             -shorthelpwin $itk_option(-shorthelpwin) \
             -usexshm $itk_option(-usexshm) \
@@ -427,7 +426,7 @@ itcl::class skycat::SkyCatCtrl {
 
 	$w add_menuitem $m command "Back" \
 	    {Go back again to the previous image} \
-	    -command [code $this previous_image] \
+	    -command [code $w busy "$this previous_image"] \
 	    -state disabled
 
 	if {[llength $back_list_]} {
@@ -436,7 +435,7 @@ itcl::class skycat::SkyCatCtrl {
 
 	$w add_menuitem $m command "Forward" \
 	    {Go forward again to the next image} \
-	    -command [code $this forward_image] \
+	    -command [code $w busy "$this forward_image"] \
 	    -state disabled
 
 	if {[llength $forward_list_]} {

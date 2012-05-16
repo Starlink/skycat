@@ -1,5 +1,5 @@
 # E.S.O. - VLT project/ ESO Archive
-# "@(#) $Id: TableListConfigFile.tcl,v 1.1.1.1 2006/01/12 16:40:45 abrighto Exp $"
+# "@(#) $Id: TableListConfigFile.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 #
 # TableListConfigFile.tcl - Class for managing config info for TableList widget
 #

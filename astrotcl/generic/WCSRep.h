@@ -4,7 +4,7 @@
 /*
  * E.S.O. - VLT project / ESO Archive
  *
- * "@(#) $Id: WCSRep.h,v 1.1.1.1 2006/01/12 16:43:57 abrighto Exp $" 
+ * "@(#) $Id: WCSRep.h,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $" 
  *
  * WCSRep.h - declarations for class WCS, a reference counted wrapper class
  *         for managing world coordinates for an image. The implementation

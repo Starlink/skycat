@@ -4,7 +4,7 @@
 /*
  * E.S.O. - VLT project 
  *
- * "@(#) $Id: Fits_IO.h,v 1.1.1.1 2006/01/12 16:43:52 abrighto Exp $" 
+ * "@(#) $Id: Fits_IO.h,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $" 
  *
  * Fits_IO.h - declarations for class FitsIO, a class representing the
  *            contents of a FITS image file (or other image source)
@@ -16,6 +16,8 @@
  * abrighto        02/01/05  Renamed .h file to avoid conflict with cfitsio's 
  *                           "fitsio.h" on case-ignoring file systems, such as 
  *                           Mac OSX.
+ * pbiereic        12/08/07  added support for data types double and long long int
+ * pbiereic        07/09/07  added support for tiled-image compressed files
  */
 
 #include <cstdio>
@@ -119,6 +121,12 @@ public:
 				      int& istemp, int decompress_flag = 1, 
 				      int bitpix = 0);
 
+    // check if FITS binary table extension contains a compressed image
+    static const char* check_cfitsio_compress(char* filename, char* buf, int bufsz, int& istemp);
+
+    // Copy a compressed input image to an uncompressed output image
+    static int imcopy(char *infile, char *outfile);
+
     // Return an allocated FitsIO object, given the Mem object for the file header
     // (header.ptr() should point to the entire FITS file contents.)
     static FitsIO* initialize(Mem& header);
@@ -136,6 +144,7 @@ public:
     int get(const char* keyword, float& val) const;
     int get(const char* keyword, int& val) const;
     int get(const char* keyword, long& val) const;
+    int get(const char* keyword, long long& val) const;
     int get(const char* keyword, unsigned char& val) const;
     int get(const char* keyword, unsigned short& val) const;
     int get(const char* keyword, short& val) const;

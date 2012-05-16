@@ -1,7 +1,7 @@
 /*
  * E.S.O. - VLT project / ESO Archive
  *
- * "@(#) $Id: util.C,v 1.1.1.1 2006/01/12 16:41:04 abrighto Exp $" 
+ * "@(#) $Id: util.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $" 
  *
  * util.C - utility routines
  * 
@@ -14,7 +14,7 @@
  *                            available, rather than just last '.'. 
  * pbiereic        17/02/03   Added 'using namespace std'.
  */
-static const char* const rcsId="@(#) $Id: util.C,v 1.1.1.1 2006/01/12 16:41:04 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: util.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 
 using namespace std;
@@ -256,7 +256,7 @@ int writeUnbufferedBytes(int fd, char* ptr, int nbytes)
 int writeUnbufferedLine(int fd, char* ptr)
 {
     return writeUnbufferedBytes(fd, ptr, strlen(ptr)) 
-	+ writeUnbufferedBytes(fd, "\n", 1);
+	+ writeUnbufferedBytes(fd, (char *)"\n", 1);
 }
 
 

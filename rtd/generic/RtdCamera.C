@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project 
- * "@(#) $Id: RtdCamera.C,v 1.1.1.1 2006/01/12 16:39:13 abrighto Exp $"
+ * "@(#) $Id: RtdCamera.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
  *
  * RtdCamera.C - member routines for class RtdCamera,
  *             manages realtime image update for class RtdImage
@@ -17,13 +17,13 @@
  *                           Revised the whole source code, in particular the
  *                           interface to rtdServer.
  *                           Removed performance test object (handled by RtdImage())
+ * pbiereic        12/08/07  added support for data type long long int
  */
-static const char* const rcsId="@(#) $Id: RtdCamera.C,v 1.1.1.1 2006/01/12 16:39:13 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: RtdCamera.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
-#include "define.h"
 #include "RtdCamera.h"
 
 /*
@@ -53,7 +53,7 @@ RtdCamera::RtdCamera(const char* name,
     eventHndl_ = new rtdIMAGE_EVT_HNDL;
     memset(eventHndl_, '\0', sizeof(rtdIMAGE_EVT_HNDL));
     camera("");
-    dbl_ = new RtdDebugLog("RtdCamera", (int) (debug_ & verbose_));
+    dbl_ = new RtdDebugLog((char *)"RtdCamera", (int) (debug_ & verbose_));
     dbl_->log("Camera object created. RTD client=%s, rtdimage=%s\n", name_, image_);
 }
 
@@ -310,8 +310,8 @@ int RtdCamera::updateGlobals()
 
 int RtdCamera::checkType(int type)
 {
-    if (type ==  BYTE || type == XIMAGE || type == SHORT || type == USHORT || 
-	type ==  INT  || type == FLOAT  || type ==  DOUBLE)
-	return RTD_OK;
+    if (type == BYTE || type == XIMAGE || type == SHORT  || type == USHORT || 
+        type == INT  || type == FLOAT  || type == DOUBLE || type == LONG64)
+        return RTD_OK;
     return RTD_ERROR;
 }

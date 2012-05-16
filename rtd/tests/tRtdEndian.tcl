@@ -3,7 +3,7 @@
     exec rtdimage_wish "$0" ${1+"$@"}
 
 # E.S.O. - VLT project 
-# "@(#) $Id: tRtdEndian.tcl,v 1.1.1.1 2006/01/12 16:38:01 abrighto Exp $"
+# "@(#) $Id: tRtdEndian.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 #
 # tRtdEndian.tcl - automatic test procedure for Rtd byte swap handling
 #

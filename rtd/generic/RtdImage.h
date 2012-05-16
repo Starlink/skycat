@@ -3,7 +3,7 @@
 
 /*
  * E.S.O. - VLT project / ESO Archive
- * "@(#) $Id: RtdImage.h,v 1.1.1.1 2006/01/12 16:39:28 abrighto Exp $"
+ * "@(#) $Id: RtdImage.h,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
  *
  * RtdImage.h - class definitions for class RtdImage, a real-time image 
  * display extension for Tk.
@@ -28,6 +28,7 @@
  * P.Biereichel    23/10/02  Made gcc 3.2 happy which complained about RTD_OPTION:
  *                           (invalid offsetof from non-POD type `class RtdImageOptions'; use 
  *                           pointer to member instead). POD means "Plain Old Data".
+ * pbiereic        10/08/07  increased MAX_VIEWS from 8 to 64
  * 
  */
 
@@ -53,6 +54,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
+#include "define.h"
 #include "error.h"
 #include "WorldCoords.h"
 #include "ImageColor.h"
@@ -168,24 +170,24 @@ public:
 #define RTD_OPTION(x) Tk_Offset(Rtd_Options, x)
 
 #define RTD_OPTIONS \
-    {TK_CONFIG_BOOLEAN, "-usexshm",     NULL, NULL, "1", RTD_OPTION(usexshm),     0}, \
-    {TK_CONFIG_BOOLEAN, "-usexsync",    NULL, NULL, "1", RTD_OPTION(usexsync),    0}, \
-    {TK_CONFIG_BOOLEAN, "-verbose",     NULL, NULL, "0", RTD_OPTION(verbose),     0}, \
-    {TK_CONFIG_BOOLEAN, "-debug",       NULL, NULL, "0", RTD_OPTION(debug),       0}, \
-    {TK_CONFIG_BOOLEAN, "-shm_header",  NULL, NULL, "0", RTD_OPTION(shm_header),  0}, \
-    {TK_CONFIG_BOOLEAN, "-shm_data",    NULL, NULL, "0", RTD_OPTION(shm_data),    0}, \
-    {TK_CONFIG_INT,     "-displaymode", NULL, NULL, "1", RTD_OPTION(displaymode), 0}, \
-    {TK_CONFIG_INT,     "-min_colors",  NULL, NULL, "1", RTD_OPTION(min_colors),  0}, \
-    {TK_CONFIG_INT,     "-max_colors",  NULL, NULL, "1", RTD_OPTION(max_colors),  0}, \
-    {TK_CONFIG_INT,     "-fitwidth",    NULL, NULL, "0", RTD_OPTION(fitWidth),    0}, \
-    {TK_CONFIG_INT,     "-fitheight",   NULL, NULL, "0", RTD_OPTION(fitHeight),   0}, \
-    {TK_CONFIG_INT,     "-fillwidth",   NULL, NULL, "0", RTD_OPTION(fillWidth),   0}, \
-    {TK_CONFIG_INT,     "-fillheight",  NULL, NULL, "0", RTD_OPTION(fillHeight),  0}, \
-    {TK_CONFIG_BOOLEAN, "-subsample",   NULL, NULL, "1", RTD_OPTION(subsample),   0}, \
-    {TK_CONFIG_INT,     "-sampmethod",  NULL, NULL, "0", RTD_OPTION(sampmethod),  0}, \
-    {TK_CONFIG_STRING,  "-file",        NULL, NULL, "",  RTD_OPTION(file),        0}, \
-    {TK_CONFIG_STRING,  "-newimagecmd", NULL, NULL, "",  RTD_OPTION(newImageCmd), 0}, \
-    {TK_CONFIG_STRING,  "-name",        NULL, NULL, "",  RTD_OPTION(name), 0}
+    {TK_CONFIG_BOOLEAN, (char *)"-usexshm",     NULL, NULL, "1", RTD_OPTION(usexshm),     0}, \
+    {TK_CONFIG_BOOLEAN, (char *)"-usexsync",    NULL, NULL, "1", RTD_OPTION(usexsync),    0}, \
+    {TK_CONFIG_BOOLEAN, (char *)"-verbose",     NULL, NULL, "0", RTD_OPTION(verbose),     0}, \
+    {TK_CONFIG_BOOLEAN, (char *)"-debug",       NULL, NULL, "0", RTD_OPTION(debug),       0}, \
+    {TK_CONFIG_BOOLEAN, (char *)"-shm_header",  NULL, NULL, "0", RTD_OPTION(shm_header),  0}, \
+    {TK_CONFIG_BOOLEAN, (char *)"-shm_data",    NULL, NULL, "0", RTD_OPTION(shm_data),    0}, \
+    {TK_CONFIG_INT,     (char *)"-displaymode", NULL, NULL, "1", RTD_OPTION(displaymode), 0}, \
+    {TK_CONFIG_INT,     (char *)"-min_colors",  NULL, NULL, "1", RTD_OPTION(min_colors),  0}, \
+    {TK_CONFIG_INT,     (char *)"-max_colors",  NULL, NULL, "1", RTD_OPTION(max_colors),  0}, \
+    {TK_CONFIG_INT,     (char *)"-fitwidth",    NULL, NULL, "0", RTD_OPTION(fitWidth),    0}, \
+    {TK_CONFIG_INT,     (char *)"-fitheight",   NULL, NULL, "0", RTD_OPTION(fitHeight),   0}, \
+    {TK_CONFIG_INT,     (char *)"-fillwidth",   NULL, NULL, "0", RTD_OPTION(fillWidth),   0}, \
+    {TK_CONFIG_INT,     (char *)"-fillheight",  NULL, NULL, "0", RTD_OPTION(fillHeight),  0}, \
+    {TK_CONFIG_BOOLEAN, (char *)"-subsample",   NULL, NULL, "1", RTD_OPTION(subsample),   0}, \
+    {TK_CONFIG_INT,     (char *)"-sampmethod",  NULL, NULL, "0", RTD_OPTION(sampmethod),  0}, \
+    {TK_CONFIG_STRING,  (char *)"-file",        NULL, NULL, "",  RTD_OPTION(file),        0}, \
+    {TK_CONFIG_STRING,  (char *)"-newimagecmd", NULL, NULL, "",  RTD_OPTION(newImageCmd), 0}, \
+    {TK_CONFIG_STRING,  (char *)"-name",        NULL, NULL, "",  RTD_OPTION(name), 0}
 
 
 /*
