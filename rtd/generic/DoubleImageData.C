@@ -1,19 +1,18 @@
 /*
- * E.S.O. - VLT project
+ * E.S.O. - VLT project 
  *
- * "@(#) $Id$"
+ * "@(#) $Id: DoubleImageData.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $" 
  *
  * DoubleImageData.C - member functions for class DoubleImageData
- *
- * See the man page RTI(3) for a complete description of this class
- * library.
- *
+ * 
  * who             when      what
  * --------------  --------  ----------------------------------------
  * Peter W. Draper 30/05/01  Created.
  *                 29/10/07  Add colorScale so that a bin for NaN pixels
  *                           is always available (shared with blank).
  * Peter W. Draper 23/06/09  Added parseBlank to get blank value in this type.
+ * pbiereic        12/08/07  Created
+ * Peter W. Draper 17/05/12  Merged skycat version created by pbiereic.
  */
 
 #include <cstdlib>
@@ -72,6 +71,7 @@ short DoubleImageData::scaleToShort( double d )
 void DoubleImageData::initShortConversion()
 {
     bias_ = -((lowCut_ + highCut_) * 0.5);
+
     if( (highCut_ - lowCut_) > 0.0 ) {
 	scale_ = LOOKUP_WIDTH / (highCut_ - lowCut_);
     } 

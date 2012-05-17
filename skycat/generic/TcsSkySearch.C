@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project/Archive
- * $Id: TcsSkySearch.C,v 1.1.1.1 2006/01/12 16:42:01 abrighto Exp $
+ * $Id: TcsSkySearch.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
  *
  * TcsSkySearch.C - method definitions for class TcsSkySearch
  *
@@ -15,7 +15,7 @@
  * --------------  --------   ----------------------------------------
  * Allan Brighton  2 Apr 98  Created
  */
-static const char* const rcsId="@(#) $Id: TcsSkySearch.C,v 1.1.1.1 2006/01/12 16:42:01 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: TcsSkySearch.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 
 #ifdef HAVE_CONFIG_H

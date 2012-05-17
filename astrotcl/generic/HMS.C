@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project/ESO Archive 
- * $Id: HMS.C,v 1.1.1.1 2006/01/12 16:43:53 abrighto Exp $
+ * $Id: HMS.C,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $
  *
  * HMS.C - method definitions for class HMS
  *
@@ -16,7 +16,7 @@
  *                            fraction part of the arcseconds value, which
  *                            can round up).
  */
-static const char* const rcsId="@(#) $Id: HMS.C,v 1.1.1.1 2006/01/12 16:43:53 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: HMS.C,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $";
 
 #include <cstdio>
 #include <cstring>

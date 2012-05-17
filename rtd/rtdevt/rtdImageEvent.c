@@ -1,6 +1,6 @@
 /*************************************************************************
 * E.S.O. - VLT project
-* "@(#) $Id: rtdImageEvent.c,v 1.2 2006/01/18 18:31:56 abrighto Exp $"
+* "@(#) $Id: rtdImageEvent.c,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 * rtdImageEvent.c
 *
 * who            when      what
@@ -11,6 +11,9 @@
 * pbiereic       16/06/97  add setsockopt(..SO_REUSEADDR..) in rtdInitServer
 * J.Stegmeier    19/03/99  Added TCP_NODELAY for faster image update
 * pbiereic       01/03/01  Added: rtdServerPing(), rtdSleep()
+* pbiereic       10/08/07  fixed rtdSetError: using strcpy(), VLTSW20070152
+* pbiereic       10/05/08  VLTSW20080107: use calloc instead of malloc in rtdSendImageInfo
+
 */
 /************************************************************************
 *   NAME
@@ -119,7 +122,7 @@
 *
 *   rtdIMAGE_EVT_HNDL  eventHndl;
 *   rtdIMAGE_INFO      imageInfo;
-*   char               *errMsg;
+*   char               errMsg[256];
 *   int                shmId;
 *   char               *shmPtr;
 *
@@ -168,7 +171,7 @@
 *
 *-------------------------------------------------------------------------
 */
-static const char* const rcsId="@(#) $Id: rtdImageEvent.c,v 1.2 2006/01/18 18:31:56 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: rtdImageEvent.c,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 
 /*
@@ -189,7 +192,6 @@ static const char* const rcsId="@(#) $Id: rtdImageEvent.c,v 1.2 2006/01/18 18:31
 #include <sys/filio.h>
 #endif
 #include <netinet/in.h>
-#include <arpa/inet.h>
 #include <netinet/tcp.h>
 #include <signal.h>
 #include <unistd.h>
@@ -306,13 +308,12 @@ int rtdInitImageEvt(char              *requestor,
 
 /*
  * rtdSetError prints an error message on stdout if the error pointer
- * is NULL; otherwise it just returns. See also the NOTE - which says
- * that the "error field" is reserved for the future.
+ * is NULL; otherwise it just returns.
  */
 void rtdSetError(char *subr, char *error, char *msg)
 {
     if (error)
-	error = msg;
+	strcpy(error, msg);
     else
 	fprintf(stderr,"%s:%s !\n",subr, msg);
 }
@@ -410,7 +411,7 @@ int rtdSendImageInfo(rtdIMAGE_EVT_HNDL  *eventHndl,
     }
     
     if (rtdPacket == NULL)
-	rtdPacket = malloc(sizeof(rtdPACKET));
+	rtdPacket = calloc(1, sizeof(rtdPACKET));
     
     if (eventHndl->socket == 0) {
 	rtdSetError(subr, error, RTD_ERR_NO_SOCKET);

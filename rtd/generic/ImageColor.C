@@ -1,6 +1,6 @@
 /*
- * E.S.O. - VLT project
- * "@(#) $Id: ImageColor.C,v 1.1.1.1 2006/01/12 16:39:04 abrighto Exp $"
+ * E.S.O. - VLT project 
+ * "@(#) $Id: ImageColor.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
  *
  * ImageColor.C - member routines for class ImageColor
  *
@@ -18,7 +18,7 @@
  *                           Stops valgrind warnings in Tcl color allocs.
  *                 19/08/11  Don't interpolate when using truecolor visuals.
  */
-static const char* const rcsId="@(#) $Id: ImageColor.C,v 1.1.1.1 2006/01/12 16:39:04 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: ImageColor.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 
 #include <cstdio>

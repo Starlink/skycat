@@ -4,6 +4,15 @@ CHANGES to Astrotcl
 This file contains a list of changes to the Astrotcl software.
 The latest changes are at the top.
 
+--------------- 16.10.08 released astrotcl-2.1.0 ----------------
+
+* Upgraded to cfitsio version 3.0.4 (32-bit signed integer, BITPIX=32).
+
+* Upgraded to wcslib version 4.3.0 (July 25, 2007). Needed for ZPN projection.
+
+* Added support for data types double and long long int.
+
+* Added support for tiled-image compressed files.
 
 --------------- 03.02.06 released astrtcl-2.0 -------------------
 

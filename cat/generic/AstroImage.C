@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project/ESO Archive
- * $Id: AstroImage.C,v 1.1.1.1 2006/01/12 16:36:41 abrighto Exp $
+ * $Id: AstroImage.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
  *
  * AstroImage.C - method definitions for class AstroImage
  *
@@ -13,7 +13,7 @@
  * --------------  --------   ----------------------------------------
  * Allan Brighton  26 Sep 95  Created
  */
-static const char* const rcsId="@(#) $Id: AstroImage.C,v 1.1.1.1 2006/01/12 16:36:41 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: AstroImage.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 
 using namespace std;
@@ -206,7 +206,7 @@ int AstroImage::getImage(const char* url)
     // needs to be decompressed and if so, how...
     char* ctype = http_.content_type();
     if (!ctype)
-	ctype = "";
+	ctype = (char *)"";
 
     // if the Content-type is not recognized...
     if (strncmp(ctype, "image/", 6) != 0) {
@@ -229,9 +229,9 @@ int AstroImage::getImage(const char* url)
     char* ce = http_.content_encoding();
     if (strcmp(t, "x-fits") == 0 && ce != NULL) {
 	if (strcmp(ce, "x-gzip") == 0)
-	    t = "x-gfits";
+	    t = (char *)"x-gfits";
  	else if (strcmp(ce, "x-compress") == 0)
-	    t = "x-cfits";
+	    t = (char *)"x-cfits";
     }
 
     if (strcmp(t, "x-fits") == 0) { // Pure FITS file

@@ -1,5 +1,5 @@
 # E.S.O. - VLT project/ESO Archive
-# "@(#) $Id: SkyCat.tcl,v 1.5 2006/02/02 18:34:51 abrighto Exp $"
+# "@(#) $Id: SkyCat.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 #
 # SkyCat.tcl - image display application class with catalog extensions
 #
@@ -11,6 +11,7 @@
 #
 # who         when       what
 # --------   ---------   ----------------------------------------------
+# pbiereic   11/12/08    config -file after SkyCat was fully constructed
 # A.Brighton 11 Oct 95   created
 # P.W.Draper 19 Jan 00   added concat to bindtags, itk ones were
 #                        being lost. Removed extra ] from ]] in title string.
@@ -55,19 +56,11 @@ Options:
 
 set about_skycat "\
 Skycat version $skycat_version
-Copyright (C) 1996-2006 ESO - European Southern Observatory
-
-Authors: 
-
-Allan Brighton (abrighto@eso.org)
-Thomas Herlin (therlin@eso.org)
-Miguel Albrecht (malbrech@eso.org)
-Daniel Durand (durand@dao.nrc.ca)
-Peter Biereichel (pbiereic@eso.org)
+Copyright (C) 1996-2009 ESO - European Southern Observatory
 
 Please send any comments, suggestions or bug reports to:
 
-Allan Brighton (abrighto@eso.org)
+archive@eso.org
 "
 
 itk::usual SkyCat {}
@@ -332,7 +325,6 @@ itcl::class skycat::SkyCat {
 	# image and control panel
 	itk_component add image {
 	    SkyCatCtrl $image_ \
-		-file $itk_option(-file) \
 		-usexshm $itk_option(-usexshm) \
 		-shm_header $itk_option(-shm_header) \
 		-shm_data $itk_option(-shm_data) \

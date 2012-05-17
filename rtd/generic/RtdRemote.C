@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project/ESO Archive
- * "@(#) $Id: RtdRemote.C,v 1.3 2006/03/26 13:22:33 abrighto Exp $"
+ * "@(#) $Id: RtdRemote.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
  *
  * RtdRemote.C - member routines for class RtdRemote, manages remote access 
  *               to RtdImage (server side, see ../../rtdrmt/... for client access)
@@ -21,7 +21,7 @@
  *                 16/12/05  Change all SOCKLEN_T use to socklen_t. The logic
  *                           that guarantees a value is set in define.h.
  */
-static const char* const rcsId="@(#) $Id: RtdRemote.C,v 1.3 2006/03/26 13:22:33 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: RtdRemote.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 
 

@@ -7,10 +7,25 @@ and user interface. The latest changes are at the top.
 See also the CHANGES files in the tclutil, astrotcl, rtd, cat and
 skycat directories for changes specific to those packages.
 
---------------- 09.06.08 released skycat-3.0.2 -----------------
+--------------- 17.10.08 released skycat-3.1.1 -----------------
 
-* Added fix for VLTSW20080117 ticket. Increase the number of of MAX_VIEWS
-  from 8 to 64 in file RtdImage.h 
+* Fixed: HDU images display for VISTA data
+
+--------------- 17.10.08 released skycat-3.1.0 -----------------
+
+* Updated cfitsio and wcstools packages (astrotcl) to newer versions.
+
+* Added support for ZPN projection.
+
+* Added support for tiled-image compressed files.
+
+* Added support for data types double and long long int.
+
+* Fixes for gcc version 4.2.4.
+
+--------------- 10.09.07 released skycat-3.0.2 -----------------
+
+* Increased maximum number of views of an image from 8 to 64
 
 --------------- 26.03.06 released skycat-3.0.1 -----------------
 

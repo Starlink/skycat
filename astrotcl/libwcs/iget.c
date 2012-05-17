@@ -1,8 +1,8 @@
 /*** File libwcs/iget.c
- *** February 26, 2004
+ *** January 4, 2007
  *** By Doug Mink, dmink@cfa.harvard.edu
  *** Harvard-Smithsonian Center for Astrophysics
- *** Copyright (C) 1998-2004
+ *** Copyright (C) 1998-2007
  *** Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 
     This library is free software; you can redistribute it and/or
@@ -60,12 +60,12 @@ static char val[30];
 int
 mgeti4 (hstring, mkey, keyword, ival)
 
-char *hstring;	/* Character string containing FITS or IRAF header information
+const char *hstring;	/* Character string containing FITS or IRAF header information
 		   in the format <keyword>= <value> ... */
-char *mkey;	/* Character string containing the name of the multi-line
+const char *mkey;	/* Character string containing the name of the multi-line
 		   keyword, the string value of which contains the desired
 		   keyword, the value of which is returned. */
-char *keyword;	/* Character string containing the name of the keyword
+const char *keyword;	/* Character string containing the name of the keyword
 		   within the multiline IRAF keyword */
 int *ival;	/* Integer value returned */
 {
@@ -94,12 +94,12 @@ int *ival;	/* Integer value returned */
 int
 mgetr8 (hstring, mkey, keyword, dval)
 
-char	*hstring; /* Character string containing FITS or IRAF header information
+const char	*hstring; /* Character string containing FITS or IRAF header information
 		   in the format <keyword>= <value> ... */
-char	*mkey;	  /* Character string containing the name of the multi-line
+const char	*mkey;	  /* Character string containing the name of the multi-line
 		   keyword, the string value of which contains the desired
 		   keyword, the value of which is returned. */
-char	*keyword; /* Character string containing the name of the keyword
+const char	*keyword; /* Character string containing the name of the keyword
 		   within the multiline IRAF keyword */
 double	*dval;	  /* Integer value returned */
 {
@@ -128,17 +128,17 @@ double	*dval;	  /* Integer value returned */
 int
 mgetstr (hstring, mkey, keyword, lstr, str)
 
-char *hstring;	/* character string containing FITS header information
+const char *hstring;	/* character string containing FITS header information
 		   in the format <keyword>= <value> {/ <comment>} */
-char *mkey;	/* Character string containing the name of the multi-line
+const char *mkey;	/* Character string containing the name of the multi-line
 		   keyword, the string value of which contains the desired
 		   keyword, the value of which is returned. */
-char *keyword;	/* character string containing the name of the keyword
+const char *keyword;	/* character string containing the name of the keyword
 		   the value of which is returned.  hget searches for a
 		   line beginning with this string.  if "[n]" is present,
 		   the n'th token in the value is returned.
 		   (the first 8 characters must be unique) */
-int lstr;	/* Size of str in characters */
+const int lstr;	/* Size of str in characters */
 char *str;	/* String (returned) */
 {
     char *mstring;
@@ -166,9 +166,9 @@ char *str;	/* String (returned) */
 int
 igeti4 (hstring, keyword, ival)
 
-char *hstring;	/* character string containing IRAF header information
+const char *hstring;	/* character string containing IRAF header information
 		   in the format <keyword>= <value> ... */
-char *keyword;	/* character string containing the name of the keyword
+const char *keyword;	/* character string containing the name of the keyword
 		   the value of which is returned.  hget searches for a
 		   line beginning with this string.  if "[n]" is present,
 		   the n'th token in the value is returned.
@@ -208,9 +208,9 @@ int minint;
 int
 igeti2 (hstring,keyword,ival)
 
-char *hstring;	/* character string containing FITS header information
+const char *hstring;	/* character string containing FITS header information
 		   in the format <keyword>= <value> {/ <comment>} */
-char *keyword;	/* character string containing the name of the keyword
+const char *keyword;	/* character string containing the name of the keyword
 		   the value of which is returned.  hget searches for a
 		   line beginning with this string.  if "[n]" is present,
 		   the n'th token in the value is returned.
@@ -249,9 +249,9 @@ int minshort;
 int
 igetr4 (hstring,keyword,rval)
 
-char *hstring;	/* character string containing FITS header information
+const char *hstring;	/* character string containing FITS header information
 		   in the format <keyword>= <value> {/ <comment>} */
-char *keyword;	/* character string containing the name of the keyword
+const char *keyword;	/* character string containing the name of the keyword
 		   the value of which is returned.  hget searches for a
 		   line beginning with this string.  if "[n]" is present,
 		   the n'th token in the value is returned.
@@ -280,9 +280,9 @@ float *rval;
 int
 igetr8 (hstring,keyword,dval)
 
-char *hstring;	/* character string containing FITS header information
+const char *hstring;	/* character string containing FITS header information
 		   in the format <keyword>= <value> {/ <comment>} */
-char *keyword;	/* character string containing the name of the keyword
+const char *keyword;	/* character string containing the name of the keyword
 		   the value of which is returned.  hget searches for a
 		   line beginning with this string.  if "[n]" is present,
 		   the n'th token in the value is returned.
@@ -311,14 +311,14 @@ double *dval;
 int
 igets (hstring, keyword, lstr, str)
 
-char *hstring;	/* character string containing FITS header information
+const char *hstring;	/* character string containing FITS header information
 		   in the format <keyword>= <value> {/ <comment>} */
-char *keyword;	/* character string containing the name of the keyword
+const char *keyword;	/* character string containing the name of the keyword
 		   the value of which is returned.  hget searches for a
 		   line beginning with this string.  if "[n]" is present,
 		   the n'th token in the value is returned.
 		   (the first 8 characters must be unique) */
-int lstr;	/* Size of str in characters */
+const int lstr;	/* Size of str in characters */
 char *str;	/* String (returned) */
 {
 	char *value;
@@ -347,9 +347,9 @@ char *str;	/* String (returned) */
 char *
 igetc (hstring,keyword0)
 
-char *hstring;	/* character string containing IRAF keyword value string
+const char *hstring;	/* character string containing IRAF keyword value string
 		   in the format <keyword>= <value> {/ <comment>} */
-char *keyword0;	/* character string containing the name of the keyword
+const char *keyword0;	/* character string containing the name of the keyword
 		   the value of which is returned.  iget searches for a
 		   line beginning with this string.  if "[n]" is present,
 		   the n'th token in the value is returned.
@@ -442,12 +442,12 @@ isearch (hstring,keyword)
 /* Find entry for keyword keyword in IRAF keyword value string hstring.
    NULL is returned if the keyword is not found */
 
-char *hstring;	/* character string containing fits-style header
+const char *hstring;	/* character string containing fits-style header
 		information in the format <keyword>= <value> {/ <comment>}
 		the default is that each entry is 80 characters long;
 		however, lines may be of arbitrary length terminated by
 		nulls, carriage returns or linefeeds, if packed is true.  */
-char *keyword;	/* character string containing the name of the variable
+const char *keyword;	/* character string containing the name of the variable
 		to be returned.  isearch searches for a line beginning
 		with this string.  The string may be a character
 		literal or a character variable terminated by a null
@@ -460,8 +460,8 @@ char *keyword;	/* character string containing the name of the variable
     lhstr = 0;
     while (lhstr < 57600 && hstring[lhstr] != 0)
 	lhstr++;
-    headlast = hstring + lhstr;
-    headnext = hstring;
+    headlast = (char *) hstring + lhstr;
+    headnext = (char *) hstring;
     pval = NULL;
     lkey = strlen (keyword);
     while (headnext < headlast) {
@@ -526,4 +526,6 @@ char *keyword;	/* character string containing the name of the variable
  * Sep 23 2003	Change mgets() to mgetstr() to avoid name collision at UCO Lick
  *
  * Feb 26 2004	Make igetc() accessible from outside this file
+ *
+ * Jan  4 2007	Declare header, keyword to be const
  */

@@ -3,7 +3,7 @@
 
 /*
  * E.S.O. - VLT project 
- * $Id: astro_image.h,v 1.1.1.1 2006/01/12 16:36:40 abrighto Exp $
+ * $Id: astro_image.h,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
  *
  * astro_image.h - C interface to C++ class AstroImage
  *

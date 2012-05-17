@@ -1,7 +1,7 @@
 /*
  * E.S.O. - VLT project / ESO Archive
  *
- * "@(#) $Id: LookupTable.C,v 1.1.1.1 2006/01/12 16:38:54 abrighto Exp $" 
+ * "@(#) $Id: LookupTable.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $" 
  *
  * LookupTable.C - method definitions for class LookupTable, managing image
  *                 pixel lookup tables for converting pixel values to 
@@ -24,7 +24,7 @@
  *                            powers. This differentiates them and makes
  *                            them more like other display tools.
  */
-static const char* const rcsId="@(#) $Id: LookupTable.C,v 1.1.1.1 2006/01/12 16:38:54 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: LookupTable.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 
 #include <cmath>

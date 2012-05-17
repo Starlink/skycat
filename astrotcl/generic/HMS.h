@@ -4,7 +4,7 @@
 
 /*
  * E.S.O. - VLT project 
- * $Id: HMS.h,v 1.1.1.1 2006/01/12 16:43:53 abrighto Exp $
+ * $Id: HMS.h,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $
  *
  * HMS.h - class representing a value of the form "hours:min:sec"
  *

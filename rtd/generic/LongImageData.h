@@ -2,8 +2,8 @@
 /*
  * E.S.O. - VLT project 
  *
- * "@(#) $Id: LongImageData.h,v 1.1.1.1 2006/01/12 16:39:22 abrighto Exp $" 
- * $Id: LongImageData.h,v 1.1.1.1 2006/01/12 16:39:22 abrighto Exp $
+ * "@(#) $Id: LongImageData.h,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $" 
+ * $Id: LongImageData.h,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
  *
  * LongImageData.h - class definitions for class LongImageData
  *

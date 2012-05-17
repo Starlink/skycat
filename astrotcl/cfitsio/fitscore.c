@@ -60,16 +60,22 @@ float ffvers(float *version)  /* IO - version number */
   return the current version number of the FITSIO software
 */
 {
-      *version = (float) 3.004;
+      *version = (float) 3.04;
 
-/*     16 September 2005
+/*     12 March 2007
 
 
    Previous releases:
-      *version = 3.003 28 July  2005 in heasoft swift release
-      *version = 3.002 15 April 2005 
-      *version = 3.001 15 March 2005 released with heasoft 6.0
-      *version = 3.000  1 March 2005 (internal release only)
+      *version = 3.03    11 Dec 2006
+      *version = 3.02    18 Sep 2006
+      *version = 3.01       May 2006 included in FTOOLS 6.1 release
+      *version = 3.006   20 Feb 2006 
+      *version = 3.005   20 Dec 2005 (beta, in heasoft swift release
+      *version = 3.004   16 Sep 2005 (beta, in heasoft swift release
+      *version = 3.003   28 Jul 2005 (beta, in heasoft swift release
+      *version = 3.002   15 Apr 2005 (beta)
+      *version = 3.001   15 Mar 2005 (beta) released with heasoft 6.0
+      *version = 3.000   1 Mar 2005 (internal release only)
       *version = 2.51     2 Dec 2004
       *version = 2.50    28 Jul 2004
       *version = 2.49    11 Feb 2004
@@ -1751,6 +1757,7 @@ then values of 'n' less than or equal to n_value will match.
 
     /* ===== Pattern match stage */
     for (pat=0; pat < npat; pat++) {
+
       spat = patterns[pat][0];
       
       i1 = 0; j1 = 0; m1 = -1; n1 = -1; a = ' ';  /* Initialize the place-holders */
@@ -1888,7 +1895,7 @@ then values of 'n' less than or equal to n_value will match.
 	  ic ++;
 	}
 	ic --;
-      } else if (s == 'a' && a != ' ') {
+      } else if (s == 'a') {
 	outrec[ic] = a;
       } else {
 	outrec[ic] = s;
@@ -2349,7 +2356,7 @@ int ffbnfmll(char *tform,     /* I - format code from the TFORMn keyword */
         /* print as double, because the string-to-64-bit int conversion */
         /* character is platform dependent (%lld, %ld, %I64d)           */
 
-        sscanf(form,"%f", &drepeat);
+        sscanf(form,"%lf", &drepeat);
         repeat = (LONGLONG) (drepeat + 0.1);
     }
     /*-----------------------------------------------*/
@@ -3403,6 +3410,8 @@ int ffgbclll( fitsfile *fptr,   /* I - FITS file pointer                      */
             strcat(dtype, "I");
         else if (abs(colptr->tdatatype) == TLONG)
             strcat(dtype, "J");
+        else if (abs(colptr->tdatatype) == TLONGLONG)
+            strcat(dtype, "K");
         else if (abs(colptr->tdatatype) == TFLOAT)
             strcat(dtype, "E");
         else if (abs(colptr->tdatatype) == TDOUBLE)
@@ -4375,7 +4384,7 @@ int ffgtbp(fitsfile *fptr,     /* I - FITS file pointer   */
     long width, repeat, nfield, ivalue;
     LONGLONG jjvalue;
     double dvalue;
-    char tvalue[FLEN_VALUE];
+    char tvalue[FLEN_VALUE], *loc;
     char message[FLEN_ERRMSG];
     tcolumn *colptr;
 
@@ -4439,7 +4448,16 @@ int ffgtbp(fitsfile *fptr,     /* I - FITS file pointer   */
 
           colptr->tdatatype = datacode; /* store datatype code */
           colptr->trepeat = (LONGLONG) repeat;     /* field repeat count  */
-          colptr->twidth = width;   /*  width of a unit value in chars */
+
+          /* Don't overwrite the unit string width if it was previously */
+	  /* set by a TDIMn keyword and has a legal value */
+          if (datacode == TSTRING) {
+	    if (colptr->twidth == 0 || colptr->twidth > repeat)
+              colptr->twidth = width;   /*  width of a unit string */
+
+          } else {
+              colptr->twidth = width;   /*  width of a unit value in chars */
+          }
         }
     }
     else if(!FSTRNCMP(name + 1, "BCOL", 4) )
@@ -4547,6 +4565,36 @@ int ffgtbp(fitsfile *fptr,     /* I - FITS file pointer   */
             colptr->tnull = jjvalue; /* null value for integer column */
         }
     }
+    else if(!FSTRNCMP(name + 1, "DIM", 3) )
+    {
+        if ((fptr->Fptr)->hdutype == ASCII_TBL)  /* ASCII table */
+            return(*status);  /* ASCII tables don't support TDIMn keyword */ 
+
+        /* get the index number */
+        if( ffc2ii(name + 4, &nfield, &tstatus) > 0) /* read index no. */
+            return(*status);    /* must not be an indexed keyword */
+
+        if (nfield < 1 || nfield > (fptr->Fptr)->tfield )  /* out of range */
+            return(*status);
+
+        colptr = (fptr->Fptr)->tableptr;     /* get pointer to columns */
+        colptr = colptr + nfield - 1;   /* point to the correct column */
+
+        /* uninitialized columns have tdatatype set = -9999 */
+        if (colptr->tdatatype != -9999 && colptr->tdatatype != TSTRING)
+	    return(*status);     /* this is not an ASCII string column */
+	   
+        loc = strchr(value, '(' );  /* find the opening parenthesis */
+        if (!loc)
+            return(*status);   /* not a proper TDIM keyword */
+
+        loc++;
+        width = strtol(loc, &loc, 10);  /* read size of first dimension */
+        if (colptr->trepeat != 1 && colptr->trepeat < width)
+	    return(*status);  /* string length is greater than column width */
+
+        colptr->twidth = width;   /* set width of a unit string in chars */
+    }
     else if (!FSTRNCMP(name + 1, "HEAP", 4) )
     {
         if ((fptr->Fptr)->hdutype == ASCII_TBL)  /* ASCII table */
@@ -4568,11 +4616,11 @@ int ffgtbp(fitsfile *fptr,     /* I - FITS file pointer   */
     return(*status);
 }
 /*--------------------------------------------------------------------------*/
-int ffgcprll( fitsfile *fptr, /* I - FITS file pointer                        */
+int ffgcprll( fitsfile *fptr, /* I - FITS file pointer                      */
         int colnum,     /* I - column number (1 = 1st column of table)      */
-        LONGLONG firstrow,  /* I - first row (1 = 1st row of table)             */
-        LONGLONG firstelem, /* I - first element within vector (1 = 1st)       */
-        LONGLONG nelem,     /* I - number of elements to read or write          */
+        LONGLONG firstrow,  /* I - first row (1 = 1st row of table)         */
+        LONGLONG firstelem, /* I - first element within vector (1 = 1st)    */
+        LONGLONG nelem, /* I - number of elements to read or write          */
         int writemode,  /* I - = 1 if writing data, = 0 if reading data     */
                         /*     If = 2, then writing data, but don't modify  */
                         /*     the returned values of repeat and incre.     */
@@ -5166,7 +5214,7 @@ int ffcmph(fitsfile *fptr,  /* I -FITS file pointer                         */
         return(*status);
     }
 
-    buffer = malloc(buffsize);  /* allocate initial buffer */
+    buffer = (char *) malloc(buffsize);  /* allocate initial buffer */
     if (!buffer)
     {
         sprintf(message,"Failed to allocate buffer to copy the heap");
@@ -7102,6 +7150,7 @@ int ffgkcl(char *tcard)
                   ZIMAGE, ZCMPTYPE, ZNAMEn, ZVALn, ZTILEn, 
                   ZBITPIX, ZNAXISn, ZSCALE, ZZERO, ZBLANK,
                   EXTNAME = 'COMPRESSED_IMAGE'
+		  ZSIMPLE, ZTENSION, ZEXTEND, ZBLOCKED, ZPCOUNT, ZGCOUNT
 
    TYP_SCAL_KEY:  BSCALE, BZERO, TSCALn, TZEROn
 
@@ -7189,12 +7238,20 @@ int ffgkcl(char *tcard)
 	    return (TYP_CMPRS_KEY);
 	else if (FSTRNCMP (card1, "BLANK  ", 7) == 0)
 	    return (TYP_CMPRS_KEY);
+	else if (FSTRNCMP (card1, "SIMPLE ", 7) == 0)
+	    return (TYP_CMPRS_KEY);
+	else if (FSTRNCMP (card1, "TENSION", 7) == 0)
+	    return (TYP_CMPRS_KEY);
+	else if (FSTRNCMP (card1, "EXTEND ", 7) == 0)
+	    return (TYP_CMPRS_KEY);
+	else if (FSTRNCMP (card1, "BLOCKED", 7) == 0)
+	    return (TYP_CMPRS_KEY);
+	else if (FSTRNCMP (card1, "PCOUNT ", 7) == 0)
+	    return (TYP_CMPRS_KEY);
+	else if (FSTRNCMP (card1, "GCOUNT ", 7) == 0)
+	    return (TYP_CMPRS_KEY);
     }
     else if (*card == ' ')
-    {
-	return (TYP_COMM_KEY);
-    }
-    else if (*card == '\0')
     {
 	return (TYP_COMM_KEY);
     }
@@ -7221,25 +7278,25 @@ int ffgkcl(char *tcard)
 	if (FSTRNCMP (card1, "OMMENT",6) == 0)
 	{
           /* new comment string starting Oct 2001 */
-	    if (FSTRNCMP (card1, "OMMENT   and Astrophysics', volume 376, page 3",
-              46) == 0)
+	    if (FSTRNCMP (tcard, "COMMENT   and Astrophysics', volume 376, page 3",
+              47) == 0)
 	        return (TYP_STRUC_KEY);
 
          /* original COMMENT strings from 1993 - 2001 */
-	    if (FSTRNCMP (card1, "OMMENT   FITS (Flexible Image Transport System",
-              46) == 0)
+	    if (FSTRNCMP (tcard, "COMMENT   FITS (Flexible Image Transport System",
+              47) == 0)
 	        return (TYP_STRUC_KEY);
-	    if (FSTRNCMP (card1, "OMMENT   Astrophysics Supplement Series v44/p3",
-              46) == 0)
+	    if (FSTRNCMP (tcard, "COMMENT   Astrophysics Supplement Series v44/p3",
+              47) == 0)
 	        return (TYP_STRUC_KEY);
-	    if (FSTRNCMP (card1, "OMMENT   Contact the NASA Science Office of St",
-              46) == 0)
+	    if (FSTRNCMP (tcard, "COMMENT   Contact the NASA Science Office of St",
+              47) == 0)
 	        return (TYP_STRUC_KEY);
-	    if (FSTRNCMP (card1, "OMMENT   FITS Definition document #100 and oth",
-              46) == 0)
+	    if (FSTRNCMP (tcard, "COMMENT   FITS Definition document #100 and oth",
+              47) == 0)
 	        return (TYP_STRUC_KEY);
 
-            if (*(card + 7) == ' ' || *(card + 7) == '\0')
+            if (*(card + 7) == ' ')
 	        return (TYP_COMM_KEY);
             else
                 return (TYP_USER_KEY);
@@ -7354,7 +7411,7 @@ int ffgkcl(char *tcard)
 
 	if (FSTRNCMP (card1, "ISTORY",6) == 0)
         {
-            if (*(card + 7) == ' ' || *(card + 7) == '\0')
+            if (*(card + 7) == ' ')
 	        return (TYP_COMM_KEY);
             else
                 return (TYP_USER_KEY);

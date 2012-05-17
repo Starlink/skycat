@@ -1,5 +1,5 @@
 # E.S.O. - VLT project 
-# $Id: configure.in,v 1.9 2006/03/26 13:24:50 abrighto Exp $
+# $Id: configure.in,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
 #
 # This file is used with GNU autoconf to generate a configure script for
 # building Skycat.
@@ -9,7 +9,7 @@
 # Allan Brighton  15/12/05   Rewrote using TCL TEA standard
 # -----------------------------------------------------------------------
 
-AC_INIT([skycat], [3.0.2])
+AC_INIT([skycat], [3.1.2])
 
 AC_CONFIG_AUX_DIR(tclconfig)
 

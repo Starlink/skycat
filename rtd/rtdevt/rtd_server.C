@@ -1,15 +1,16 @@
 /*******************************************************************************
 * E.S.O. - VLT project
 * 
-* "@(#) $Id: rtd_server.C,v 1.1.1.1 2006/01/12 16:39:56 abrighto Exp $"
+* "@(#) $Id: rtd_server.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 * 
 *  rtdServer.C
 * 
 * who          when      what
 * --------     --------  ----------------------------------------------
 * pbiereic     01/03/01  Adapted from previous version
+* pbiereic     11/09/07  VLTSW20070184: rtdServer should not ignore SIGTERM    
 */
-static const char* const rcsId="@(#) $Id: rtd_server.C,v 1.1.1.1 2006/01/12 16:39:56 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: rtd_server.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 /************************************************************************
 *   NAME
@@ -86,7 +87,7 @@ static const char* const rcsId="@(#) $Id: rtd_server.C,v 1.1.1.1 2006/01/12 16:3
 #include "rtdSERVER.h"
 #include "rtdLOG.h"
 
-#define RTD_SERVER_DELAY 5     // default time to sleep before new events are read
+#define DELAY 5     // default time to sleep before new events are read
 
 typedef void (*MySigFunc)(int);  // prototype cast to keep Sun cc quiet
 
@@ -103,7 +104,7 @@ void usage(void)
 	   "  -v  verbose mode\n"
 	   "  -p  port number, default %d. Set with RTD_SERVER_PORT\n"
 	   "  -t  delay between image events in msec (default %d)\n",
-	   RTD_FALLBACK_PORT, RTD_SERVER_DELAY);
+	   RTD_FALLBACK_PORT, DELAY);
     exit(1);
 }
 
@@ -127,7 +128,7 @@ main(int argc, char *argv[])
     extern char *optarg;
     extern int  optind;
     int         portNo = 0;
-    int         delay = RTD_SERVER_DELAY;
+    int         delay = DELAY;
     char        c;
     int         verbose = 0;
 
@@ -139,7 +140,7 @@ main(int argc, char *argv[])
  */
 
     // signals which are ignored:
-    signal(SIGTERM, SIG_IGN);
+    //signal(SIGTERM, SIG_IGN); /* VLTSW20070184 */
     signal(SIGHUP,  SIG_IGN);
     signal(SIGUSR1, SIG_IGN);
     signal(SIGUSR2, SIG_IGN);

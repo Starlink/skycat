@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project/ESO Archive
- * $Id: world_coords.C,v 1.1.1.1 2006/01/12 16:43:52 abrighto Exp $
+ * $Id: world_coords.C,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $
  *
  * worldCoords.C - C interface implementation for C++ class WorldCoords
  * 
@@ -12,7 +12,7 @@
  *                 02/01/06  Renamed worldCoords.C to world_coords.C to
  *                           avoid name conflict on file systems that ignore case
  */
-static const char* const rcsId="@(#) $Id: world_coords.C,v 1.1.1.1 2006/01/12 16:43:52 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: world_coords.C,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $";
 
 
 

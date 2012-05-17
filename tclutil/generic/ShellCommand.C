@@ -1,7 +1,7 @@
 /*
  * E.S.O. - VLT project / ESO Archive
  *
- * "@(#) $Id: ShellCommand.C,v 1.1.1.1 2006/01/12 16:41:05 abrighto Exp $" 
+ * "@(#) $Id: ShellCommand.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $" 
  *
  * ShellCommand.C - methods for class ShellCommand, util class for
  *                  running a shell command and getting the output.
@@ -11,7 +11,7 @@
  * Allan Brighton  12 Jun 96  Created
  * pbiereic        17/02/03  Added 'using namespace std'.
  */
-static const char* const rcsId="@(#) $Id: ShellCommand.C,v 1.1.1.1 2006/01/12 16:41:05 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: ShellCommand.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 
 #include <sys/types.h>

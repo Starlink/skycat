@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project / ESO Archive
- * "@(#) $Id: trtdRemote.c,v 1.1.1.1 2006/01/12 16:38:03 abrighto Exp $"
+ * "@(#) $Id: trtdRemote.c,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
  *
  * trtdRemote.C - test cases for remote interface to the RTD
  * 

@@ -1,5 +1,5 @@
 # E.S.O. - VLT project 
-# "@(#) $Id: SkyCatHduChooser.tcl,v 1.1.1.1 2006/01/12 16:41:55 abrighto Exp $"
+# "@(#) $Id: SkyCatHduChooser.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 #
 # SkyCatHduChooser.tcl - Itcl widget for displaying FITS extensions
 # 
@@ -67,7 +67,7 @@ itcl::class skycat::SkyCatHduChooser {
 	lappend entry [list long_name $extname]
 	lappend entry [list url $filename]
 
-	foreach row [$table_ cget -info] {
+	foreach row [$itk_component(table) cget -info] {
 	    eval lassign [list $row] $headings
 	    if {"$ExtName" == "$catinfo"} {
 		# found table

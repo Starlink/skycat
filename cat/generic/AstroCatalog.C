@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project/ESO Archive
- * $Id: AstroCatalog.C,v 1.2 2006/03/26 13:22:33 abrighto Exp $
+ * $Id: AstroCatalog.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
  *
  * AstroCatalog.C - method definitions for class AstroCatalog
  * 
@@ -17,7 +17,7 @@
  *                            Started crashing query subprocess.
  *                 27 Aug 08  Allow image/fits as a content type.
  */
-static const char* const rcsId="@(#) $Id: AstroCatalog.C,v 1.2 2006/03/26 13:22:33 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: AstroCatalog.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 
 #include <sys/types.h>
@@ -300,7 +300,7 @@ int AstroCatalog::query(const AstroQuery& q, const char* filename, QueryResult& 
     urls[2] = entry_->backup2();
     char url[10000];
 
-    char* ctype = "";
+    char* ctype = (char *)"";
     for (int i = 0; i < 3 && urls[i]; i++) {
 	if (genHttpQuery(url, sizeof(url), q, urls[i]) != 0) 
 	    return -1;
@@ -310,7 +310,7 @@ int AstroCatalog::query(const AstroQuery& q, const char* filename, QueryResult& 
 
 	ctype = http_.content_type();
 	if (!ctype)
-	    ctype = "";
+	    ctype = (char *)"";
 	if (result_buf != NULL && strcmp(ctype, "text/html") != 0) 
 	    break;
 	// don't go to backup URL if it was a request for authorization
@@ -402,7 +402,7 @@ int AstroCatalog::getImage(const AstroQuery& q)
  */
 int AstroCatalog::getImage(const char* url)
 {
-    char* ctype = "";
+        char* ctype = (char *)"";
     if (getPreview(url, ctype) == 0 && 
         ( strcmp(ctype, "image/x-fits") == 0 || 
           strcmp(ctype, "image/fits" ) == 0 ) )
@@ -932,7 +932,7 @@ int AstroCatalog::getPreview(const char* url, char*& ctype)
     // needs to be decompressed and if so, how...
     ctype = http_.content_type();
     if (!ctype)
-	ctype = "";
+	ctype = (char *)"";
     
     if (strcmp(ctype, "text/html") == 0) {
 	// most likely an HTML formatted server error message
@@ -957,10 +957,10 @@ int AstroCatalog::getPreview(const char* url, char*& ctype)
 	if (m.status() == 0 
 	    && m.size() >= 2880 
 	    && strncmp((const char*)m.ptr(), "SIMPLE", 6) == 0) {
-	    ctype = "image/x-fits";   // assume FITS file
+	    ctype = (char *)"image/x-fits";   // assume FITS file
 	    is_image++;
 	} else {
-	    ctype = "text/x-starbase"; // assume catalog data
+	    ctype = (char *)"text/x-starbase"; // assume catalog data
 	}
 	return 0;
     }
@@ -972,11 +972,11 @@ int AstroCatalog::getPreview(const char* url, char*& ctype)
     char* ce = http_.content_encoding();
     if (is_image && strcmp(t, "x-fits") == 0 && ce != NULL) {
 	if (strcmp(ce, "x-gzip") == 0) {
-	    ctype = "image/x-gfits";
+	    ctype = (char *)"image/x-gfits";
 	    t = ctype+6;
 	}
  	else if (strcmp(ce, "x-compress") == 0) {
-	    ctype = "image/x-cfits";
+	    ctype = (char *)"image/x-cfits";
 	    t = ctype+6;
 	}
     }

@@ -229,7 +229,7 @@
 *   where the projection may diverge).
 *
 *   Author: Mark Calabretta, Australia Telescope National Facility
-*   $Id: proj.c,v 1.1.1.1 2006/01/12 16:45:21 abrighto Exp $
+*   $Id: proj.c,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $
 *===========================================================================*/
 
 #include <stdlib.h>
@@ -378,7 +378,7 @@ struct prjprm *prj;
 double *phi, *theta;
 
 {
-   return prj->prjrev(x, y, prj, phi, theta);
+  return prj->prjrev(x, y, prj, phi, theta);
 }
 
 /*============================================================================
@@ -3453,7 +3453,11 @@ double *x, *y;
 
 {
    int   face;
-   double cthe, l, m, n, rho, x0, xf, y0, yf;
+   double cthe, l, m, n, rho;
+   double x0 = 0.0;
+   double y0 = 0.0;
+   double xf = 0.0;
+   double yf = 0.0;
    const double tol = 1.0e-12;
 
    if (prj->flag != TSC) {
@@ -3671,7 +3675,11 @@ double *x, *y;
    double cthe, eta, l, m, n, rho, xi;
    const float tol = 1.0e-7;
 
-   float a, a2, a2b2, a4, ab, b, b2, b4, ca2, cb2, x0, xf, y0, yf;
+   float a, a2, a2b2, a4, ab, b, b2, b4, ca2, cb2;
+   float x0 = 0.0;
+   float y0 = 0.0;
+   float xf = 0.0;
+   float yf = 0.0;
    const float gstar  =  1.37484847732;
    const float mm     =  0.004869491981;
    const float gamma  = -0.13161671474;
@@ -3799,7 +3807,9 @@ double *phi, *theta;
 
 {
    int   face;
-   double l, m, n;
+   double l = 0.0;
+   double m = 0.0;
+   double n = 0.0;
 
    float     a, b, xf, xx, yf, yy, z0, z1, z2, z3, z4, z5, z6;
    const float p00 = -0.27292696;
@@ -3982,7 +3992,13 @@ double *x, *y;
 
 {
    int   face;
-   double cthe, eta, l, m, n, omega, p, rho, rhu, t, tau, x0, xf, xi, y0, yf;
+   double cthe, l, m, n, omega, p, rho, rhu, t, tau;
+   double xi = 0.0;
+   double eta = 0.0;
+   double x0 = 0.0;
+   double y0 = 0.0;
+   double xf = 0.0;
+   double yf = 0.0;
    const double tol = 1.0e-12;
 
    if (prj->flag != QSC) {
@@ -4155,7 +4171,10 @@ double *phi, *theta;
 
 {
    int   direct, face;
-   double l, m, n, omega, rho, rhu, tau, xf, yf, w;
+   double omega, rho, rhu, tau, xf, yf, w;
+   double l = 0.0;
+   double m = 0.0;
+   double n = 0.0;
    const double tol = 1.0e-12;
 
    if (prj->flag != QSC) {

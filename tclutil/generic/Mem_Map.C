@@ -1,6 +1,6 @@
  /*
  * E.S.O. - VLT project/ESO Archive 
- * $Id: Mem_Map.C,v 1.1.1.1 2006/01/12 16:41:01 abrighto Exp $
+ * $Id: Mem_Map.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
  *
  * Mem_Map.C - method definitions for class Mem_Map
  * Author:     Doug Schmidt - ripped from ACE_wrappers by K. Gillies.
@@ -12,7 +12,7 @@
  *                 23 Oct 00 Expanded error messages to be a little
  *                           more informative to an end user.
  */
-static const char* const rcsId="@(#) $Id: Mem_Map.C,v 1.1.1.1 2006/01/12 16:41:01 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: Mem_Map.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 #include <unistd.h>
 #include <sys/types.h>

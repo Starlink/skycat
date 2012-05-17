@@ -1,5 +1,5 @@
 # E.S.O. - VLT project/ESO Archive
-# @(#) $Id: SkySearch.tcl,v 1.1.1.1 2006/01/12 16:41:56 abrighto Exp $
+# @(#) $Id: SkySearch.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
 #
 # SkySearch.tcl - Widget for searching a catalog and plotting the results
 #                 in the skycat image viewer. 
@@ -784,7 +784,7 @@ itcl::class skycat::SkySearch {
 	    set filename [string range $PREVIEW 5 end]
 	    $m add command \
 		-label $file \
-		-command [list after idle $skycat config -file $filename]
+		-command [list after idle $w busy \"$skycat config -file $filename\"]
 	}
     }
 

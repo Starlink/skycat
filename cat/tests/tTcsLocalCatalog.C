@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project / ESO Archive
- * $Id: tTcsLocalCatalog.C,v 1.1.1.1 2006/01/12 16:36:08 abrighto Exp $
+ * $Id: tTcsLocalCatalog.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
  *
  * tTcsLocalCatalog.C - test cases for class TcsLocalCatalog
  * 

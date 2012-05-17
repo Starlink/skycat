@@ -4,7 +4,7 @@
 
 /*
  * E.S.O. - VLT project/ESO Archive
- * $Id: TcsCatalogObject.h,v 1.1.1.1 2006/01/12 16:36:27 abrighto Exp $
+ * $Id: TcsCatalogObject.h,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
  *
  * TcsCatalogObject.h - class representing one row of results from a 
  *                      TcsCatalog query.

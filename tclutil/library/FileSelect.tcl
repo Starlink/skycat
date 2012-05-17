@@ -1,5 +1,5 @@
 # E.S.O. - VLT project/ ESO Archive
-# "@(#) $Id: FileSelect.tcl,v 1.14 2005/11/25 12:06:27 pdraper Exp $"
+# "@(#) $Id: FileSelect.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 #
 # FileSelect.tcl - OSF/Motif standard file selection dialog
 #

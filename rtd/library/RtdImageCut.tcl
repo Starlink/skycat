@@ -1,7 +1,7 @@
 #*******************************************************************************
 # E.S.O. - VLT project
 #
-# "@(#) $Id: RtdImageCut.tcl,v 1.1.1.1 2006/01/12 16:38:12 abrighto Exp $"
+# "@(#) $Id: RtdImageCut.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 #
 # RtdImageCut.tcl - itcl widget for setting cut levels for an RtdImage widget
 # 

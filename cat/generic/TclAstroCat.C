@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project/Archive
- * $Id: TclAstroCat.C,v 1.3 2006/03/26 13:22:33 abrighto Exp $
+ * $Id: TclAstroCat.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
  *
  * TclAstroCat.C - method definitions for class TclAstroCat
  *
@@ -17,7 +17,7 @@
  *                 20/07/09   Use object interface for building the query
  *                            table list. Old interface very slow in tcl8.5.
  */
-static const char* const rcsId="@(#) $Id: TclAstroCat.C,v 1.3 2006/03/26 13:22:33 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: TclAstroCat.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 using namespace std;
 #include <cstring>
@@ -451,8 +451,8 @@ int TclAstroCat::saveCmd(int argc, char* argv[])
     char** colNames = NULL;
     int freeColNames = 0;
 
-    char* equinoxStr = "J2000";
-    if (argc >= 4)
+    char* equinoxStr = (char *)"J2000";
+    if (argc >= 4) 
 	equinoxStr = argv[3];
 
     // get the column names
@@ -565,8 +565,8 @@ int TclAstroCat::removeCmd(int argc, char* argv[])
     int freeColNames = 0;
 
     double equinox = 2000.;
-    char* equinoxStr = "J2000";
-    if (argc >= 3)
+    char* equinoxStr = (char *)"J2000";
+    if (argc >= 3) 
 	equinoxStr = argv[2];
 
     // get the column names
@@ -746,8 +746,8 @@ int TclAstroCat::queryCmd(int argc, char* argv[])
 
 		// put the column values in a list
 		for (j = 0; j < ncols; j++) {
-		    if (result_->get(i, j, s) != 0)
-			s = "";
+		    if (result_->get(i, j, s) != 0) 
+			s = (char *)"";
 		    if (j == ra_col)
                         Tcl_ListObjAppendElement(interp_, list,
                                                  Tcl_NewStringObj(ra_buf,-1));
@@ -763,7 +763,7 @@ int TclAstroCat::queryCmd(int argc, char* argv[])
 		// put the column values in a list
 		for (j = 0; j < ncols; j++) {
 		    if (result_->get(i, j, s) != 0)
-			s = "";
+                        s = (char *)"";
                     Tcl_ListObjAppendElement(interp_, list,
                                              Tcl_NewStringObj(s, -1));
 		}

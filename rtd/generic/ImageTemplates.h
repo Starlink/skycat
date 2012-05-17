@@ -2,7 +2,7 @@
 /*
  * E.S.O. - VLT project 
  * #
- * # "@(#) $Id: ImageTemplates.h,v 1.1.1.1 2006/01/12 16:39:03 abrighto Exp $" 
+ * # "@(#) $Id: ImageTemplates.h,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $" 
  *
  * ImageTemplates.h - template class method definitions for classes derived   
  *                    from class ImageData and defined in ImageTemplates.C

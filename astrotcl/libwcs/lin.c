@@ -160,7 +160,7 @@
 *   leak will result.
 *
 *   Author: Mark Calabretta, Australia Telescope National Facility
-*   $Id: lin.c,v 1.1.1.1 2006/01/12 16:44:16 abrighto Exp $
+*   $Id: lin.c,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $
 *===========================================================================*/
 
 #include <stdlib.h>

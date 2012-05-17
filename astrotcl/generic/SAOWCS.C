@@ -1,7 +1,7 @@
 /*
  * E.S.O. - VLT project / ESO Archive
  *
- * "@(#) $Id: SAOWCS.C,v 1.1.1.1 2006/01/12 16:44:00 abrighto Exp $" 
+ * "@(#) $Id: SAOWCS.C,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $" 
  *
  * SAOWCS.C - method definitions for class SAOWCS, an implementation
  *            of the abstract WCS (WCSRep) class interface based on 
@@ -19,21 +19,13 @@
  *                            libraries.
  * pbiereic        11/10/99   Added deltset()
  */
-static const char* const rcsId="@(#) $Id: SAOWCS.C,v 1.1.1.1 2006/01/12 16:44:00 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: SAOWCS.C,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $";
 
 
 #include <cstdlib>
 #include <cstring>
 #include "error.h"
 #include "SAOWCS.h"
-
-extern "C" {
-void wcsdeltset(		/* Set rotation and scaling */   /* missing from wcs.h */
-        struct WorldCoor *wcs,  /* World coordinate system structure */
-	double cdelt1,          /* scale in degrees/pixel (axis 1) */
-	double cdelt2,          /* scale in degrees/pixel (axis 2) */
-	double rotation);       /* rotation angle in degrees */
-}
 
 /*
  * constructor: make an SAOWCS object from the FITS header string
@@ -117,7 +109,7 @@ char* SAOWCS::pix2wcs(double x, double y, char* buf, int bufsz, int hms_flag) co
 	else {
 	    double ra, dec;
 	    ::pix2wcs(wcs_, x, y, &ra, &dec);
-	    if (! (wcs_->offscl == 1)) {
+	    if ( ! (wcs_->offscl == 1)) {
 		char rastr[32], decstr[32];
 		if (wcs_->degout == 0 || wcs_->sysout == WCS_J2000 || wcs_->sysout == WCS_B1950) 
 		    ::ra2str(rastr, sizeof(rastr), ra, 3);
@@ -239,9 +231,9 @@ int SAOWCS::shift(double ra, double dec, double equinox)
 {
     char* coorsys;
     if (equinox == 2000.)
-	coorsys = "FK5";
+	coorsys = (char *)"FK5";
     else if (equinox == 1950.)
-	coorsys = "FK4";
+	coorsys = (char *)"FK4";
     else
 	return error("expected equinox of 1950 or 2000");
 

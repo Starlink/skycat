@@ -1,6 +1,6 @@
  /*
  * E.S.O. - VLT project/ESO Archive 
- * $Id: DCompress.C,v 1.1.1.1 2006/01/12 16:44:01 abrighto Exp $
+ * $Id: DCompress.C,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $
  *
  * Compress.C - method definitions for class Compress
  *             (based on Archive/CADC press routines)
@@ -11,7 +11,7 @@
  *                 2 Jan 06  Renamed file to avoid name conflict with fitsio's 
  *                           "compress.c" on file systems that ignore case.
  */
-static const char* const rcsId="@(#) $Id: DCompress.C,v 1.1.1.1 2006/01/12 16:44:01 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: DCompress.C,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $";
 
 
 #include <sys/types.h>
@@ -33,7 +33,7 @@ extern "C" {
 }
 
 // must correspond to enum CompressType
-static char* types_[] = {"NONE", "UCMP", "HCMP", "ULDA", "GZIP"};
+static char* types_[] = {(char *)"NONE", (char *)"UCMP", (char *)"HCMP", (char *)"ULDA", (char *)"GZIP"};
 
 
 /* 

@@ -1,6 +1,6 @@
 #-*-tcl-*-
 # E.S.O. - VLT project/ESO Archive
-# $Id: graphics_features.tcl,v 1.1.1.1 2006/01/12 16:42:11 abrighto Exp $
+# $Id: graphics_features.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
 #
 # graphics_features.tcl - add graphics features to Skycat Graphics
 #                         menu.

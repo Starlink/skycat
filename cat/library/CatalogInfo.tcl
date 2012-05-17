@@ -1,5 +1,5 @@
 # E.S.O. - VLT project/ESO Archive
-# "@(#) $Id: CatalogInfo.tcl,v 1.2 2006/01/20 23:36:27 abrighto Exp $"
+# "@(#) $Id: CatalogInfo.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 #
 # CatalogInfo.tcl - widget for browsing through a hierarchical list of catalogs
 #

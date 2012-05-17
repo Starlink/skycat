@@ -1,8 +1,8 @@
 /*** File wcscon.c
- *** April 13, 2005
+ *** August 15, 2007
  *** Doug Mink, Harvard-Smithsonian Center for Astrophysics
  *** Some subroutines are based on Starlink subroutines by Patrick Wallace
- *** Copyright (C) 1995-2005
+ *** Copyright (C) 1995-2007
  *** Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 
     This library is free software; you can redistribute it and/or
@@ -55,8 +55,10 @@
  * Subroutine:	ecl2fk5 (dtheta,dphi,epoch) Convert ecliptic coordinates to J2000<FK5)
  * Subroutine:  fk5prec (ep0, ep1, ra, dec) Precession ep0 to ep1, FK5 system
  * Subroutine:  fk4prec (ep0, ep1, ra, dec) Precession ep0 to ep1, FK4 system
+ * Subroutine:  d2v3 (rra, rdec, r, pos) RA and Dec in degrees, Distance to Cartesian
+ * Subroutine:  v2d3 (pos, rra, rdec, r) Cartesian to RA and Dec in degrees, Distance
  * Subroutine:  s2v3 (rra, rdec, r, pos) RA, Dec, Distance to Cartesian
- * Subroutine:  v2s3 (pos, rra, rdec, r) Cartesion to RA, Dec, Distance
+ * Subroutine:  v2s3 (pos, rra, rdec, r) Cartesian to RA, Dec, Distance
  * Subroutine:  rotmat (axes, rot1, rot2, rot3, matrix) Rotation angles to matrix
  */
 
@@ -68,9 +70,6 @@
 #include <ctype.h>
 #include <string.h>
 #include "wcs.h"
-
-/* pi/(180*3600):  arcseconds to radians */
-#define DAS2R 4.8481368110953599358991410235794797595635330237270e-6
 
 void fk524(), fk524e(), fk524m(), fk524pv();
 void fk425(), fk425e(), fk425m(), fk425pv();
@@ -127,6 +126,20 @@ double	*pphi;	/* Latitude or declination proper motion in degrees/year
 	    ep2 = 1950.0;
 	else
 	    ep2 = 2000.0;
+	}
+
+    if (sys1 == WCS_ICRS && sys2 == WCS_ICRS)
+	eq2 = eq1;
+
+    if (sys1 == WCS_J2000 && sys2 == WCS_ICRS && eq1 == 2000.0) {
+	eq2 = eq1;
+	sys1 = sys2;
+	}
+
+    /* Set systems and equinoxes so that ICRS coordinates are not precessed */
+    if (sys1 == WCS_ICRS && sys2 == WCS_J2000 && eq2 == 2000.0) {
+	eq1 = eq2;
+	sys1 = sys2;
 	}
 
     /* If systems and equinoxes are the same, add proper motion and return */
@@ -323,6 +336,20 @@ double	*rv;	/* Radial velocity in km/sec */
 	    ep2 = 2000.0;
 	}
 
+    /* Set systems and equinoxes so that ICRS coordinates are not precessed */
+    if (sys1 == WCS_ICRS && sys2 == WCS_ICRS)
+	eq2 = eq1;
+
+    if (sys1 == WCS_J2000 && sys2 == WCS_ICRS && eq1 == 2000.0) {
+	eq2 = eq1;
+	sys1 = sys2;
+	}
+
+    if (sys1 == WCS_ICRS && sys2 == WCS_J2000 && eq2 == 2000.0) {
+	eq1 = eq2;
+	sys1 = sys2;
+	}
+
     /* If systems and equinoxes are the same, add proper motion and return */
     if (sys2 == sys1 && eq1 == eq2) {
 	if (ep1 != ep2) {
@@ -499,6 +526,20 @@ double	epoch;	/* Besselian epoch in years */
 	    eq2 = 2000.0;
 	}
 
+    /* Set systems and equinoxes so that ICRS coordinates are not precessed */
+    if (sys1 == WCS_ICRS && sys2 == WCS_ICRS)
+	eq2 = eq1;
+
+    if (sys1 == WCS_J2000 && sys2 == WCS_ICRS && eq1 == 2000.0) {
+	eq2 = eq1;
+	sys1 = sys2;
+	}
+
+    if (sys1 == WCS_ICRS && sys2 == WCS_J2000 && eq2 == 2000.0) {
+	eq1 = eq2;
+	sys1 = sys2;
+	}
+
     /* If systems and equinoxes are the same, return */
     if (sys2 == sys1 && eq1 == eq2)
 	return;
@@ -629,6 +670,9 @@ char *wcstring;		/* Name of coordinate system */
 	!strncmp (wcstring,"FK4",3) || !strncmp (wcstring, "fk4",3))
 	return WCS_B1950;
 
+    else if (wcstring[0] == 'I' || wcstring[0] == 'i' )
+	return WCS_ICRS;
+
     else if (wcstring[0] == 'G' || wcstring[0] == 'g' )
 	return WCS_GALACTIC;
 
@@ -643,6 +687,9 @@ char *wcstring;		/* Name of coordinate system */
 
     else if (wcstring[0] == 'L' || wcstring[0] == 'l' )
 	return WCS_LINEAR;
+
+    else if (!strncasecmp (wcstring, "pixel", 5))
+	return WCS_XY;
 
     else if (wcstring[0] == 'P' || wcstring[0] == 'p' )
 	return WCS_PLANET;
@@ -756,8 +803,14 @@ double	epoch;		/* Epoch of coordinate system */
 	    estr[2] = (char) 0;
 	    }
 	}
+    else if (syswcs == WCS_ICRS) {
+	strcpy (cstr, "ICRS");
+	}
     else if (syswcs == WCS_PLANET) {
 	strcpy (cstr, "PLANET");
+	}
+    else if (syswcs == WCS_LINEAR || syswcs == WCS_XY) {
+	strcpy (cstr, "LINEAR");
 	}
     return;
 }
@@ -1721,7 +1774,7 @@ double	epoch;	/* Besselian epoch in years */
     t = (epoch - 2000.0) * 0.01;
  
     /* Mean obliquity */
-    eps0 = DAS2R * (84381.448 + (-46.8150 + (-0.00059 + 0.001813 * t) * t) * t);
+    eps0 = secrad ((84381.448 + (-46.8150 + (-0.00059 + 0.001813*t) * t) * t));
  
     /* Form the equatorial to ecliptic rotation matrix (IAU 1980 theory).
      *  References: Murray, C.A., Vectorial Astrometry, section 4.3.
@@ -1786,7 +1839,7 @@ double	epoch;	/* Besselian epoch in years */
     int i, j;
     double rtheta, rphi, v1[3], v2[3];
     double t, eps0, r;
-    double rmat[9], *rmati;	/* Rotation matrix */
+    double rmat[9];	/* Rotation matrix */
     void v2s3(),s2v3(), fk5prec(), rotmat();
 
     rtheta = degrad (*dtheta);
@@ -1800,7 +1853,7 @@ double	epoch;	/* Besselian epoch in years */
     t = (epoch - 2000.0) * 0.01;
  
     /* Mean obliquity */
-    eps0 = DAS2R * (84381.448 + (-46.8150 + (-0.00059 + 0.001813 * t) * t) * t);
+    eps0 = secrad ((84381.448 + (-46.8150 + (-0.00059 + 0.001813*t) * t) * t));
  
     /* Form the equatorial to ecliptic rotation matrix (IAU 1980 theory).
      *  References: Murray, C.A., Vectorial Astrometry, section 4.3.
@@ -1915,7 +1968,7 @@ double *dec;	/* Dec in degrees mean equator & equinox of epoch ep0
     for (i = 0; i < 3; i++) {
 	v2[i] = 0;
 	for (j = 0; j < 3; j++)
-	    v2[i] = v2[i] + (*pmi++ * v1[j]);
+	    v2[i] = v2[i] + ( v1[j] * *pmi++ );
 	}
  
     /* Back to RA,Dec */
@@ -1960,7 +2013,7 @@ double rmatp[9];	/* 3x3 Precession matrix (returned) */
     t = ( bep1 - bep0 ) / 100.0;
  
     /* Euler angles */
-    tas2r = t * DAS2R;
+    tas2r = secrad (t);
     w = 2303.5548 + ( 1.39720 + 0.000059 * bigt ) * bigt;
     zeta = (w + ( 0.30242 - 0.000269 * bigt + 0.017996 * t ) * t ) * tas2r;
     z = (w + ( 1.09478 + 0.000387 * bigt + 0.018324 * t ) * t ) * tas2r;
@@ -1968,7 +2021,8 @@ double rmatp[9];	/* 3x3 Precession matrix (returned) */
 	    ( - 0.42647 - 0.000365 * bigt - 0.041802 * t ) * t ) * tas2r;
  
     /* Rotation matrix */
-    rotmat (313, -zeta, theta, -z, rmatp);
+    rotmat (323, -zeta, theta, -z, rmatp);
+    return;
 }
 
 
@@ -2003,7 +2057,7 @@ double rmatp[9];	/* 3x3 Precession matrix (returned) */
     t =  ( ep1 - ep0 ) / 100.0;
  
     /* Euler angles */
-    tas2r = t * DAS2R;
+    tas2r = secrad (t);
     w = 2306.2181 + ( ( 1.39656 - ( 0.000139 * t0 ) ) * t0 );
     zeta = (w + ( ( 0.30188 - 0.000344 * t0 ) + 0.017998 * t ) * t ) * tas2r;
     z = (w + ( ( 1.09468 + 0.000066 * t0 ) + 0.018203 * t ) * t ) * tas2r;
@@ -2011,7 +2065,8 @@ double rmatp[9];	/* 3x3 Precession matrix (returned) */
 	  + ( ( -0.42665 - 0.000217 * t0 ) - 0.041833 * t ) * t ) * tas2r;
  
     /* Rotation matrix */
-    rotmat (313, -zeta, theta, -z, rmatp);
+    rotmat (323, -zeta, theta, -z, rmatp);
+    return;
 }
 
 
@@ -2027,9 +2082,9 @@ double rot3;	/* Third rotation in degrees */
 double *matrix;	/* 3x3 rotation matrix (returned) */
 
 {
-    int i, j, k, naxis, idig;
-    double rot, srot, crot, *mati, w, wm[9], *wmi, matn[9];
-    char axis;
+    int i, j, k, naxis, iaxes, iaxis;
+    double rot[3], srot, crot, *mati, w, wm[9], *wmi, matn[9];
+    int axis[3];
 
     /* Initial final rotation matrix */
     mati = matrix;
@@ -2042,16 +2097,32 @@ double *matrix;	/* 3x3 rotation matrix (returned) */
 	    }
 	}
 
-    /* For each digit of axis string, set up matrix */
-    idig = 100;
-    while (axes > 0) {
-	naxis = axes / idig;
-	axes = axes - (naxis * 10);
-	idig = idig / 10;
-	if (naxis < 1)
-	    continue;
+    /* Separate digits of rotation axis string and count rotations */
+    naxis = 0;
+    iaxes = axes;
+    axis[0] = iaxes / 100;
+    if (axis[0] > 0) {
+	naxis++;
+	iaxes = iaxes - (100 * axis[0]);
+	}
+    axis[naxis] = iaxes / 10;
+    if (axis[naxis] > 0) {
+	iaxes = iaxes - (10 * axis[naxis]);
+	naxis++;
+	}
+    axis[naxis] = iaxes;
+    if (axis[naxis] > 0)
+	naxis++;
 
-	/* Initial current rotation matrix */
+    /* Set up rotation angles */
+    rot[0] = rot1;
+    rot[1] = rot2;
+    rot[2] = rot3;
+
+    /* For each digit of axis string, set up matrix */
+    for (iaxis = 0; iaxis < naxis; iaxis++) {
+
+	/* Initialize current rotation matrix */
 	mati = matn;
 	for (i = 0; i < 3; i++) {
 	    for (j=0; j < 3; j++) {
@@ -2062,18 +2133,11 @@ double *matrix;	/* 3x3 rotation matrix (returned) */
 		}
 	    }
 
-	/* Select rotation angle from argument list */
-	if (naxis == 1)
-	    rot = rot1;
-	else if (naxis == 2)
-	    rot = rot2;
-	else
-	    rot = rot3;
-	srot = sin (rot);
-	crot = cos (rot);
+	srot = sin (rot[iaxis]);
+	crot = cos (rot[iaxis]);
 	
 	/* Matrix for rotation in X */
-	if (naxis == 1) {
+	if (axis[iaxis] == 1) {
 	    matn[4] = crot;
 	    matn[5] = srot;
 	    matn[7] = -srot;
@@ -2081,7 +2145,7 @@ double *matrix;	/* 3x3 rotation matrix (returned) */
 	    }
 	
 	/* Matrix for rotation in Y */
-	else if (naxis == 2) {
+	else if (axis[iaxis] == 2) {
 	    matn[0] = crot;
 	    matn[2] = -srot;
 	    matn[6] = srot;
@@ -2096,7 +2160,7 @@ double *matrix;	/* 3x3 rotation matrix (returned) */
 	    matn[4] = crot;
 	    }
 
-	/* Multiply existing rotation matrix by current rotation matrix */
+	/* Multiply existing rotation matrix by new rotation matrix */
 	for (i = 0; i < 3; i++) {
 	    for (j = 0; j < 3; j++) {
 		w = 0.0;
@@ -2113,10 +2177,28 @@ double *matrix;	/* 3x3 rotation matrix (returned) */
 	    *mati++ = *wmi++;
 	    }
 	}
+    return;
 }
 
 
 /* The following routines are from Doug Mink's Fortran ephemeris library */
+
+/* Convert right ascensiona and declination in degrees and distance to
+   geocentric equatorial rectangular coordinates */
+
+void
+d2v3 (rra,rdec,r,pos)
+
+double rra;	/* Right ascension in degrees */
+double rdec;	/* Declination in degrees */
+double r;	/* Distance to object in same units as pos */
+double pos[3];	/* x,y,z geocentric equatorial position of object (returned) */
+{
+    s2v3 (degrad (rra), degrad (rdec), r, pos);
+
+    return;
+}
+
 
 /* Convert right ascension, declination, and distance to
    geocentric equatorial rectangular coordinates */
@@ -2136,6 +2218,24 @@ double pos[3];	/* x,y,z geocentric equatorial position of object (returned) */
     return;
 }
 
+
+/* Convert geocentric equatorial rectangular coordinates to
+   right ascension and declination in degrees and distance */
+
+void
+v2d3 (pos,rra,rdec,r)
+
+double pos[3];	/* x,y,z geocentric equatorial position of object */
+double *rra;	/* Right ascension in degrees (returned) */
+double *rdec;	/* Declination in degrees (returned) */
+double *r;	/* Distance to object in same units as pos (returned) */
+{
+    v2s3 (pos, rra, rdec, r);
+    *rra = raddeg (*rra);
+    *rdec = raddeg (*rdec);
+    return;
+}
+
 /* Convert geocentric equatorial rectangular coordinates to
    right ascension, declination, and distance */
 
@@ -2146,7 +2246,6 @@ double pos[3];	/* x,y,z geocentric equatorial position of object */
 double *rra;	/* Right ascension in radians (returned) */
 double *rdec;	/* Declination in radians (returned) */
 double *r;	/* Distance to object in same units as pos (returned) */
-
 {
     double x,y,z,rxy,rxy2,z2;
 
@@ -2215,4 +2314,12 @@ double *r;	/* Distance to object in same units as pos (returned) */
  * Feb 13 2002	Fix precession units problem in ecl2fk5() and fk52ecl()
  *
  * Apr 13 2005	Replace all sla_lib calls with local code
+ * Nov  1 2005	Add WCS_ICRS, and unprecessable system
+ *
+ * Jan  5 2006	Fix bugs in precession subroutines mprecxxx()
+ * May  3 2006	Drop declarations of unused variables suggested by Robert Lupton
+ * Oct  6 2006	If pixel coordinates, set system to WCS_XY in wcscsys()
+ * Oct 30 2006	Add LINEAR and ICRS to wcscstr() returns
+ *
+ * Aug 15 2007	Clean up code in rotmat()
  */

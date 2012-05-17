@@ -26,7 +26,7 @@ static rtdShm shmInfo_;		// Structure for managing shm/semaphores
 
 // Define the image types for the recorder and playback tools.
 static Tk_ImageType rtdRecorderType = {
-    "rtdrecorder",		/* name */
+    (char *)"rtdrecorder",		/* name */
     RtdRecorder::CreateImage,	/* createProc */
     RtdRecorder::GetImage,	/* getProc */
     RtdRecorder::DisplayImage,  /* displayProc */
@@ -41,7 +41,7 @@ static Tk_ImageType rtdRecorderType = {
 };
 
 static Tk_ImageType rtdPlaybackType = {
-    "rtdplayback",
+    (char *)"rtdplayback",
     RtdPlayback::CreateImage,
     RtdPlayback::GetImage,
     RtdPlayback::DisplayImage,
@@ -87,10 +87,10 @@ public:
     int min_args;
     int max_args;
 } RPsubcmds_[] = {
-    {"close", &RtdRPTool::close, 0, 0},
-    {"cycle", &RtdRPTool::cycle, 1, 1},
-    {"filename", &RtdRPTool::filename, 1, 1},
-    {"status", &RtdRPTool::status, 0, 0},	// Declared inline in header
+    {(char *)"close", &RtdRPTool::close, 0, 0},
+    {(char *)"cycle", &RtdRPTool::cycle, 1, 1},
+    {(char *)"filename", &RtdRPTool::filename, 1, 1},
+    {(char *)"status", &RtdRPTool::status, 0, 0},	// Declared inline in header
 };
 
 static class RtdRecorderSubCmds {
@@ -100,11 +100,11 @@ public:
     int min_args;
     int max_args;
 } Recsubcmds_[] = {
-    {"camera", &RtdRecorder::camera, 1, 1},
-    {"file", &RtdRecorder::file, 2, 2},
-    {"record", &RtdRecorder::record, 0, 0},
-    {"stop", &RtdRecorder::stop, 0, 0},
-    {"subimage", &RtdRecorder::subimage, 1, 5}
+    {(char *)"camera", &RtdRecorder::camera, 1, 1},
+    {(char *)"file", &RtdRecorder::file, 2, 2},
+    {(char *)"record", &RtdRecorder::record, 0, 0},
+    {(char *)"stop", &RtdRecorder::stop, 0, 0},
+    {(char *)"subimage", &RtdRecorder::subimage, 1, 5}
 };
 
 static class RtdPlaybackSubCmds {
@@ -114,16 +114,16 @@ public:
     int min_args;
     int max_args;
 } Playsubcmds_[] = {
-    {"close", &RtdPlayback::close, 0, 0},
-    {"filename", &RtdPlayback::filename, 1, 1},
-    {"gotoimage", &RtdPlayback::gotoimage, 1, 1},
-    {"play", &RtdPlayback::play, 0, 0},
-    {"props", &RtdPlayback::props, 2, 2},
-    {"hastime", &RtdPlayback::hastime, 0, 0},
-    {"reset", &RtdPlayback::reset, 0, 0},
-    {"spool", &RtdPlayback::spool, 1, 1},
-    {"step", &RtdPlayback::step, 0, 0},
-    {"stop", &RtdPlayback::stop, 0, 0}
+    {(char *)"close", &RtdPlayback::close, 0, 0},
+    {(char *)"filename", &RtdPlayback::filename, 1, 1},
+    {(char *)"gotoimage", &RtdPlayback::gotoimage, 1, 1},
+    {(char *)"play", &RtdPlayback::play, 0, 0},
+    {(char *)"props", &RtdPlayback::props, 2, 2},
+    {(char *)"hastime", &RtdPlayback::hastime, 0, 0},
+    {(char *)"reset", &RtdPlayback::reset, 0, 0},
+    {(char *)"spool", &RtdPlayback::spool, 1, 1},
+    {(char *)"step", &RtdPlayback::step, 0, 0},
+    {(char *)"stop", &RtdPlayback::stop, 0, 0}
 };
 
 /*
@@ -473,10 +473,10 @@ int RtdRecorder::record(int argc, char *argv[])
     // Set up an object to control the file handling. File will be opened
     // after the first image event.
     if (fileFormat_ == COMP_FITS) {
-	fileHandler = (RtdFITSComp *)new RtdFITSComp(interp_, instname_, fileName, "\0", fileSize_);
+	fileHandler = (RtdFITSComp *)new RtdFITSComp(interp_, instname_, fileName, (char *)"\0", fileSize_);
     }
     else if (fileFormat_ == FITS_CUBE) {
-	fileHandler = (RtdFITSCube *)new RtdFITSCube(interp_, instname_, fileName, "\0", fileSize_);
+	fileHandler = (RtdFITSCube *)new RtdFITSCube(interp_, instname_, fileName, (char *)"\0", fileSize_);
     }
     else {
 	return error("Unknown file format specified");

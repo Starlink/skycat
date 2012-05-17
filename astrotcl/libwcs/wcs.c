@@ -1,8 +1,8 @@
 /*** File libwcs/wcs.c
- *** July 21, 2005
+ *** July 25, 2007
  *** By Doug Mink, dmink@cfa.harvard.edu
  *** Harvard-Smithsonian Center for Astrophysics
- *** Copyright (C) 1994-2005
+ *** Copyright (C) 1994-2007
  *** Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 
     This library is free software; you can redistribute it and/or
@@ -76,6 +76,7 @@
  * Subroutine:	getwcscom (i)  Return specified WCS command 
  * Subroutine:	wcsfree (wcs)  Free storage used by WCS structure
  * Subroutine:	freewcscom (wcs)  Free storage used by WCS commands 
+ * Subroutine:  cpwcs (&header, cwcs)
  */
 
 #include <string.h>		/* strstr, NULL */
@@ -387,6 +388,10 @@ char	*ctype2;	/* FITS WCS projection for axis 2 */
     else if (!strncmp (ctype1,"PIXEL",6))
 	wcs->prjcode = WCS_PIX;
 
+    /*Detector pixel coordinates */
+    else if (strsrch (ctype1,"DET"))
+	wcs->prjcode = WCS_PIX;
+
     /* Set up right ascension, declination, latitude, or longitude */
     else if (ctype1[0] == 'R' || ctype1[0] == 'D' ||
 	     ctype1[0] == 'A' || ctype1[1] == 'L') {
@@ -639,7 +644,6 @@ wcseqset (wcs, equinox)
 struct WorldCoor *wcs;		/* World coordinate system data structure */
 double equinox;			/* Desired equinox as fractional year */
 {
-    extern void fk425e(), fk524e();
 
     if (nowcs (wcs))
 	return;
@@ -703,7 +707,6 @@ wcscdset (wcs, cd)
 struct WorldCoor *wcs;	/* World coordinate system structure */
 double *cd;			/* CD matrix, ignored if NULL */
 {
-    extern int matinv();
     double tcd;
 
     if (cd == NULL)
@@ -749,11 +752,13 @@ double cdelt1;		/* degrees/pixel in first axis (or both axes) */
 double cdelt2;		/* degrees/pixel in second axis if nonzero */
 double crota;		/* Rotation counterclockwise in degrees */
 {
-    extern int matinv();
     double *pci;
     double crot, srot;
-    int i, j;
+    int i, j, naxes;
 
+    naxes = wcs->naxis;
+    if (naxes > 2)
+	naxes = 2;
     wcs->cdelt[0] = cdelt1;
     if (cdelt2 != 0.0)
 	wcs->cdelt[1] = cdelt2;
@@ -762,8 +767,8 @@ double crota;		/* Rotation counterclockwise in degrees */
     wcs->xinc = wcs->cdelt[0];
     wcs->yinc = wcs->cdelt[1];
     pci = wcs->pc;
-    for (i = 0; i < wcs->lin.naxis; i++) {
-	for (j = 0; j < wcs->lin.naxis; j++) {
+    for (i = 0; i < naxes; i++) {
+	for (j = 0; j < naxes; j++) {
 	    if (i ==j)
 		*pci = 1.0;
 	    else
@@ -886,7 +891,6 @@ double cdelt1;		/* degrees/pixel in first axis (or both axes) */
 double cdelt2;		/* degrees/pixel in second axis if nonzero */
 double *pc;		/* Rotation matrix, ignored if NULL */
 {
-    extern int matinv();
     double *pci, *pc0i;
     int i, j, naxes;
 
@@ -894,6 +898,8 @@ double *pc;		/* Rotation matrix, ignored if NULL */
 	return;
 
     naxes = wcs->naxis;
+/*   if (naxes > 2)
+	naxes = 2; */
     if (naxes < 1 || naxes > 9) {
 	naxes = wcs->naxes;
 	wcs->naxis = naxes;
@@ -918,25 +924,19 @@ double *pc;		/* Rotation matrix, ignored if NULL */
 	}
 
     /* Set CD matrix */
-    if (naxes < 3) {
+    if (naxes > 1) {
 	wcs->cd[0] = pc[0] * wcs->cdelt[0];
-	wcs->cd[1] = pc[1] * wcs->cdelt[1];
-	wcs->cd[2] = pc[2] * wcs->cdelt[0];
-	wcs->cd[3] = pc[3] * wcs->cdelt[1];
+	wcs->cd[1] = pc[1] * wcs->cdelt[0];
+	wcs->cd[2] = pc[naxes] * wcs->cdelt[1];
+	wcs->cd[3] = pc[naxes+1] * wcs->cdelt[1];
 	}
-    else if (naxes == 3) {
+    else {
 	wcs->cd[0] = pc[0] * wcs->cdelt[0];
-	wcs->cd[1] = pc[1] * wcs->cdelt[1];
-	wcs->cd[2] = pc[3] * wcs->cdelt[0];
-	wcs->cd[3] = pc[4] * wcs->cdelt[1];
+	wcs->cd[1] = 0.0;
+	wcs->cd[2] = 0.0;
+	wcs->cd[3] = 1.0;
 	}
-    else if (naxes == 4) {
-	wcs->cd[0] = pc[0] * wcs->cdelt[0];
-	wcs->cd[1] = pc[1] * wcs->cdelt[1];
-	wcs->cd[2] = pc[4] * wcs->cdelt[0];
-	wcs->cd[3] = pc[5] * wcs->cdelt[1];
-	}
-    (void) matinv (naxes, wcs->cd, wcs->dc);
+    (void) matinv (2, wcs->cd, wcs->dc);
     wcs->rotmat = 1;
 
     (void)linset (&wcs->lin);
@@ -959,6 +959,8 @@ struct WorldCoor *wcs;	/* World coordinate system structure */
     int i, mem, naxes;
 
     naxes = wcs->naxis;
+    if (naxes > 2)
+	naxes = 2;
     if (naxes < 1 || naxes > 9) {
 	naxes = wcs->naxes;
 	wcs->naxis = naxes;
@@ -1413,29 +1415,20 @@ double	x1,y1;	/* (RA,Dec) or (Long,Lat) in degrees */
 double	x2,y2;	/* (RA,Dec) or (Long,Lat) in degrees */
 
 {
-	double xr1, xr2, yr1, yr2;
+	double xr1, xr2, yr1, yr2, r, diffi;
 	double pos1[3], pos2[3], w, diff, cosb;
 	int i;
 
 	/* Convert two vectors to direction cosines */
-	xr1 = degrad (x1);
-	yr1 = degrad (y1);
-	cosb = cos (yr1);
-	pos1[0] = cos (xr1) * cosb;
-	pos1[1] = sin (xr1) * cosb;
-	pos1[2] = sin (yr1);
-
-	xr2 = degrad (x2);
-	yr2 = degrad (y2);
-	cosb = cos (yr2);
-	pos2[0] = cos (xr2) * cosb;
-	pos2[1] = sin (xr2) * cosb;
-	pos2[2] = sin (yr2);
+	r = 1.0;
+	d2v3 (x1, y1, r, pos1);
+	d2v3 (x2, y2, r, pos2);
 
 	/* Modulus squared of half the difference vector */
 	w = 0.0;
 	for (i = 0; i < 3; i++) {
-	    w = w + (pos1[i] - pos2[i]) * (pos1[i] - pos2[i]);
+	    diffi = pos1[i] - pos2[i];
+	    w = w + (diffi * diffi);
 	    }
 	w = w / 4.0;
 	if (w > 1.0) w = 1.0;
@@ -2060,11 +2053,6 @@ double	*xpos,*ypos;	/* RA and Dec in degrees (returned) */
     double	xpi, ypi, xp, yp;
     double	eqin, eqout;
     int wcspos();
-    extern int dsspos();
-    extern int platepos();
-    extern int worldpos();
-    extern int tnxpos();
-    extern void wcscon();
 
     if (nowcs (wcs))
 	return;
@@ -2137,8 +2125,9 @@ double	*xpos,*ypos;	/* RA and Dec in degrees (returned) */
 	*ypos = yp;
 	}
 
-    /* Keep RA/longitude within range if spherical coordinate output */
-    if (wcs->sysout > 0 && wcs->sysout < 10) {
+    /* Keep RA/longitude within range if spherical coordinate output
+       (Not LINEAR or XY) */
+    if (wcs->sysout > 0 && wcs->sysout != 6 && wcs->sysout != 10) {
 	if (*xpos < 0.0)
 	    *xpos = *xpos + 360.0;
 	else if (*xpos > 360.0)
@@ -2182,11 +2171,6 @@ int	*offscl;	/* 0 if within bounds, else off scale */
     double eqin, eqout;
     int sysin;
     int wcspix();
-    extern int dsspix();
-    extern int platepix();
-    extern int worldpix();
-    extern int tnxpix();
-    extern void wcscon();
 
     if (nowcs (wcs))
 	return;
@@ -2209,8 +2193,10 @@ int	*offscl;	/* 0 if within bounds, else off scale */
     wcs->zpix = 1.0;
 
     /* Convert coordinates to same system as image */
-    eqout = wcs->equinox;
-    wcscon (sysin, wcs->syswcs, eqin, eqout, &xp, &yp, wcs->epoch);
+    if (sysin > 0 && sysin != 6 && sysin != 10) {
+	eqout = wcs->equinox;
+	wcscon (sysin, wcs->syswcs, eqin, eqout, &xp, &yp, wcs->epoch);
+	}
 
     /* Convert sky coordinates to image coordinates */
 
@@ -2307,7 +2293,7 @@ double  *ypos;           /* y (dec) coordinate (deg) */
     pixcrd[3] = 1.0;
     for (i = 0; i < 4; i++)
 	imgcrd[i] = 0.0;
-    offscl = wcsrev (&wcs->ctype, &wcs->wcsl, pixcrd, &wcs->lin, imgcrd,
+    offscl = wcsrev ((void *)&wcs->ctype, &wcs->wcsl, pixcrd, &wcs->lin, imgcrd,
 		    &wcs->prj, &phi, &theta, wcs->crval, &wcs->cel, wcscrd);
     if (offscl == 0) {
 	*xpos = wcscrd[wcs->wcsl.lng];
@@ -2337,7 +2323,7 @@ double  *ypix;          /* y pixel number  (dec or lat without rotation) */
     *xpix = 0.0;
     *ypix = 0.0;
     if (wcs->wcsl.flag != WCSSET) {
-	if (wcsset (wcs->lin.naxis, &wcs->ctype, &wcs->wcsl) )
+	if (wcsset (wcs->lin.naxis, (void *)&wcs->ctype, &wcs->wcsl) )
 	    return (1);
 	}
 
@@ -2360,7 +2346,7 @@ double  *ypix;          /* y pixel number  (dec or lat without rotation) */
     imgcrd[3] = 1.0;
 
     /* Invoke WCSLIB subroutines for coordinate conversion */
-    offscl = wcsfwd (&wcs->ctype, &wcs->wcsl, wcscrd, wcs->crval, &wcs->cel,
+    offscl = wcsfwd ((void *)&wcs->ctype, &wcs->wcsl, wcscrd, wcs->crval, &wcs->cel,
 		     &phi, &theta, &wcs->prj, imgcrd, &wcs->lin, pixcrd);
 
     if (!offscl) {
@@ -2529,6 +2515,165 @@ struct WorldCoor *wcs;  /* WCS parameter structure */
 	    }
 	}
     return;
+}
+
+int
+cpwcs (header, cwcs)
+
+char **header;	/* Pointer to start of FITS header */
+char *cwcs;	/* Keyword suffix character for output WCS */
+{
+    double tnum;
+    int dkwd[100];
+    int i, maxnkwd, ikwd, nleft, lbuff, lhead, nkwd, nbytes;
+    int nkwdw;
+    char **kwd;
+    char *newhead, *oldhead;
+    char kwdc[16], keyword[16];
+    char tstr[80];
+
+    /* Allocate array of keywords to be transferred */
+    maxnkwd = 100;
+    kwd = (char **)calloc (maxnkwd, sizeof(char *));
+    for (ikwd = 0; ikwd < maxnkwd; ikwd++)
+	kwd[ikwd] = (char *) calloc (16, 1);
+
+    /* Make list of all possible keywords to be transferred */
+    nkwd = 0;
+    strcpy (kwd[++nkwd], "EPOCH");
+    dkwd[nkwd] = 1;
+    strcpy (kwd[++nkwd], "EQUINOX");
+    dkwd[nkwd] = 1;
+    strcpy (kwd[++nkwd], "RADECSYS");
+    dkwd[nkwd] = 0;
+    strcpy (kwd[++nkwd], "CTYPE1");
+    dkwd[nkwd] = 0;
+    strcpy (kwd[++nkwd], "CTYPE2");
+    dkwd[nkwd] = 0;
+    strcpy (kwd[++nkwd], "CRVAL1");
+    dkwd[nkwd] = 1;
+    strcpy (kwd[++nkwd], "CRVAL2");
+    dkwd[nkwd] = 1;
+    strcpy (kwd[++nkwd], "CDELT1");
+    dkwd[nkwd] = 1;
+    strcpy (kwd[++nkwd], "CDELT2");
+    dkwd[nkwd] = 1;
+    strcpy (kwd[++nkwd], "CRPIX1");
+    dkwd[nkwd] = 1;
+    strcpy (kwd[++nkwd], "CRPIX2");
+    dkwd[nkwd] = 1;
+    strcpy (kwd[++nkwd], "CROTA1");
+    dkwd[nkwd] = 1;
+    strcpy (kwd[++nkwd], "CROTA2");
+    dkwd[nkwd] = 1;
+    strcpy (kwd[++nkwd], "CD1_1");
+    dkwd[nkwd] = 1;
+    strcpy (kwd[++nkwd], "CD1_2");
+    dkwd[nkwd] = 1;
+    strcpy (kwd[++nkwd], "CD2_1");
+    dkwd[nkwd] = 1;
+    strcpy (kwd[++nkwd], "CD2_2");
+    dkwd[nkwd] = 1;
+    strcpy (kwd[++nkwd], "PC1_1");
+    dkwd[nkwd] = 1;
+    strcpy (kwd[++nkwd], "PC1_2");
+    dkwd[nkwd] = 1;
+    strcpy (kwd[++nkwd], "PC2_1");
+    dkwd[nkwd] = 1;
+    strcpy (kwd[++nkwd], "PC2_2");
+    dkwd[nkwd] = 1;
+    strcpy (kwd[++nkwd], "PC001001");
+    dkwd[nkwd] = 1;
+    strcpy (kwd[++nkwd], "PC001002");
+    dkwd[nkwd] = 1;
+    strcpy (kwd[++nkwd], "PC002001");
+    dkwd[nkwd] = 1;
+    strcpy (kwd[++nkwd], "PC002002");
+    dkwd[nkwd] = 1;
+    strcpy (kwd[++nkwd], "LATPOLE");
+    dkwd[nkwd] = 1;
+    strcpy (kwd[++nkwd], "LONPOLE");
+    dkwd[nkwd] = 1;
+    for (i = 1; i < 13; i++) {
+	sprintf (keyword,"CO1_%d", i);
+	strcpy (kwd[++nkwd], keyword);
+	dkwd[nkwd] = 1;
+	}
+    for (i = 1; i < 13; i++) {
+	sprintf (keyword,"CO2_%d", i);
+	strcpy (kwd[++nkwd], keyword);
+	dkwd[nkwd] = 1;
+	}
+    for (i = 0; i < 10; i++) {
+	sprintf (keyword,"PROJP%d", i);
+	strcpy (kwd[++nkwd], keyword);
+	dkwd[nkwd] = 1;
+	}
+    for (i = 0; i < 10; i++) {
+	sprintf (keyword,"PV1_%d", i);
+	strcpy (kwd[++nkwd], keyword);
+	dkwd[nkwd] = 1;
+	}
+    for (i = 0; i < 10; i++) {
+	sprintf (keyword,"PV2_%d", i);
+	strcpy (kwd[++nkwd], keyword);
+	dkwd[nkwd] = 1;
+	}
+
+    /* Allocate new header buffer if needed */
+    lhead = (ksearch (*header, "END") - *header)  + 80;
+    lbuff = gethlength (*header);
+    nleft = (lbuff - lhead) / 80;
+    if (nleft < nkwd) {
+	nbytes = lhead + (nkwd * 80) + 400;
+	newhead = (char *) calloc (1, nbytes);
+	strncpy (newhead, *header, lhead);
+	oldhead = *header;
+	header = &newhead;
+	free (oldhead);
+	}
+    
+    /* Copy keywords to new WCS ID in header */
+    nkwdw = 0;
+    for (i = 0; i < nkwd; i++) {
+	if (dkwd[i]) {
+	    if (hgetr8 (*header, kwd[i], &tnum)) {
+		nkwdw++;
+		if (!strncmp (kwd[i], "PC0", 3)) {
+		    if (!strcmp (kwd[i], "PC001001"))
+			strcpy (kwdc, "PC1_1");
+		    else if (!strcmp (kwd[i], "PC001002"))
+			strcpy (kwdc, "PC1_2");
+		    else if (!strcmp (kwd[i], "PC002001"))
+			strcpy (kwdc, "PC2_1");
+		    else
+			strcpy (kwdc, "PC2_2");
+		    }
+		else
+		    strcpy (kwdc, kwd[i]);
+		strncat (kwdc, cwcs, 1);
+		(void)hputr8 (*header, kwdc, tnum);
+		}
+	    }
+	else {
+	    if (hgets (*header, kwd[i], 80, tstr)) {
+		nkwdw++;
+		if (!strncmp (kwd[i], "RADECSYS", 8))
+		    strcpy (kwdc, "RADECSY");
+		else
+		    strcpy (kwdc, kwd[i]);
+		strncat (kwdc, cwcs, 1);
+		hputs (*header, kwdc, tstr);
+		}
+	    }
+	}
+    
+    /* Free keyword list array */
+    for (ikwd = 0; ikwd < maxnkwd; ikwd++)
+	free (kwd[ikwd]);
+    free (kwd);
+    kwd = NULL;
+    return (nkwdw);
 }
 
 
@@ -2762,4 +2907,21 @@ struct WorldCoor *wcs;  /* WCS parameter structure */
  * Mar  9 2005	Fix bug in wcsrotset() which set rot > 360 to 360
  * Jun 27 2005	Fix ctype in calls to wcs subroutines
  * Jul 21 2005	Fix bug in wcsrange() at RA ~= 0.0
+ *
+ * Apr 24 2006	Always set inverse CD matrix to 2 dimensions in wcspcset()
+ * May  3 2006	(void *) pointers so arguments match type, from Robert Lupton
+ * Jun 30 2006	Set only 2-dimensional PC matrix; that is all lin* can deal with
+ * Oct 30 2006	In pix2wcs(), do not limit x to between 0 and 360 if XY or LINEAR
+ * Oct 30 2006	In wcsc2pix(), do not precess LINEAR or XY coordinates
+ * Dec 21 2006	Add cpwcs() to copy WCS keywords to new suffix
+ *
+ * Jan  4 2007	Fix pointer to header in cpwcs()
+ * Jan  5 2007	Drop declarations of wcscon(); it is in wcs.h
+ * Jan  9 2006	Drop declarations of fk425e() and fk524e(); moved to wcs.h
+ * Jan  9 2006	Drop *pix() and *pos() external declarations; moved to wcs.h
+ * Jan  9 2006	Drop matinv() external declaration; it is already in wcslib.h
+ * Feb 15 2007	If CTYPEi contains DET, set to WCS_PIX projection
+ * Feb 23 2007	Fix bug when checking for "DET" in CTYPEi
+ * Apr  2 2007	Fix PC to CD matrix conversion
+ * Jul 25 2007	Compute distance between two coordinates using d2v3()
  */

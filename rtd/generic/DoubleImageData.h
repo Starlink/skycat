@@ -2,24 +2,23 @@
 /*
  * E.S.O. - VLT project 
  *
- * "@(#) $Id$" 
+ * "@(#) $Id: DoubleImageData.h,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $" 
  *
  * DoubleImageData.h - class definitions for class DoubleImageData
- *
- * See the man page RTI(3) for a complete description of this class
- * library.
  * 
  * who             when      what
  * --------------  --------  ----------------------------------------
  * Peter W. Draper 30/05/01  Created
  *                 14/11/05  Added bias subtraction members.
  * Peter W. Draper 29/10/07  Added colorScale
+ * pbiereic        12/08/07  Created
+ * Peter W. Draper 17/05/12  Merged skycat version created by pbiereic.
  */
 
 #include <sys/types.h>
 #include "ImageData.h"
 
-// This class is used for images where the raw data is made up of ints
+// This class is used for images where the raw data is made up of doubles.
 
 class DoubleImageData : public ImageData {
 private:
@@ -56,10 +55,10 @@ protected:
     void initShortConversion();
 
     // sprintf format for (x y value)
-    virtual char* getXYValueFmt() {return "%.1f %.1f %.2f";}
+    virtual char* getXYValueFmt() {return (char *)"%.1f %.1f %.2f";}
 
     // sprintf format for image pixel value
-    virtual char* getValueFmt() {return "%.2f";}
+    virtual char* getValueFmt() {return (char *)"%.2f";}
 
     int getXsamples(double *rawImage, int idx, int wbox, double *samples);
     int getBsamples(double *rawImage, int idx, int wbox, double *samples);

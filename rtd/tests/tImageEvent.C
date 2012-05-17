@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project 
- * $Id: tImageEvent.C,v 1.1.1.1 2006/01/12 16:38:00 abrighto Exp $
+ * $Id: tImageEvent.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
  *
  * tImageEvent.C - simulate a moving star within the ngc1275 image
  *

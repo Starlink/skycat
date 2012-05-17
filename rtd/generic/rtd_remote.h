@@ -3,7 +3,7 @@
 
 /*
  * E.S.O. - VLT project 
- * "@(#) $Id: rtd_remote.h,v 1.1.1.1 2006/01/12 16:39:03 abrighto Exp $" 
+ * "@(#) $Id: rtd_remote.h,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $" 
  *
  * rtd_remote.h - C interface for remote access to rtdimage based
  *                widgets

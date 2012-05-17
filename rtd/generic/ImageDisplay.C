@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project 
- * "@(#) $Id: ImageDisplay.C,v 1.1.1.1 2006/01/12 16:39:29 abrighto Exp $"
+ * "@(#) $Id: ImageDisplay.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
  *
  * ImageDisplay.C - member routines for class ImageDisplay,
  *                  for managing XImage to Pixmap display including
@@ -18,7 +18,7 @@
  *                           shared memory cannot be attached (Solaris
  *                           limit is 6 segments!).
  */
-static const char* const rcsId="@(#) $Id: ImageDisplay.C,v 1.1.1.1 2006/01/12 16:39:29 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: ImageDisplay.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 // #define DEBUG
 // #define XXXDEBUG

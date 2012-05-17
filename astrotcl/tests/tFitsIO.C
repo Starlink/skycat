@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project 
- * $Id: tFitsIO.C,v 1.1.1.1 2006/01/12 16:43:25 abrighto Exp $
+ * $Id: tFitsIO.C,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $
  *
  * tFitsIO.C - test cases for class FitsIO
  * 

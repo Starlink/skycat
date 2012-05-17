@@ -108,6 +108,7 @@
 #define fits_write_grphdrll     ffphprll
 #define fits_write_atblhdr      ffphtb
 #define fits_write_btblhdr      ffphbn
+#define fits_write_exthdr       ffphext
 #define fits_write_key_template ffpktp
 
 #define fits_get_hdrspace      ffghsp
@@ -236,6 +237,7 @@
 #define fits_copy_file      ffcpfl
 #define fits_copy_header    ffcphd
 #define fits_copy_data      ffcpdt
+#define fits_write_hdu      ffwrhdu
 
 #define fits_set_hdustruc   ffrdef
 #define fits_set_hdrsize    ffhdef
@@ -360,6 +362,7 @@
 #define fits_read_subsetnull_flt ffgsfe
 #define fits_read_subsetnull_dbl ffgsfd
 
+#define ffcpimg fits_copy_image_section
 #define fits_compress_img fits_comp_img
 #define fits_decompress_img fits_decomp_img
 
@@ -507,6 +510,7 @@
 #define fits_write_col_null    ffpclu
 #define fits_write_col_bit     ffpclx
 #define fits_write_nulrows     ffprwu
+#define fits_write_nullrows    ffprwu
 
 #define fits_write_colnull ffpcn
 #define fits_write_colnull_str ffpcns
@@ -522,6 +526,9 @@
 #define fits_write_colnull_int ffpcnk
 #define fits_write_colnull_flt ffpcne
 #define fits_write_colnull_dbl ffpcnd
+
+#define fits_write_ext ffpextn
+#define fits_read_ext  ffgextn
 
 #define fits_write_descript  ffpdes
 #define fits_compress_heap   ffcmph

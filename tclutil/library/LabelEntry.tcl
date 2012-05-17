@@ -1,5 +1,5 @@
 # E.S.O. - VLT project/ ESO Archive
-# "@(#) $Id: LabelEntry.tcl,v 1.6 2006/05/04 12:04:33 pwd Exp $"
+# "@(#) $Id: LabelEntry.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 #
 # LabelEntry.tcl - Itk widget for displaying a labeled entry
 #

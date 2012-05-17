@@ -1,7 +1,7 @@
 /*
  * E.S.O. - VLT project 
  *
- * "@(#) $Id: NativeImageData.C,v 1.1.1.1 2006/01/12 16:38:29 abrighto Exp $" 
+ * "@(#) $Id: NativeImageData.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $" 
  *
  * NativeImageData.C - cpp template definitions to support native byte
  *                     order images on byte swapped machines (i386, vax, etc.)
@@ -44,6 +44,12 @@
 #define FloatImageData NativeFloatImageData
 #include "FloatImageData.C"
 #undef FloatImageData
+#undef NTOH
+
+#define NTOH(x) x
+#define LongLongImageData NativeLongLongImageData
+#include "LongLongImageData.C"
+#undef LongLongImageData
 #undef NTOH
 
 #define NTOH(x) x

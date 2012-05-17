@@ -3,10 +3,10 @@
 # Convenience script to configure, build and install skycat in the given prefix dir.
 
 # Edit the next line:
-#prefix=/usr/local
-prefix=$HOME/Software/skycat
+prefix=/usr/local
+#prefix=$HOME/work/eso/skycat/install
 
 make -f Makefile.in autoconf
-./configure --with-tcl=$prefix/lib --with-tk=$prefix/lib --prefix=$prefix --exec_prefix=$prefix
+configure --prefix=$prefix --exec_prefix=$prefix
 make all install
 #make release

@@ -29,7 +29,7 @@
 *                      AUSTRALIA
 *
 *   Author: Mark Calabretta, Australia Telescope National Facility
-*   $Id: wcslib.h,v 1.1.1.1 2006/01/12 16:45:38 abrighto Exp $
+*   $Id: wcslib.h,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $
 *===========================================================================*/
 
 #ifdef __cplusplus
@@ -74,9 +74,6 @@ struct prjprm {
    int azpset(struct prjprm *);
    int azpfwd(const double, const double, struct prjprm *, double *, double *);
    int azprev(const double, const double, struct prjprm *, double *, double *);
-   int szpset(struct prjprm *);
-   int szpfwd(const double, const double, struct prjprm *, double *, double *);
-   int szprev(const double, const double, struct prjprm *, double *, double *);
    int szpset(struct prjprm *);
    int szpfwd(const double, const double, struct prjprm *, double *, double *);
    int szprev(const double, const double, struct prjprm *, double *, double *);
@@ -377,7 +374,7 @@ extern const char *wcsmix_errmsg[];
 #define WCSTRIG_TOL 1e-10
 
 #ifdef __cplusplus
-};
+}
 #endif
 
 #endif /* wcslib_h_ */
@@ -388,4 +385,6 @@ extern const char *wcsmix_errmsg[];
  * Sep 19 2001	Doug Mink - Update for WCSLIB 2.7, especially proj.h and cel.h
  *
  * Mar 12 2002	Doug Mink - Update for WCSLIB 2.8.2, especially proj.h
+ * Nov 29 2006	Doug Mink - Drop semicolon at end of C++ ifdef
+ * Jan  4 2007	Doug Mink - Drop extra declarations of SZP subroutines
  */

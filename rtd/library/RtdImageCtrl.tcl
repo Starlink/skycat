@@ -1,5 +1,5 @@
 # E.S.O. - VLT project 
-# "@(#) $Id: RtdImageCtrl.tcl,v 1.1.1.1 2006/01/12 16:38:06 abrighto Exp $"
+# "@(#) $Id: RtdImageCtrl.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 #
 # RtdImageCtrl.tcl - Widget combining an RtdImage with a control panel
 #                    zoom and panning windows.
@@ -448,9 +448,8 @@ itcl::class rtd::RtdImageCtrl {
     # (for real-time updates, see camera command)
 
     protected method new_image_cmd {} {
-
 	RtdImage::new_image_cmd
-        
+
         # display HDU list, if there are multiple HDUs
         update_fits_hdus
 
@@ -599,6 +598,12 @@ itcl::class rtd::RtdImageCtrl {
     # to set new world coordinates information for the current image.
 
     public method set_wcs_info {list} {
+        if { "[lindex $list 10]" == "ZPN" } {
+            # $image_ wcsset $list crashes for ZPN projection (bug in WCSLIB?)
+            error_dialog "Setting WCS information for ZPN projection is not yet supported."
+            return
+        }
+
 	if {[catch "$image_ wcsset $list" msg]} {
 	    error_dialog $msg $w_
 	}
@@ -700,19 +705,14 @@ itcl::class rtd::RtdImageCtrl {
 	}
 
         utilReUseWidget rtd::RtdImageHduChooser $w_.hdu \
-	    -center 0 \
-            -image $this \
+	    -image $this \
             -shorthelpwin $itk_option(-shorthelpwin) \
-            -usexshm $itk_option(-usexshm) \
-            -usexsync $itk_option(-usexsync) \
             -verbose $itk_option(-verbose)
-
     }
 
     # Update the popup window listing the HDUs in the current image
 
     public method update_fits_hdus {} {
-	
         if {[catch {set n [$image_ hdu count]}]} {
             set n 0
         }

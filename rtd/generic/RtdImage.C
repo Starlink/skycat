@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project 
- * "@(#) $Id: RtdImage.C,v 1.5 2006/02/02 17:36:47 abrighto Exp $"
+ * "@(#) $Id: RtdImage.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
  *
  * RtdImage.C - member routines for class RtdImage,
  *               implementation of the TCL rtdimage command
@@ -111,12 +111,11 @@
  *                           configuration option is given. This functionality
  *                           is lost in Tk 8.5.
  */
-static const char* const rcsId="@(#) $Id: RtdImage.C,v 1.5 2006/02/02 17:36:47 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: RtdImage.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
-#include "define.h"
 #include "RtdImage.h"
 
 // Tcl procedure to search for an init for Rtd startup file.  
@@ -186,7 +185,7 @@ static Tk_ConfigSpec configSpecs_[] = {
  * functions
  */
 static Tk_ImageType rtdImageType = {
-    "rtdimage",                 /* name */
+    (char *)"rtdimage",                 /* name */
     RtdImage::CreateImage,      /* createProc */
     TkImage::GetImage,          /* getProc */
     TkImage::DisplayImage,      /* displayProc */
@@ -465,7 +464,7 @@ RtdImage::RtdImage(Tcl_Interp* interp, const char* instname, int argc, char** ar
 		   Tk_ConfigSpec* specs, RtdImageOptions* options)
     : TkImage(interp, imageType, instname, 
 	      (specs ? specs : configSpecs_), options, 
-	      master, "Canvas"),
+	      master, (char *)"Canvas"),
       image_((ImageData*)NULL),
       options_(options),
       camera_(NULL),
@@ -1772,7 +1771,7 @@ TkImage* RtdImage::getImage(Tk_Window tkwin)
     // get a handle to the canvas and save it for later reference
     Tcl_CmdInfo info;
     if (Tcl_GetCommandInfo(interp_, (char*)canvasName_, &info) == 0) {
-	char* msg = "internal error: couldn't get canvas info";
+	char* msg = (char *)"internal error: couldn't get canvas info";
 	error(msg);
 	fprintf(stderr, "rtd: %s for %s\n", msg, canvasName_);
 	Tk_BackgroundError(interp_);
@@ -1821,24 +1820,24 @@ void RtdImage::motionNotify(XEvent* eventPtr)
     // (eventuallY) update zoom window, if shift button not pressed
     if ((eventPtr->xmotion.state & ( ShiftMask | LockMask ) )  == 0) {
 
-	if (saveMotion_) {
-	    motionX_ = eventPtr->xmotion.x;
-	    motionY_ = eventPtr->xmotion.y;
-	}
-	motionState_ = eventPtr->xmotion.state;
+        if (saveMotion_) {
+            motionX_ = eventPtr->xmotion.x;
+            motionY_ = eventPtr->xmotion.y;
+        }
+        motionState_ = eventPtr->xmotion.state;
 
-	if (!motionPending_) {
-	    if (motionState_ == 0 && zoomSpeed_ >= 0) {
-		// speed up zoom if no keys or mouse buttons are pressed
-		processMotionEvent();
-	    }
-	    else {
-		// slow down zoom if buttons are pressed, or zoomSpeed is
-		// negative, since it might drag down the performance for drawing, etc...
-		motionPending_ = 1;
-		Tk_DoWhenIdle(motionProc, (ClientData)this);
-	    }
-	}
+        if (!motionPending_) {
+            if (motionState_ == 0 && zoomSpeed_ >= 0) {
+                // speed up zoom if no keys or mouse buttons are pressed
+                processMotionEvent();
+            }
+            else {
+                // slow down zoom if buttons are pressed, or zoomSpeed is
+                // negative, since it might drag down the performance for drawing, etc...
+                motionPending_ = 1;
+                Tk_DoWhenIdle(motionProc, (ClientData)this);
+            }
+        }
     }
 }
 

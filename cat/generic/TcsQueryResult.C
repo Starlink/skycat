@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project/ESO Archive
- * $Id: TcsQueryResult.C,v 1.1.1.1 2006/01/12 16:36:29 abrighto Exp $
+ * $Id: TcsQueryResult.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
  *
  * TcsQueryResult.C - method definitions for class TcsQueryResult
  * 
@@ -10,7 +10,7 @@
  * --------------  --------   ----------------------------------------
  * Allan Brighton  13 Jun 96  Created
  */
-static const char* const rcsId="@(#) $Id: TcsQueryResult.C,v 1.1.1.1 2006/01/12 16:36:29 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: TcsQueryResult.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 
 using namespace std;
@@ -108,7 +108,7 @@ int TcsQueryResult::getDouble(int row, int col, double& value)
     if (strlen(p) == 0) 
 	value = TCS_CATALOG_NULL_DOUBLE;
     else if (sscanf(p, "%lf", &value) != 1)
-	return tab_error(row, col, "double", p);
+	return tab_error(row, col, (char *)"double", p);
     return 0;
 }
 

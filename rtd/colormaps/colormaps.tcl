@@ -2,7 +2,7 @@
 #
 # E.S.O. - VLT project
 #
-# "@(#) $Id: colormaps.tcl,v 1.1.1.1 2006/01/12 16:37:25 abrighto Exp $"
+# "@(#) $Id: colormaps.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 #
 # script to generate C code including static colormaps, so that the ,
 # (binary) application doesn't have to be delivered with the colormap files.
@@ -15,7 +15,7 @@
 puts {
 /*
  * E.S.O. - VLT project 
- * "@(#) $Id: colormaps.tcl,v 1.1.1.1 2006/01/12 16:37:25 abrighto Exp $"
+ * "@(#) $Id: colormaps.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
  *
  * Colormap definitions for RTD
  *
@@ -40,7 +40,7 @@ foreach file [glob *.lasc] {
 	puts "\t\t{[join $line {, }]},"
     }
     puts "\t};"
-    puts "\tnew ColorMapInfo(\"$name\", $ar);\n"
+    puts "\tnew ColorMapInfo((char *)\"$name\", $ar);\n"
     close $fd
 }
 
@@ -55,7 +55,7 @@ foreach file [glob *.iasc] {
 	puts "\t\t[lindex $line 0],"
     }
     puts "\t};"
-    puts "\tnew ITTInfo(\"$name\", $ar);\n"
+    puts "\tnew ITTInfo((char *)\"$name\", $ar);\n"
     close $fd
 }
 

@@ -1,5 +1,5 @@
 # E.S.O. - VLT project/ ESO Archive
-# "@(#) $Id: FrameWidget.tcl,v 1.1.1.1 2006/01/12 16:40:51 abrighto Exp $"
+# "@(#) $Id: FrameWidget.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 #
 # FrameWidget.tcl - Itk base class for widgets with their own frame
 #
@@ -11,6 +11,8 @@
 #                            that it does restore the focus,
 #                            not just get the window name. 
 #                 23 Jan 08  Make focus control is busy method optional.
+
+itk::usual FrameWidget {}
 
 # The FrameWidget itcl class is a subclass of itk::Widget and thus
 # inherits all of the features described in Widget(n).  In addition, a

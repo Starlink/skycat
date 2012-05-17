@@ -1,5 +1,5 @@
 # E.S.O. - VLT project/ ESO Archive
-# "@(#) $Id: TopLevelWidget.tcl,v 1.2 2006/01/30 20:21:45 abrighto Exp $"
+# "@(#) $Id: TopLevelWidget.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 #
 # TopLevelWidget.tcl - Itk base class for popup windows
 #
@@ -181,7 +181,7 @@ itcl::class util::TopLevelWidget {
 	if {$status} {
 	    start_err_ $mainclass $name $default_opt $msg $usage
 	}
-	
+
 	# keep track of main windows
 	set main_windows_(.) 0
 

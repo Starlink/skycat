@@ -1,5 +1,5 @@
 # E.S.O. - VLT project 
-# $Id: configure.in,v 1.5 2006/02/01 22:10:36 abrighto Exp $
+# $Id: configure.in,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
 #
 # This file is used with GNU autoconf to generate a configure script
 #
@@ -27,7 +27,7 @@
 # so you can encode the package version directly into the source files.
 #-----------------------------------------------------------------------
 
-AC_INIT([rtd], [3.0])
+AC_INIT([rtd], [3.2.1])
 
 #--------------------------------------------------------------------
 # Call TEA_INIT as the first TEA_ macro to set up initial vars.

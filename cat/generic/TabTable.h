@@ -4,7 +4,7 @@
 
 /*
  * E.S.O. - VLT project/ESO Archive
- * $Id: TabTable.h,v 1.1.1.1 2006/01/12 16:36:38 abrighto Exp $
+ * $Id: TabTable.h,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
  *
  * TabTable.h - class definitions for accessing values from a char buffer
  * 	        in the format of table, such as the result of a database query,

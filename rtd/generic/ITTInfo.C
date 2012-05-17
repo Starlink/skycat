@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project 
- * "@(#) $Id: ITTInfo.C,v 1.1.1.1 2006/01/12 16:39:23 abrighto Exp $"
+ * "@(#) $Id: ITTInfo.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
  *
  * ITTInfo.C - member routines for class ITTInfo
  * 
@@ -13,7 +13,7 @@
  *                           (makes last colour pure).
  * pbiereic        17/02/03  Added 'using namespace std'. Removed ::std specs.
  */
-static const char* const rcsId="@(#) $Id: ITTInfo.C,v 1.1.1.1 2006/01/12 16:39:23 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: ITTInfo.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 
 using namespace std;

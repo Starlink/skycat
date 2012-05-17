@@ -5,7 +5,7 @@
  *
  * E.S.O. - VLT project
  *
- * $Id: define.h,v 1.2 2006/01/18 17:56:53 abrighto Exp $
+ * $Id: define.h,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
  *
  * define.h - common definitions
  * 
@@ -15,11 +15,14 @@
  * pbiereic        17/02/03  Added defines for byte swap and SOCKLEN_T
  * Peter W. Draper 16/12/05  Redo SOCKLEN_T logic. Only set when socklen_t
  *                           is not defined. Use a typedef.
+ * pbiereic        12/08/07  added support for data types double and long long int
  */
 
 #include <arpa/inet.h>
 #include <netinet/in.h>
-#include <arpa/inet.h>
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 // Byte swap defines. On little Endian machines we use the network-to-host
 // routines since they are faster (implemented in assembler code).
@@ -56,25 +59,10 @@ inline float SWAP_FLOAT(float x) {
     return u.f;
 }
 
-inline float SWAP_DOUBLE(double x) {
-    union {double d; unsigned int l[2];} u;
-    unsigned int tmp;
-
+inline double SWAP_DOUBLE(double x) {
+    union {double d; unsigned long long l;} u;
     u.d = x;
-    tmp = u.l[0];
-    u.l[0] = SWAP32(u.l[1]);
-    u.l[1] = SWAP32(tmp);
-    return u.d;
-}
-
-inline float SWAP_LONG(long x) {
-    union {long d; unsigned int l[2];} u;
-    unsigned int tmp;
-
-    u.d = x;
-    tmp = u.l[0];
-    u.l[0] = SWAP32(u.l[1]);
-    u.l[1] = SWAP32(tmp);
+    u.l = SWAP64(u.l);
     return u.d;
 }
 

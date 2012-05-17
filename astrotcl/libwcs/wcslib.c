@@ -382,7 +382,7 @@
 *      projections.
 *
 *   Author: Mark Calabretta, Australia Telescope National Facility
-*   $Id: wcslib.c,v 1.1.1.1 2006/01/12 16:45:37 abrighto Exp $
+*   $Id: wcslib.c,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $
 *===========================================================================*/
 
 #include <stdio.h>
@@ -431,7 +431,8 @@ struct wcsprm *wcs;
    int  nalias = 2;
    char aliases [2][4] = {"NCP", "GLS"};
 
-   int j, k, *ndx;
+   int j, k;
+   int *ndx = NULL;
    char requir[9];
 
    strcpy(wcs->pcode, "");
@@ -520,6 +521,8 @@ struct wcsprm *wcs;
             return 1;
          }
 
+	if (ndx == NULL)
+	    return 1;
          *ndx = j;
          strcpy(requir, "");
       }
@@ -763,7 +766,8 @@ double pixcrd[];
    double pixmix;
    double dlng, lng, lng0, lng0m, lng1, lng1m;
    double dlat, lat, lat0, lat0m, lat1, lat1m;
-   double d, d0, d0m, d1, d1m, dx;
+   double d, d0, d0m, d1, d1m;
+   double dx = 0.0;
    double dabs, dmin, lmin;
    double dphi, phi0, phi1;
    struct celprm cel0;
@@ -1325,4 +1329,6 @@ double pixcrd[];
  *
  * Mar 15 2002	Doug Mink - Add above changes to WCSLIB-2.8.2
  * Apr  3 2002	Mark Calabretta - Fix bug in code checking section
+ *
+ * Jun 20 2006	Doug Mink - Initialized uninitialized variables
  */

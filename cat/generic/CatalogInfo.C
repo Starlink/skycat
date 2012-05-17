@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project/ESO Archive
- * $Id: CatalogInfo.C,v 1.1.1.1 2006/01/12 16:36:24 abrighto Exp $
+ * $Id: CatalogInfo.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
  *
  * CatalogInfo.C - method definitions for class CatalogInfo, CatalogInfoEntry
  *
@@ -141,7 +141,7 @@
  *                            output as they are verbose and associated 
  *                            with local catalogues (so are volatile).
  */
-static const char* const rcsId="@(#) $Id: CatalogInfo.C,v 1.1.1.1 2006/01/12 16:36:24 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: CatalogInfo.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 #include <unistd.h>
 #include <cstdlib>
@@ -1009,11 +1009,11 @@ CatalogInfoEntry::~CatalogInfoEntry()
 char* CatalogInfoEntry::check()
 {
     if (longName() == NULL) 
-	return "missing long_name";
+	return (char *)"missing long_name";
     if (shortName() == NULL) 
-	return "missing short_name";
+	return (char *)"missing short_name";
     if (url() == NULL) 
-	return "missing url";
+	return (char *)"missing url";
 
     return NULL;			// OK
 }

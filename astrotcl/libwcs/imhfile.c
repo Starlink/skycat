@@ -1,8 +1,8 @@
 /*** File imhfile.c
- *** June 13, 2005
+ *** January 8, 2007
  *** By Doug Mink, dmink@cfa.harvard.edu
  *** Harvard-Smithsonian Center for Astrophysics
- *** Copyright (C) 1996-2005
+ *** Copyright (C) 1996-2007
  *** Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 
     This library is free software; you can redistribute it and/or
@@ -210,7 +210,7 @@ int	*lihead;	/* Length of IRAF image header in bytes (returned) */
 
     /* allocate initial sized buffer */
     nbytes = nbhead + 5000;
-    irafheader = (char *) calloc (1, nbytes);
+    irafheader = (char *) calloc (nbytes/4, 4);
     if (irafheader == NULL) {
 	(void)fprintf(stderr, "IRAFRHEAD Cannot allocate %d-byte header\n",
 		      nbytes);
@@ -263,7 +263,7 @@ char	*fitsheader;	/* FITS image header (filled) */
     char *bang;
     int naxis, naxis1, naxis2, naxis3, npaxis1, npaxis2,bitpix, bytepix, pixswap, i;
     char *image;
-    int nbr, nbimage, nbaxis, nbl, nbx, nbdiff, lpname;
+    int nbr, nbimage, nbaxis, nbl, nbdiff, lpname;
     char *pixheader;
     char *linebuff, *pixchar;
     int imhver, lpixhead, len;
@@ -305,7 +305,7 @@ char	*fitsheader;	/* FITS image header (filled) */
 	}
 
     /* Read pixel header */
-    pixheader = (char *) calloc (lpixhead, 1);
+    pixheader = (char *) calloc (lpixhead/4, 4);
     if (pixheader == NULL) {
 	(void)fprintf(stderr, "IRAFRIMAGE Cannot allocate %d-byte pixel header\n",
 		lpixhead);
@@ -354,7 +354,14 @@ char	*fitsheader;	/* FITS image header (filled) */
 	naxis3 = 1;
 	}
 
-    image =  (char *) calloc (nbimage, 1);
+    if (bytepix > 4)
+	image =  (char *) calloc (nbimage/8, 8);
+    else if (bytepix > 2)
+	image =  (char *) calloc (nbimage/4, 4);
+    else if (bytepix > 1)
+	image =  (char *) calloc (nbimage/2, 2);
+    else
+	image =  (char *) calloc (nbimage, 1);
     if (image == NULL) {
 	(void)fprintf(stderr, "IRAFRIMAGE Cannot allocate %d-byte image buffer\n",
 		nbimage);
@@ -376,7 +383,7 @@ char	*fitsheader;	/* FITS image header (filled) */
 	for (i = 0; i < naxis2; i++) {
 	    nbl = fread (linebuff, 1, nbaxis, fd);
 	    nbr = nbr + nbl;
-	    nbx = fseek (fd, nbdiff, SEEK_CUR);
+	    (void) fseek (fd, nbdiff, SEEK_CUR);
 	    linebuff = linebuff + nbaxis;
 	    }
 	}
@@ -480,7 +487,8 @@ int	*nbfits;	/* Number of bytes in FITS header (returned) */
 
 {
     char *objname;	/* object name from FITS file */
-    int lstr, i, j, k, ib, nax, nbits, nl, lname;
+    int lstr, i, j, k, ib, nax, nbits, nl;
+    int lname = 0;
     char *pixname, *newpixname, *bang, *chead;
     char *fitsheader;
     int nblock, nlines;
@@ -656,10 +664,10 @@ int	*nbfits;	/* Number of bytes in FITS header (returned) */
     rmax = irafgetr4 (irafheader, immax);
     rmin = irafgetr4 (irafheader, immin);
     if (rmin != rmax) {
-	hputr4 (fitsheader, "IRAFMIN", rmin);
+	hputr4 (fitsheader, "IRAFMIN", &rmin);
 	fhead = fhead + 80;
 	hputcom (fitsheader,"IRAFMIN", "IRAF .imh minimum");
-	hputr4 (fitsheader, "IRAFMAX", rmax);
+	hputr4 (fitsheader, "IRAFMAX", &rmax);
 	hputcom (fitsheader,"IRAFMAX", "IRAF .imh maximum");
 	fhead = fhead + 80;
 	}
@@ -902,7 +910,7 @@ char	*fitsheader;	/* FITS image header */
 
     /* Write IRAF header to disk file */
     nbw = write (fd, irafheader, nbhead);
-    ftruncate (fd, nbhead);
+    (void) ftruncate (fd, nbhead);
     close (fd);
     if (nbw < nbhead) {
 	(void)fprintf(stderr, "IRAF header file %s: %d / %d bytes written.\n",
@@ -1028,7 +1036,7 @@ char	*hdrname;	/* IRAF image header file pathname */
     int len;
     char *newpixname;
 
-    newpixname = (char *) calloc (SZ_IM2PIXFILE, sizeof (char));
+    newpixname = (char *) calloc (SZ_IM2PIXFILE, 1);
 
     /* Pixel file is in same directory as header */
     if (strncmp(pixname, "HDR$", 4) == 0 ) {
@@ -1916,4 +1924,10 @@ FILE *diskfile;		/* Descriptor of file for which to find size */
  * Nov  3 2003	Set NAXISi to image, not physical dimensions in iraf2fits()
  *
  * Jun 13 2005	Drop trailing spaces on pixel file name
+ *
+ * Jun 20 2006	Initialize uninitialized variables
+ *
+ * Jan  4 2007	Change hputr4() calls to send pointer to value
+ * Jan  8 2007	Drop unused variable nbx in irafrimage()
+ * Jan  8 2006	Align header and image buffers properly by 4 and by BITPIX
  */

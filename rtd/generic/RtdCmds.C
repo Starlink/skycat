@@ -1,72 +1,73 @@
 /*******************************************************************************
-* E.S.O. - VLT project
-*
-* "@(#) $Id: RtdCmds.C,v 1.1.1.1 2006/01/12 16:39:12 abrighto Exp $"
-*
-* who          when      what
-* --------     --------  ----------------------------------------------
-* A. Brighton  05/10/95  Created in RtdImage.C
-* pbiereic     01/03/01  copied from RtdImage.C
-* pbiereic     01/04/01  bltgraph subcommand
-* pbiereic     27/06/01  added "statistics noise" subcommand
-* pbiereic     14/08/01  added "hdu fits" subcommand
-* pbiereic     17/02/03  "autocut" uses autoSetCutLevels(99.5) instead of
-*                        medianFilter(). This gives much better results
-*                        and is also faster.
-* pbiereic     19/03/03  The previous change was undone (on request)
-* Peter W. Draper 14/11/05 Merge my RtdImage changes.
-* Peter W. Draper 26/10/06 Change mbandCmd so that clipping happens in
-*                          centre of last pixel, not previous pixel.
-*                 08/01/07 Mark blank images with an OBJECT keyword
-*                          with value RTD_BLANK. Do not use image size.
-*                 18/01/07 Back to mband, clip that at 0.5->width/height+0.5
-*                          so that measurement happens to the edge.
-*                 04/06/07 Increase upper limit of zoom factor (supports
-*                          adaptive zoom in GAIA for very small, one pixel,
-*                          images).
-*                 09/07/07 Reset zoomFactor_ when stopping a zoomed view.
-*                          Will be re-used in reference counted copies
-*                          (inappropriately when extra high factors are in
-*                          use, leading to memory allocation errors).
-*                 14/12/07 Add option to statisticsCmd so that world
-*                          coordinates can be reported in degrees (J2000).
-*                 24/04/08 Allow scales to have differing signs.
-*                 21/05/08 Extend statisticsCmd to append the FWHM in arcsecs.
-*                 15/02/12 Round spectrum end points to nearest integers so
-*                          that pixel boundaries are respected.
-*/
+ * E.S.O. - VLT project
+ *
+ * "@(#) $Id: RtdCmds.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
+ *
+ * who          when      what
+ * --------     --------  ----------------------------------------------
+ * A. Brighton  05/10/95  Created in RtdImage.C
+ * pbiereic     01/03/01  copied from RtdImage.C
+ * pbiereic     01/04/01  bltgraph subcommand
+ * pbiereic     27/06/01  added "statistics noise" subcommand
+ * pbiereic     14/08/01  added "hdu fits" subcommand
+ * pbiereic     17/02/03  "autocut" uses autoSetCutLevels(99.5) instead of
+ *                        medianFilter(). This gives much better results
+ *                        and is also faster.
+ * pbiereic     19/03/03  The previous change was undone (on request)
+ * Peter W. Draper 14/11/05 Merge my RtdImage changes.
+ * Peter W. Draper 26/10/06 Change mbandCmd so that clipping happens in
+ *                          centre of last pixel, not previous pixel.
+ *                 08/01/07 Mark blank images with an OBJECT keyword
+ *                          with value RTD_BLANK. Do not use image size.
+ *                 18/01/07 Back to mband, clip that at 0.5->width/height+0.5
+ *                          so that measurement happens to the edge.
+ *                 04/06/07 Increase upper limit of zoom factor (supports
+ *                          adaptive zoom in GAIA for very small, one pixel,
+ *                          images).
+ *                 09/07/07 Reset zoomFactor_ when stopping a zoomed view.
+ *                          Will be re-used in reference counted copies
+ *                          (inappropriately when extra high factors are in
+ *                          use, leading to memory allocation errors).
+ *                 14/12/07 Add option to statisticsCmd so that world
+ *                          coordinates can be reported in degrees (J2000).
+ *                 24/04/08 Allow scales to have differing signs.
+ *                 21/05/08 Extend statisticsCmd to append the FWHM in arcsecs.
+ *                 15/02/12 Round spectrum end points to nearest integers so
+ *                          that pixel boundaries are respected.
+ * pbiereic     19/06/06  added subcommand "getvals"
+ * pbiereic     14/09/07  Revised biasimageCmd for tile compression
+ */
 
 /************************************************************************
-*   NAME
-*
-*   RtdCmds.C - rtd subimage commands
-*
-*   SYNOPSIS
-*
-*
-*   DESCRIPTION
-*
-*   This file contains all RtdImage member functions which perform
-*   an image subcommand. These functions were originally contained
-*   in RtdImage.C and moved to this file since RtdImage.C were becoming
-*   much too big.
-*
-*   FILES
-*
-*   ENVIRONMENT
-*
-*   CAUTIONS
-*
-*   SEE ALSO
-*    RtdImage(3), RTD documentation
-*
-*   BUGS
-*
-*------------------------------------------------------------------------
-*/
+ *   NAME
+ *   
+ *   RtdCmds.C - rtd subimage commands
+ * 
+ *   SYNOPSIS
+ *   
+ * 
+ *   DESCRIPTION
+ *
+ *   This file contains all RtdImage member functions which perform
+ *   an image subcommand. These functions were originally contained
+ *   in RtdImage.C and moved to this file since RtdImage.C were becoming
+ *   much too big.
+ *
+ *   FILES
+ *
+ *   ENVIRONMENT
+ *
+ *   CAUTIONS 
+ *
+ *   SEE ALSO
+ *    RtdImage(3), RTD documentation
+ *
+ *   BUGS   
+ * 
+ *------------------------------------------------------------------------
+ */
 
-static char *rcsId="@(#) $Id: RtdCmds.C,v 1.1.1.1 2006/01/12 16:39:12 abrighto Exp $";
-static void *use_rcsId = ((void)&use_rcsId,(void *) &rcsId);
+static const char *rcsId="@(#) $Id: RtdCmds.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"; 
 
 #include "RtdImage.h"
 #include "define.h"   // for max function
@@ -85,67 +86,68 @@ public:
     int (RtdImage::*fptr)(int argc, char* argv[]); // ptr to method
     int min_args;    // minimum number of args
     int max_args;    // maximum number of args
-} subcmds_[] = {
-    {"alloccolors", &RtdImage::alloccolorsCmd,  0,  1},
-    {"autocut",     &RtdImage::autocutCmd,      0,  2},
-    {"biasimage",   &RtdImage::biasimageCmd,    0,  3},
-    {"bitpix",      &RtdImage::bitpixCmd,       0,  0},
-    {"bltgraph",    &RtdImage::bltgraphCmd,     6,  10},
-    {"camera",      &RtdImage::cameraCmd,       1,  4},
-    {"clear",       &RtdImage::clearCmd,        0,  14},
-    {"cmap",        &RtdImage::cmapCmd,         1,  2},
-    {"colorramp",   &RtdImage::colorrampCmd,    0,  0},
-    {"colorscale",  &RtdImage::colorscaleCmd,   0,  1},
-    {"convert",     &RtdImage::convertCmd,      7,  7},
-    {"cut",         &RtdImage::cutCmd,          0,  3},
-    {"dispheight",  &RtdImage::dispheightCmd,   0,  0},
-    {"dispwidth",   &RtdImage::dispwidthCmd,    0,  0},
-    {"dump",        &RtdImage::dumpCmd,         1,  5},
-    {"fits",        &RtdImage::fitsCmd,         1,  2},
-    {"flip",        &RtdImage::flipCmd,         0,  2},
-    {"frameid",     &RtdImage::frameidCmd,      0,  0},
-    {"get",         &RtdImage::getCmd,          3,  5},
-    {"graphdist",   &RtdImage::graphdistCmd,    5,  5},
-    {"hdu",         &RtdImage::hduCmd,          0,  6},
-    {"height",      &RtdImage::heightCmd,       0,  0},
-    {"info",        &RtdImage::infoCmd,         0,  6},
-    {"isclear",     &RtdImage::isclearCmd,      0,  0},
-    {"itt",         &RtdImage::ittCmd,          1,  2},
-    {"max",         &RtdImage::maxCmd,          0,  0},
-    {"mband",       &RtdImage::mbandCmd,        6,  6},
-    {"min",         &RtdImage::minCmd,          0,  0},
-    {"mmap",        &RtdImage::mmapCmd,         0,  7},
-    {"motionevent", &RtdImage::motioneventCmd,  0,  1},
-    {"object",      &RtdImage::objectCmd,       0,  0},
-    {"pan",         &RtdImage::panCmd,          1,  3},
-    {"perftest",    &RtdImage::perfTestCmd,     1,  2},
-    {"pixtab",      &RtdImage::pixtabCmd,       1,  3},
-    {"preview",     &RtdImage::previewCmd,      1,  1},
-    {"radecbox",    &RtdImage::radecboxCmd,     3,  3},
-    {"remote",      &RtdImage::remoteCmd,       0,  1},
-    {"remotetcl",   &RtdImage::remoteTclCmd,    1,  1},
-    {"rotate",      &RtdImage::rotateCmd,       0,  1},
-    {"scale",       &RtdImage::scaleCmd,        0,  2},
-    {"shm",         &RtdImage::shmCmd,          0,  7},
-    {"spectrum",    &RtdImage::spectrumCmd,     9,  9},
-    {"statistics",  &RtdImage::statisticsCmd,   0,  5},
-    {"type",        &RtdImage::typeCmd,         0,  0},
-    {"update",      &RtdImage::updateCmd,       0,  1},
-    {"userfreq",    &RtdImage::maxFreqCmd,      1,  1},
-    {"view",        &RtdImage::viewCmd,         2,  11},
-    {"warp",        &RtdImage::warpCmd,         2,  2},
-    {"wcscenter",   &RtdImage::wcscenterCmd,    0,  2},
-    {"wcsdeltset",  &RtdImage::wcsdeltsetCmd,   0,  4},
-    {"wcsdist",     &RtdImage::wcsdistCmd,      4,  4},
-    {"wcsequinox",  &RtdImage::wcsequinoxCmd,   0,  0},
-    {"wcsheight",   &RtdImage::wcsheightCmd,    0,  0},
-    {"wcsradius",   &RtdImage::wcsradiusCmd,    0,  0},
-    {"wcsset",      &RtdImage::wcssetCmd,       0,  11},
-    {"wcsshift",    &RtdImage::wcsshiftCmd,     3,  3},
-    {"wcswidth",    &RtdImage::wcswidthCmd,     0,  0},
-    {"width",       &RtdImage::widthCmd,        0,  0},
-    {"zoom",        &RtdImage::zoomCmd,         1,  3},
-    {"zoomview",    &RtdImage::zoomviewCmd,     1,  5}
+} subcmds_[] = { 
+    {(char *)"alloccolors", &RtdImage::alloccolorsCmd,  0,  1},
+    {(char *)"autocut",     &RtdImage::autocutCmd,      0,  2},
+    {(char *)"biasimage",   &RtdImage::biasimageCmd,    0,  3},
+    {(char *)"bitpix",      &RtdImage::bitpixCmd,       0,  0},
+    {(char *)"bltgraph",    &RtdImage::bltgraphCmd,     6,  10},
+    {(char *)"camera",      &RtdImage::cameraCmd,       1,  4},
+    {(char *)"clear",       &RtdImage::clearCmd,        0,  14},
+    {(char *)"cmap",        &RtdImage::cmapCmd,         1,  2},
+    {(char *)"colorramp",   &RtdImage::colorrampCmd,    0,  0},
+    {(char *)"colorscale",  &RtdImage::colorscaleCmd,   0,  1},
+    {(char *)"convert",     &RtdImage::convertCmd,      7,  7},
+    {(char *)"cut",         &RtdImage::cutCmd,          0,  3},
+    {(char *)"dispheight",  &RtdImage::dispheightCmd,   0,  0},
+    {(char *)"dispwidth",   &RtdImage::dispwidthCmd,    0,  0},
+    {(char *)"dump",        &RtdImage::dumpCmd,         1,  5},
+    {(char *)"fits",        &RtdImage::fitsCmd,         1,  2},
+    {(char *)"flip",        &RtdImage::flipCmd,         0,  2},
+    {(char *)"frameid",     &RtdImage::frameidCmd,      0,  0},
+    {(char *)"get",         &RtdImage::getCmd,          3,  5},
+    {(char *)"getvals",     &RtdImage::getvalsCmd,      3,  5},
+    {(char *)"graphdist",   &RtdImage::graphdistCmd,    5,  5},
+    {(char *)"hdu",         &RtdImage::hduCmd,          0,  6},
+    {(char *)"height",      &RtdImage::heightCmd,       0,  0},
+    {(char *)"info",        &RtdImage::infoCmd,         0,  6},
+    {(char *)"isclear",     &RtdImage::isclearCmd,      0,  0},
+    {(char *)"itt",         &RtdImage::ittCmd,          1,  2},
+    {(char *)"max",         &RtdImage::maxCmd,          0,  0},
+    {(char *)"mband",       &RtdImage::mbandCmd,        6,  6},
+    {(char *)"min",         &RtdImage::minCmd,          0,  0},
+    {(char *)"mmap",        &RtdImage::mmapCmd,         0,  7},
+    {(char *)"motionevent", &RtdImage::motioneventCmd,  0,  1},
+    {(char *)"object",      &RtdImage::objectCmd,       0,  0},
+    {(char *)"pan",         &RtdImage::panCmd,          1,  3},
+    {(char *)"perftest",    &RtdImage::perfTestCmd,     1,  2},
+    {(char *)"pixtab",      &RtdImage::pixtabCmd,       1,  3},
+    {(char *)"preview",     &RtdImage::previewCmd,      1,  1},
+    {(char *)"radecbox",    &RtdImage::radecboxCmd,     3,  3},
+    {(char *)"remote",      &RtdImage::remoteCmd,       0,  1},
+    {(char *)"remotetcl",   &RtdImage::remoteTclCmd,    1,  1},
+    {(char *)"rotate",      &RtdImage::rotateCmd,       0,  1},
+    {(char *)"scale",       &RtdImage::scaleCmd,        0,  2},
+    {(char *)"shm",         &RtdImage::shmCmd,          0,  7},
+    {(char *)"spectrum",    &RtdImage::spectrumCmd,     9,  9},
+    {(char *)"statistics",  &RtdImage::statisticsCmd,   0,  5},
+    {(char *)"type",        &RtdImage::typeCmd,         0,  0},
+    {(char *)"update",      &RtdImage::updateCmd,       0,  1},
+    {(char *)"userfreq",    &RtdImage::maxFreqCmd,      1,  1},
+    {(char *)"view",        &RtdImage::viewCmd,         2,  11},
+    {(char *)"warp",        &RtdImage::warpCmd,         2,  2},
+    {(char *)"wcscenter",   &RtdImage::wcscenterCmd,    0,  2},
+    {(char *)"wcsdeltset",  &RtdImage::wcsdeltsetCmd,   0,  4},
+    {(char *)"wcsdist",     &RtdImage::wcsdistCmd,      4,  4},
+    {(char *)"wcsequinox",  &RtdImage::wcsequinoxCmd,   0,  0},
+    {(char *)"wcsheight",   &RtdImage::wcsheightCmd,    0,  0},
+    {(char *)"wcsradius",   &RtdImage::wcsradiusCmd,    0,  0},
+    {(char *)"wcsset",      &RtdImage::wcssetCmd,       0,  11},
+    {(char *)"wcsshift",    &RtdImage::wcsshiftCmd,     3,  3},
+    {(char *)"wcswidth",    &RtdImage::wcswidthCmd,     0,  0},
+    {(char *)"width",       &RtdImage::widthCmd,        0,  0},
+    {(char *)"zoom",        &RtdImage::zoomCmd,         1,  3},
+    {(char *)"zoomview",    &RtdImage::zoomviewCmd,     1,  5}
 };
 
 
@@ -189,8 +191,9 @@ int RtdImage::call(const char* name, int len, int argc, char* argv[])
 	    low = mid + 1;
 	else {
 	    RtdImageSubCmds& t = subcmds_[mid];
-	    if (check_args(name, argc, t.min_args, t.max_args) != TCL_OK)
+	    if (check_args(name, argc, t.min_args, t.max_args) != TCL_OK) {
 		return TCL_ERROR;
+	    }
 	    return (this->*t.fptr)(argc, argv);
 	}
     }
@@ -322,100 +325,87 @@ int RtdImage::autocutCmd(int argc, char* argv[])
  */
 int RtdImage::biasimageCmd(int argc, char* argv[])
 {
-    char* usage =
-	"usage: $image biasimage copy|clear|on|off|status|select|display|file|update|maxbias ?filename? ?nr?";
+    char* usage = 
+        (char *)"usage: $image biasimage copy|clear|on|off|status|select|display|file|update|maxbias ?filename? ?nr?";
     int nr;
     char buf[1024];
     FitsIO *fits = NULL;
 
-    // bias images for images with extensions are not supported
-    if (image_) {
-	fits = (FitsIO*)image_->image().rep();
-	if (fits->getNumHDUs() > 1) {
-	    biasimage_->off();
-	    for (int i=0; i<MAXBIAS; i++)
-		biasimage_->clear(i);
-	}
-    }
-
     if (argc < 1)
-	return error(usage);
+        return error(usage);
     else if (strcmp(argv[0], "update") == 0) {
     }
     else if (strcmp(argv[0], "status") == 0) {
-	sprintf(buf, "%d", biasimage_->status());
-	return set_result(buf);
+        sprintf(buf, "%d", biasimage_->status());
+        return set_result(buf);
     }
     else if (strcmp(argv[0], "off") == 0)
-	biasimage_->off();
+        biasimage_->off();
     else if (strcmp(argv[0], "maxbias") == 0) {
-	sprintf(buf, "%d", MAXBIAS);
-	return set_result(buf);
+        sprintf(buf, "%d", MAXBIAS);
+        return set_result(buf);
     }
     else if (strcmp(argv[0], "clear") == 0) {
-	if (Tcl_GetInt(interp_, argv[1], &nr) != TCL_OK) {
-	    for (int i=0; i<MAXBIAS; i++)  // clear all
-		biasimage_->clear(i);
-	}
-	else
-	    biasimage_->clear(nr);
-    }
-    else if (fits && fits->getNumHDUs() > 1) {
-	//return error("Bias image not supported for images with extensions");
+        if (Tcl_GetInt(interp_, argv[1], &nr) != TCL_OK) {
+            for (int i=0; i<MAXBIAS; i++)  // clear all
+                biasimage_->clear(i);
+        }
+        else
+            biasimage_->clear(nr);
     }
     else if (strcmp(argv[0], "on") == 0) {
-	if (biasimage_->on() != 0)
-	    return TCL_ERROR;
+        if (biasimage_->on() != 0)
+            return TCL_ERROR;
     }
     else if (strcmp(argv[0], "select") == 0) {
-	if (argc < 2) {
-	    sprintf(buf, "%d", biasimage_->select());
-	    return set_result(buf);
-	}
-	if (Tcl_GetInt(interp_, argv[1], &nr) != TCL_OK)
-	    return error("usage: $image biasimage select nr");
-	if (biasimage_->select(nr) != 0) {
-	    sprintf(buf, "biasimage select: number must be in range 0-%d", MAXBIAS-1);
-	    return error(buf);
-	}
+        if (argc < 2) {
+            sprintf(buf, "%d", biasimage_->select());
+            return set_result(buf);
+        }
+        if (Tcl_GetInt(interp_, argv[1], &nr) != TCL_OK)
+            return error("usage: $image biasimage select nr");
+        if (biasimage_->select(nr) != 0) {
+            sprintf(buf, "biasimage select: number must be in range 0-%d", MAXBIAS-1);
+            return error(buf);
+        }
     }
     else if (strcmp(argv[0], "display") == 0) {
-	if (!biasimage_->image())
-	    return error("selected bias image is not loaded");
-	ImageDataParams p;
-	if (image_) {
-	    image_->saveParams(p);
-	    delete image_;
-	    image_ = NULL;
-	    updateViews();
-	}
-	image_ = biasimage_->image()->copy();
-	filename(biasimage_->file(biasimage_->select()));
-	image_->restoreParams(p, 1);
-	return initNewImage();
+        if (!biasimage_->image())
+            return error("selected bias image is not loaded");
+        ImageDataParams p;
+        if (image_) {
+            image_->saveParams(p);
+            delete image_;
+            image_ = NULL;
+            updateViews();
+        }
+        image_ = biasimage_->image()->copy();
+        filename(biasimage_->file(biasimage_->select()));
+        image_->restoreParams(p, 1);
+        return initNewImage();
     }
     else if (strcmp(argv[0], "copy") == 0) {
-	if (isclear())
-	    return error("no image loaded");
-	if (Tcl_GetInt(interp_, argv[1], &nr) != TCL_OK)
-	    return error("usage: $image biasimage copy nr");
-	if (biasimage_->copy(image_, filename(), nr) != 0)
-	    return TCL_ERROR;
+        if (isclear())
+            return error("no image loaded");
+        if (Tcl_GetInt(interp_, argv[1], &nr) != TCL_OK)
+            return error("usage: $image biasimage copy nr");
+        if (biasimage_->copy(image_, filename(), nr) != 0)
+            return TCL_ERROR;
     }
     else if (strcmp(argv[0], "file") == 0) {
-	if (argc == 2) {
-	    if (Tcl_GetInt(interp_, argv[1], &nr) != TCL_OK)
-		return error("usage: $image biasimage file nr");
-	    strcpy (buf, biasimage_->file(nr));
-	    return set_result(buf);
-	}
-	if (argc != 3 || Tcl_GetInt(interp_, argv[2], &nr) != TCL_OK)
-	    return error("usage: $image biasimage file filename nr");
-	if (biasimage_->file(argv[1], nr) != 0)
-	    return TCL_ERROR;
+        if (argc == 2) {
+            if (Tcl_GetInt(interp_, argv[1], &nr) != TCL_OK)
+                return error("usage: $image biasimage file nr");
+            strcpy (buf, biasimage_->file(nr));
+            return set_result(buf);
+        }
+        if (argc != 3 || Tcl_GetInt(interp_, argv[2], &nr) != TCL_OK)
+            return error("usage: $image biasimage file filename nr");
+        if (biasimage_->file(argv[1], nr) != 0)
+            return TCL_ERROR;
     }
     else
-	return error(usage);
+        return error(usage);
 
     // keep status in a global Tcl variable which can be traced by the Tcl code
     char* var = (viewMaster_ ? viewMaster_->instname_ : instname_);
@@ -583,8 +573,8 @@ int RtdImage::clearCmd(int argc, char* argv[])
 	delete image_;
 	image_ = NULL;
     }
-    filename("");
-
+    filename((char *)"");
+    
     // generate the blank image
     FitsIO* fits = FitsIO::blankImage(ra, dec, equinox, radius, width, height,
 				      colors_->pixelval(0));
@@ -855,7 +845,7 @@ int RtdImage::convertCmd(int argc, char* argv[])
     if (!image_)
 	return error("no image loaded");
 
-    char* usage = "usage: $image convert [coords|dist] inx iny in_coord_type outx outy out_coord_type";
+    char* usage = (char *)"usage: $image convert [coords|dist] inx iny in_coord_type outx outy out_coord_type";
     int dist_flag = 0;
     if (strcmp(argv[0], "dist") == 0)
 	dist_flag++;
@@ -955,7 +945,7 @@ int RtdImage::cutCmd(int argc, char* argv[])
  */
 int RtdImage::infoCmd(int argc, char* argv[])
 {
-    char* msg = "invalid arguments for info subcommand";
+    char* msg = (char *)"invalid arguments for info subcommand";
 
     if (! image_)
 	return set_result(0);
@@ -1255,6 +1245,60 @@ int RtdImage::getCmd(int argc, char* argv[])
 			     NULL);
 	}
 	Tcl_AppendResult(interp_, " } ", NULL);
+    }
+
+    return TCL_OK;
+}
+
+
+/*
+ * Implement the "getvals" image command to return a Tcl list of image values
+ * at the given X,Y coordinates.
+ *
+ * This command is similar to the "get" subcommand but uses x, y as lower left
+ * corner for the image window and only returns a tcl list with the Y values.
+ * Furthermore, the values are scanned by row order (1'st row first, then
+ * 2'nd row etc.).
+ *
+ * usage: <path> getvals $x $y coord_type ?nrows ncols?
+ *
+ * x and y are the coordinates in the image window in the given coordinate
+ * system (one of: canvas, image, screen, wcs, deg). 
+ *
+ * The return value is a tcl list with the Y values in the raw image
+ * or "-" if out of range.
+ */
+int RtdImage::getvalsCmd(int argc, char* argv[])
+{
+    if (!image_)
+        return TCL_OK;
+
+    double x, y, val;
+    int nrows = 1, ncols = 1; 
+    char buf[80];
+    int ix, iy;
+
+    if (convertCoordsStr(0, argv[0], argv[1], NULL, NULL, 
+                         x, y, argv[2], "image") != TCL_OK)
+        return TCL_ERROR;
+    
+    if (argc == 5) {
+        if (Tcl_GetInt(interp_, argv[3], &nrows) != TCL_OK ||
+            Tcl_GetInt(interp_, argv[4], &ncols) != TCL_OK) {
+            return TCL_ERROR;
+        }
+    }
+    
+    for (int j = 0; j < nrows; j++) {
+        for (int i = 0; i < ncols; i++) {
+            if (image_->getIndex(x+i, y+j, ix, iy) != 0)
+                strcpy(buf, "- ");
+            else {
+                val = image_->getValue(x+i, y+j);
+                sprintf(buf, "%g ", val);
+            }
+            Tcl_AppendResult(interp_, buf, NULL);
+        }
     }
 
     return TCL_OK;
@@ -1595,7 +1639,7 @@ int RtdImage::mbandCmd(int argc, char* argv[])
     double x0, y0, x1, y1;
     int show_angle;
     char* from_type = argv[4];
-    char* to_type = "canvas";
+    char* to_type = (char *)"canvas";
     char buf[1024];
 
     if (Tcl_GetInt(interp_, argv[5], &show_angle) != TCL_OK)
@@ -1644,9 +1688,9 @@ int RtdImage::mbandCmd(int argc, char* argv[])
     double my = (y0 + y1)/2;
     int offset = 10;		// offset of labels from lines
 
-    char* diag_anchor = "c";	// label anchors
-    char* width_anchor = "c";
-    char* height_anchor = "c";
+    char* diag_anchor = (char *)"c";	// label anchors
+    char* width_anchor = (char *)"c";
+    char* height_anchor = (char *)"c";
 
     int diag_xoffset = 0,	// x,y offsets for labels
 	diag_yoffset = 0,
@@ -1654,37 +1698,37 @@ int RtdImage::mbandCmd(int argc, char* argv[])
 	height_xoffset = 0;
 
     if (fabs(y0 - y1) < 5) {
-	diag_anchor = "s";
+	diag_anchor = (char *)"s";
 	diag_yoffset = offset;
 	show_angle = 0;
     }
     else if (y0 < y1) {
-	width_anchor = "s";
+	width_anchor = (char *)"s";
 	width_yoffset = -offset;
     }
     else {
-	width_anchor = "n";
+	width_anchor = (char *)"n";
 	width_yoffset = offset;
     }
 
     if (fabs(x0 - x1) < 5) {
-	diag_anchor  = "w";
+	diag_anchor  = (char *)"w";
 	diag_xoffset = offset;
 	diag_yoffset = 0;
 	show_angle = 0;
     }
     else if (x0 < x1) {
-	diag_anchor = "se";
+	diag_anchor = (char *)"se";
 	diag_xoffset = -offset;
 	diag_yoffset = offset;
-	height_anchor = "w";
+	height_anchor = (char *)"w";
 	height_xoffset = offset;
     }
     else {
-	diag_anchor = "nw";
+	diag_anchor = (char *)"nw";
 	diag_xoffset = offset;
 	diag_yoffset = -offset;
-	height_anchor = "e";
+	height_anchor = (char *)"e";
 	height_xoffset = -offset;
     }
 
@@ -1845,8 +1889,8 @@ int RtdImage::minCmd(int argc, char* argv[])
  */
 int RtdImage::mmapCmd(int argc, char* argv[])
 {
-    char* msg = "invalid arguments for mmap subcommand";
-
+    char* msg = (char *)"invalid arguments for mmap subcommand";
+    
     // this is used to keep track of memory areas for the "create" and
     // "delete" subcommands here
     static Mem* mem_areas[10];
@@ -2041,7 +2085,7 @@ int RtdImage::objectCmd(int argc, char* argv[])
  */
 int RtdImage::panCmd(int argc, char* argv[])
 {
-   if (strcmp(argv[0],"start") == 0) {
+    if (strcmp(argv[0],"start") == 0) {
 	// pan start subcommand
 	if (argc != 3)
 	    return error("wrong # of args: should be \"pathName pan start tclCommand shrinkFactor\"");
@@ -2290,7 +2334,7 @@ int RtdImage::remoteCmd(int argc, char* argv[])
 	return TCL_OK;
     }
 
-    char* cmd = "";
+    char* cmd = (char *)"";
     int port = 0;
 
     if (Tcl_GetInt(interp_, argv[0], &port) == TCL_ERROR)
@@ -2475,8 +2519,8 @@ int RtdImage::scaleCmd(int argc, char* argv[])
  */
 int RtdImage::shmCmd(int argc, char* argv[])
 {
-    char* msg = "invalid arguments for shm subcommand";
-
+    char* msg = (char *)"invalid arguments for shm subcommand";
+    
     // this is used to keep track of memory areas for the "create" and
     // "delete" subcommands here
     static Mem* mem_areas[10];
@@ -2719,7 +2763,7 @@ int RtdImage::spectrumCmd(int argc, char* argv[])
  */
 int RtdImage::statisticsCmd(int argc, char* argv[])
 {
-    char* msg = "invalid arguments for statistics subcommand";
+    char* msg = (char *)"invalid arguments for statistics subcommand";
 
     if (!image_)
 	return error("no image loaded");
@@ -2857,10 +2901,10 @@ int RtdImage::statisticsCmd(int argc, char* argv[])
  */
 int RtdImage::bltgraphCmd(int argc, char* argv[])
 {
-    char* msg = "invalid arguments for bltgraph subcommand";
+    char* msg = (char *)"invalid arguments for bltgraph subcommand";
     int stat, numValues;
 
-   if (argc < 6)
+    if (argc < 6)
 	return error(msg);
     if (!image_)
 	return error("no image loaded");
@@ -3073,9 +3117,9 @@ int RtdImage::viewCmd(int argc, char* argv[])
 	    // only update width and height of image
 	    double width, height;
 	    char* from_type = argv[4];
-	    char* to_type = "image";
-	    if (convertCoordsStr(1, argv[2], argv[3], NULL, NULL, width, height,
-				 from_type, to_type) != TCL_OK)
+	    char* to_type = (char *)"image";
+	    if (convertCoordsStr(1, argv[2], argv[3], NULL, NULL, width, height, 
+				 from_type, to_type) != TCL_OK) 
 		return TCL_ERROR;
 
 	    // add 1 so that there is no space left at right and bottom
@@ -3091,8 +3135,8 @@ int RtdImage::viewCmd(int argc, char* argv[])
 	// get image coords and update image offsets
 	double xOffset, yOffset, width, height, frameX, frameY, rapidX, rapidY;
 	char* from_type = argv[10];
-	char* to_type = "image";
-	if (convertCoordsStr(1, argv[2], argv[3], NULL, NULL, xOffset, yOffset,
+	char* to_type = (char *)"image";
+	if (convertCoordsStr(1, argv[2], argv[3], NULL, NULL, xOffset, yOffset, 
 			     from_type, to_type) != TCL_OK
 	    || convertCoordsStr(1, argv[4], argv[5], NULL, NULL, width, height,
 				from_type, to_type) != TCL_OK
@@ -3444,7 +3488,7 @@ int RtdImage::wcssetCmd(int argc, char* argv[])
     else if (argc == 11) {
 	double ra, dec, secpix, xrefpix, yrefpix, rotate, equinox, epoch;
 	int nxpix, nypix;
-	char* proj = "";
+	char* proj = (char *)"";
 
 	// skip over B in B1950 and J in J2000
 	if (strcmp(argv[8], "B1950") == 0)

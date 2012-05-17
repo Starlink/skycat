@@ -1,5 +1,5 @@
 # E.S.O. - VLT project/ESO Archive
-# @(#) $Id: Batch.tcl,v 1.3 2006/05/04 12:04:33 pwd Exp $
+# @(#) $Id: Batch.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
 #
 # Batch.tcl - Class to evaluate Tcl commands in a separate process.  
 #

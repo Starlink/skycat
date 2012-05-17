@@ -1,6 +1,6 @@
 # E.S.O. - VLT project
 #
-# "@(#) $Id: SkycatInit.tcl,v 1.3 2006/01/25 10:55:38 abrighto Exp $"
+# "@(#) $Id: SkycatInit.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 #
 # SkycatInit.tcl
 #

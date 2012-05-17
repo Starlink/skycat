@@ -1,6 +1,6 @@
 /*************************************************************************
 * E.S.O. - VLT project
-* "@(#) $Id: rtdCubeDisplay.c,v 1.1.1.1 2006/01/12 16:39:59 abrighto Exp $"
+* "@(#) $Id: rtdCubeDisplay.c,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 *  rtdClient.c
 *
 * who       when      what
@@ -11,7 +11,7 @@
 *             12/09/01 Added UKIRT Quick Look member initialisations, should
 *                      be harmless to other uses.
 */
-static const char* const rcsId="@(#) $Id: rtdCubeDisplay.c,v 1.1.1.1 2006/01/12 16:39:59 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: rtdCubeDisplay.c,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 /************************************************************************
 *   NAME

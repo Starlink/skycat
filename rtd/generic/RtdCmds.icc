@@ -4,7 +4,7 @@
 
 /*
  * E.S.O. - VLT project 
- * "@(#) $Id: RtdCmds.icc,v 1.1.1.1 2006/01/12 16:38:55 abrighto Exp $" 
+ * "@(#) $Id: RtdCmds.icc,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $" 
  *
  * RtdCmds.h - definitions for the RtdImage subcommand methods
  * 
@@ -35,6 +35,7 @@ int flipCmd		(int argc, char* argv[]);
 int frameidCmd		(int argc, char* argv[]);
 int freqCmd		(int argc, char* argv[]);
 int getCmd		(int argc, char* argv[]);
+int getvalsCmd          (int argc, char* argv[]);
 int graphdistCmd	(int argc, char* argv[]);
 int hduCmd		(int argc, char* argv[]);
 int heightCmd		(int argc, char* argv[]);

@@ -2,7 +2,7 @@
 /*
  * E.S.O. - VLT project 
  *
- * "@(#) $Id: FloatImageData.h,v 1.1.1.1 2006/01/12 16:39:02 abrighto Exp $" 
+ * "@(#) $Id: FloatImageData.h,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $" 
  *
  * FloatImageData.h - class definitions for class FloatImageData
  *
@@ -56,10 +56,10 @@ protected:
     void initShortConversion();
 
     // sprintf format for (x y value)
-    virtual char* getXYValueFmt() {return "%.1f %.1f %.2f";}
+    virtual char* getXYValueFmt() {return (char *)"%.1f %.1f %.2f";}
 
     // sprintf format for image pixel value
-    virtual char* getValueFmt() {return "%.2f";}
+    virtual char* getValueFmt() {return (char *)"%.2f";}
 
     int getXsamples(float *rawImage, int idx, int wbox, float *samples);
     int getBsamples(float *rawImage, int idx, int wbox, float *samples);

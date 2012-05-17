@@ -1,6 +1,6 @@
  /*
  * E.S.O. - VLT project/ESO Archive 
- * $Id: HTTP.C,v 1.1.1.1 2006/01/12 16:40:58 abrighto Exp $
+ * $Id: HTTP.C,v 1.2 2010/07/21 19:42:46 cguirao Exp $
  *
  * HTTP.C - method definitions for class HTTP
  *          (based on code from DSS:HTTP.c by Miguell Albrecht)
@@ -19,7 +19,7 @@
  * pbiereic        17/02/03   Added 'using namespace std'. Removed ::std specs.
  * Peter W. Draper 06 Apr 09  Increase size of host buffers to 64 from 32.
  */
-static const char* const rcsId="@(#) $Id: HTTP.C,v 1.1.1.1 2006/01/12 16:40:58 abrighto Exp $";
+static const char* const rcsId="@(#) $Id: HTTP.C,v 1.2 2010/07/21 19:42:46 cguirao Exp $";
 
 #include <cstdio>
 #include <cctype>
@@ -1124,7 +1124,7 @@ void HTTP::checkProxy( const char *host )
             //  host. Note need a copy of variable as strtok modifies it.
             char *ptr = getenv( "http_noproxy" );
             if ( ptr != NULL ) {
-                char *hostdomain = (char *) strchr(host, '.');
+                const char *hostdomain = strchr(host, '.');
                 if (hostdomain != NULL) {
                     hostdomain++;
 		    // make a copy of the http_noproxy string for strtok

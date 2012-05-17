@@ -1,7 +1,7 @@
 /*******************************************************************************
 * E.S.O. - VLT project
 *
-* "@(#) $Id: RtdHDU.C,v 1.2 2006/03/26 13:22:33 abrighto Exp $"
+* "@(#) $Id: RtdHDU.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 *
 * who          when      what
 * --------     --------  ----------------------------------------------
@@ -47,9 +47,7 @@
 *------------------------------------------------------------------------
 */
 
-static const char *rcsId="@(#) $Id: RtdHDU.C,v 1.2 2006/03/26 13:22:33 abrighto Exp $";
-
-static void *use_rcsId = ((void)&use_rcsId,(void *) &rcsId);
+static const char *rcsId="@(#) $Id: RtdHDU.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
 #include <sstream>
 #ifdef HAVE_CONFIG_H

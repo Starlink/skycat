@@ -1,6 +1,6 @@
 /*
  * E.S.O. - VLT project / ESO Archive
- * $Id: tAstroCatalog.C,v 1.1.1.1 2006/01/12 16:36:12 abrighto Exp $
+ * $Id: tAstroCatalog.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $
  *
  * tAstroCatalog.C - test cases for class AstroCatalog
  * 

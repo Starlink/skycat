@@ -1,5 +1,5 @@
 # E.S.O. - VLT project/ ESO Archive
-# "@(#) $Id: TextDialog.tcl,v 1.1.1.1 2006/01/12 16:40:46 abrighto Exp $"
+# "@(#) $Id: TextDialog.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 #
 # TextDialog.tcl - Dialog widget displaying a text window
 #

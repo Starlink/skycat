@@ -4,7 +4,7 @@
 /*
  * E.S.O. - VLT project / ESO Archive
  *
- * "@(#) $Id: SAOWCS.h,v 1.1.1.1 2006/01/12 16:44:01 abrighto Exp $" 
+ * "@(#) $Id: SAOWCS.h,v 1.1.1.1 2009/03/31 14:11:53 cguirao Exp $" 
  *
  * SAOWCS.h - declarations for class SAOWCS, an implementation class for
  *            class WCS, which is a reference counted class that manages

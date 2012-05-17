@@ -1,7 +1,7 @@
 # dialog.tcl - general purpose dialogs
 #
 # Copyright (C) 1994 Allan Brighton (abrighto@eso.org)
-# "@(#) $Id: udialog.tcl,v 1.1.1.1 2006/01/12 16:40:53 abrighto Exp $"
+# "@(#) $Id: udialog.tcl,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $"
 
 
 # Get a file name from the user and return it or the empty string.
