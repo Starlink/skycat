@@ -8,6 +8,7 @@
  * who             when      what
  * --------------  --------  ----------------------------------------
  * pbiereic        12/08/07  Created
+ * Peter W. Draper 23/06/09  Added parseBlank to get blank value in this type.
  */
 
 using namespace std;
@@ -110,6 +111,17 @@ void LongLongImageData::initShortConversion()
     scaled_ = (scale_ != 1.0);  // Sense inverted - PWD
 }
 
+/*
+ * Set the blank value from a given string. Return 1 if successful.
+ */
+int LongLongImageData::parseBlank(const char* value) {
+    long l;
+    int n = sscanf(value, "%ld", &l);
+    if ( n > 0 ) {
+        blank_ = (FITS_LONGLONG) l;
+    }
+    return n;
+}
 
 /*
  * Include some standard methods as (cpp macro) templates:

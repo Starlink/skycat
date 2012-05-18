@@ -364,9 +364,8 @@ const char* FitsIO::check_cfitsio_compress(char* filename, char* buf, int bufsz,
  */
 FitsIO* FitsIO::read(const char* filename, int mem_options)
 {
-    FILE *f;
-    char  tmpfile[1024];
-    int istemp = 0;
+    char  tmpfile[1024], tmpfile2[1024], cfile[1024];
+    int istemp = 0, istemp2 = 0;
 
     tmpfile[0] = '\0';
     if (strcmp(filename, "-") == 0) { // use stdin
@@ -687,7 +686,7 @@ FitsIO* FitsIO::initialize(Mem& header)
     if (!fitsio)
 	return NULL;
 
-    long long headStart = 0, dataStart = 0, dataEnd = 0;
+    LONGLONG headStart = 0, dataStart = 0, dataEnd = 0;
     int status = 0;
     if (fits_get_hduaddrll(fitsio, &headStart, &dataStart, &dataEnd, &status) != 0) {
 	cfitsio_error();
@@ -810,7 +809,7 @@ FitsIO* FitsIO::blankImage(double ra, double dec, double equinox,
     }
 
     // add a keyword so we can determine this image is blank
-    put_keyword(os, "OBJECT", "RTD_BLANK");
+    put_keyword(os, "OBJECT", (char *) "RTD_BLANK");
 
     //put_keyword(os, "BLANK", (int)color0);   // blank pixel value
 
@@ -1142,15 +1141,6 @@ int FitsIO::fwriteNBO(char *data, int tsize, int size, FILE *f) const
         }
     }
 
-    else if (tsize == 8) {
-        unsigned long long *from = (unsigned long long *) data;
-        unsigned long long *to   = (unsigned long long *) dbuf.ptr();
-        while (n--) {
-            *to++ = SWAP64(*from);
-            from++;
-        }
-    }
-
     status = fwrite(dbuf.ptr(), tsize, size, f);
 
     return status;
@@ -1350,7 +1340,7 @@ int FitsIO::get(const char* keyword, long& val) const {
 }
 
 
-int FitsIO::get(const char* keyword, long long& val) const {
+int FitsIO::get(const char* keyword, LONGLONG& val) const {
     if (! fitsio_)
         return error(noHdrErrMsg);
     int status = 0;
@@ -1615,7 +1605,7 @@ int FitsIO::setHDU(int num)
     if (fits_movabs_hdu(fitsio_, num, &type, &status) != 0)
 	return cfitsio_error();
 
-    long long headStart = 0, dataStart = 0, dataEnd = 0;
+    LONGLONG headStart = 0, dataStart = 0, dataEnd = 0;
     if (fits_get_hduaddrll(fitsio_, &headStart, &dataStart, &dataEnd, &status) != 0) {
 	return cfitsio_error();
     }
