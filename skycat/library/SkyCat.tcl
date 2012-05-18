@@ -141,6 +141,8 @@ itcl::class skycat::SkyCat {
 	bind SkyCat::resize <Configure> [code $this resize %w %h]
 	bindtags $w_ [concat SkyCat::resize [bindtags $w_]]
 	#bindtags $w_ SkyCat::resize
+
+        after 0 [code $image_ config -file $itk_option(-file)]
     }
 
 
