@@ -38,8 +38,10 @@ static const char* const rcsId="@(#) $Id: ImageIO.C,v 1.1.1.1 2009/03/31 14:11:5
 // The type "long" may have 64 bits.
 #if LONGSIZE == 64
 #define FITS_LONG int 
+#define FITS_LONGLONG long
 #else 
 #define FITS_LONG long 
+#define FITS_LONGLONG long long
 #endif
 
 /*
@@ -148,8 +150,8 @@ int ImageIORep::byteSwapData()
     }
     else if (dsize == 8) {
         // copy long longs (doubles)
-        unsigned long long* from = (unsigned long long*)data_.ptr();
-        unsigned long long* to = (unsigned long long*)data.ptr(); 
+        unsigned FITS_LONGLONG* from = (unsigned FITS_LONGLONG*)data_.ptr();
+        unsigned FITS_LONGLONG* to = (unsigned FITS_LONGLONG*)data.ptr(); 
         while(n--) {
             *to++ = SWAP64(*from);
             from++;
