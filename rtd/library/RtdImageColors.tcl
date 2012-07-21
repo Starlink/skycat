@@ -11,6 +11,7 @@
 # --------------  ---------  ----------------------------------------
 # Allan Brighton  01 Jun 95  Created
 # pbiereic        04/11/03   Workaround bug in tcl 8.4.3 (SourceForge Request ID 835020)
+# Peter W. Draper 21/07/12   Make cmap_dir a PATH-like list.
 
 itk::usual RtdImageColors {}
 
@@ -60,7 +61,6 @@ itcl::class rtd::RtdImageColors {
 		 -title "Colormap" \
 		 -relief groove -borderwidth 2 \
 		 -width 0 \
-		 -dir $itk_option(-cmap_dir) \
 		 -suffix $itk_option(-cmap_suffix) \
 		 -files $cmap_files \
 		 -default $itk_option(-default_cmap) \
@@ -73,7 +73,6 @@ itcl::class rtd::RtdImageColors {
 		 -title "Intensity" \
 		 -relief groove -borderwidth 2 \
 		 -width 0 \
-		 -dir $itk_option(-cmap_dir) \
 		 -suffix $itk_option(-itt_suffix) \
 		 -files $itt_files \
 		 -default $itk_option(-default_itt) \
@@ -268,6 +267,8 @@ itcl::class rtd::RtdImageColors {
     # this method is called to set the colormap for the image
     
     public method set_cmap {cmap} {
+        #  strip ./ from front.
+        set cmap [string range $cmap 2 end]
 	$image_ cmap file $cmap
 	
 	# if the colormap is read-only, we need to regenerate the color ramp
@@ -280,6 +281,8 @@ itcl::class rtd::RtdImageColors {
     # this method is called to set the itt for the image
     
     public method set_itt {itt} {
+        #  strip ./ from front.
+        set itt [string range $itt 2 end]
 	$image_ itt file $itt
 
 	# if the colormap is read-only, we need to regenerate the color ramp
@@ -362,7 +365,7 @@ itcl::class rtd::RtdImageColors {
  	set image_ [$itk_option(-image) get_image]
    }
 
-    # directory for colormap and ITT files
+    # directory path for colormap and ITT files
     itk_option define -cmap_dir cmap_dir Cmap_dir "" {
 	if {"$itk_option(-cmap_dir)" == ""} {
 	    global ::rtd_library
