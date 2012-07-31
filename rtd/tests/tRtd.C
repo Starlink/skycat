@@ -92,6 +92,7 @@ static char data[MAX_NX * MAX_NY * 4];
 /* 
  * Main:
  */
+int
 main(int argc, char** argv) 
 {
     rtdIMAGE_EVT_HNDL eventHndl;	// image event handle

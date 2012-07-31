@@ -123,6 +123,7 @@ void cleanup(int sig=0)
     exit(0);
 }
 
+int
 main(int argc, char *argv[])
 {
     extern char *optarg;
