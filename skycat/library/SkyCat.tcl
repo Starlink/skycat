@@ -180,7 +180,7 @@ itcl::class skycat::SkyCat {
     # time.
 
     protected method save_toplevel_geometry {} {
-	set s [winfo geometry $w_]
+	set s [wm geometry $w_]
 	# check for case where window was not initialized...
 	if {"$s" != "1x1+0+0"} {
 	    if {[catch {set fd [::open $toplevel_geometry_ w]}]} {
