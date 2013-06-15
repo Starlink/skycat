@@ -146,6 +146,9 @@ extern "C" int gethostname(char *name, unsigned int namelen);
 #endif /* NEED_GETHOSTNAME_PROTO */
 #endif
 
+// local extension to enable postscript printing for images
+extern "C" void TkCanvasPsImage_Init();
+
 // generated code for bitmaps used in tcl scripts
 void defineRtdBitmaps(Tcl_Interp*);
 
@@ -179,7 +182,6 @@ static Tk_ConfigSpec configSpecs_[] = {
     {TK_CONFIG_END, NULL, NULL, NULL, NULL, 0, 0}
 };
 
-
 /*
  * Initialize the image control structure with pointers to the handler
  * functions
@@ -191,12 +193,7 @@ static Tk_ImageType rtdImageType = {
     TkImage::DisplayImage,      /* displayProc */
     TkImage::FreeImage,         /* freeProc */
     TkImage::DeleteImage,       /* deleteProc */
-
-#if TCL_MAJOR_VERSION >= 8 && TCL_MINOR_VERSION >= 3
-    // XXX RtdImage::Postscript,        /* postscriptProc */
-    (Tk_ImagePostscriptProc *) NULL,    /* postscriptProc */
-#endif
-
+    (Tk_ImagePostscriptProc *) NULL,      /* postscriptProc, use generic */
     (Tk_ImageType *) NULL       /* nextPtr */
 };
 
@@ -331,6 +328,9 @@ extern "C"
 int Rtd_Init(Tcl_Interp* interp)  
 {
     // Initialize the local packages that rtd depends on
+
+    // PWD: enable postscript printing for images (local ext)
+    TkCanvasPsImage_Init();
 
     // initialize the tclutil package 
     if (Tclutil_Init(interp) == TCL_ERROR) {
