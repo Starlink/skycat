@@ -475,9 +475,12 @@ tImageEvent: tImageEvent.o
 trtdRemote: trtdRemote.o
 	$(COMPILE) -o $@ $@.o $(RTD_REMOTE_LIB) @LIBS@
 
+# put libs before TK so that the libpath from TK does not override
+# the libpath for the local shared libraries in $LIBS
 tRtd: tRtd.o tRtdEvt.o tRtdEvtData.o
 	$(CXXCOMPILE) -o $@ $@.o tRtdEvt.o tRtdEvtData.o \
-	@rtd_BUILD_LIB_SPEC@ @TK_LIB_SPEC@ @TCL_LIB_SPEC@ ${LDFLAGS_DEFAULT} ${LIBS}
+	@rtd_BUILD_LIB_SPEC@ ${LDFLAGS_DEFAULT} ${LIBS} @TK_LIB_SPEC@ @TCL_LIB_SPEC@ 
+
 
 #========================================================================
 # Run Tcl test cases
