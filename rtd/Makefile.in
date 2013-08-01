@@ -447,13 +447,13 @@ $(RTDEVT_LIB): $(RTDEVT_OBJ)
 	$(AR) r $@ $(RTDEVT_OBJ)
 	$(RANLIB_STUB) $@
 
-$(RTD_SERVER): $(RTD_SERVER_OBJS)
+$(RTD_SERVER): $(RTD_SERVER_OBJS) $(RTDEVT_LIB)
 	$(CXXCOMPILE) -o $@ $(RTD_SERVER_OBJS) $(RTDEVT_LIB) @LIBS@
 
-rtdClient: rtdClient.o
+rtdClient: rtdClient.o $(RTDEVT_LIB)
 	$(CXXCOMPILE) -o $@ $? $(RTDEVT_LIB) @LIBS@
 
-rtdCubeDisplay: rtdCubeDisplay.o
+rtdCubeDisplay: rtdCubeDisplay.o $(RTDEVT_LIB)
 	$(CXXCOMPILE) -o $@ $? $(RTDEVT_LIB) @LIBS@
 
 #========================================================================
@@ -469,10 +469,10 @@ $(RTD_REMOTE_LIB): $(RTD_REMOTE_OBJ)
 #========================================================================
 test: binaries libraries $(TEST_APPS)
 
-tImageEvent: tImageEvent.o
+tImageEvent: tImageEvent.o $(RTDEVT_LIB)
 	$(CXXCOMPILE) -o $@ $@.o $(RTDEVT_LIB) @LIBS@
 
-trtdRemote: trtdRemote.o
+trtdRemote: trtdRemote.o $(RTD_REMOTE_LIB)
 	$(COMPILE) -o $@ $@.o $(RTD_REMOTE_LIB) @LIBS@
 
 # put libs before TK so that the libpath from TK does not override
