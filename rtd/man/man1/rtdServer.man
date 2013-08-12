@@ -1,0 +1,47 @@
+.TH RTDSERVER "1" "March 2009" "RTDSERVER" "User Commands"
+.SH NAME
+rtdServer - image event dispatcher for RTD
+.SH SYNOPSIS
+.B rtdServer
+\fI[\-v] [\-p] [\-s]\fR
+.SH DESCRIPTION
+rtdServer is the process that manages the image event mechanism.
+Clients register to the rtdServer via the rtdInitImageEvt call.
+When a client attaches to a camera source an incoming image event
+will be forwarded to this client. Several clients can attach to the
+same camera source as the multicasting of event notification is
+supported by the rtdServer.
+Image events received from image sources where no clients are attached
+are simply discarded. Clients can also attach to image sources
+that not have registered yet as the rtdServer supports a independence
+between image event producer and image event consumer.
+
+Furthermore rtdServer contains a simulator part that can be used
+to simulate the generation of image events. This feature is reserved
+for testing purposes only. Similarly, it also contains a performance
+test facility, in which several areas of shared memory are sent to
+a client Rtd in quick succession, and measurements are taken on
+certain performance parameters (see RtdPerformanceTool(3/n).
+
+The rtdServer also implements semaphore locking of shared memory, to
+avoid the possibility of the RTD client reading the shared memory
+at the same time as the CCD writes (this is known as "image jitter").
+The server program expects the CCD software to set a semaphore against
+any shared memory that has been written to (effectively to lock it).
+The server will then increment this semaphore by the number of RTD
+clients less one. If semaphores are not implemented in the incoming
+image event, no action is taken. The overall locking scheme is discussed
+in more detail in rtdSem(1). Semaphore locking is implemented in the
+simulator facility.
+.TP
+\fB\-v\fR
+verbose mode
+.TP
+\fB\-p\fR
+port number, default 5555. Set with RTD_SERVER_PORT
+.TP
+\fB\-t\fR
+delay between image events in msec (default 5)
+.SH "SEE ALSO"
+rtd(1),rtdClient(1),rtcCubeClient(1)
+

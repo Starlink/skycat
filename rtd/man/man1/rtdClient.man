@@ -1,0 +1,14 @@
+.TH RTDCLIENT "1" "March 2009" "RTDCLIENT" "User Commands"
+.SH NAME
+rtdClient - image event client for RTD
+.SH SYNOPSIS
+.B rtdClient
+\fI[\-v]\fR
+.SH DESCRIPTION
+This is the client for the rtdServer.
+.TP
+\fB\-v\fR
+verbose mode
+.SH "SEE ALSO"
+rtd(1),rtdServer(1),rtcCubeDisplay(1)
+

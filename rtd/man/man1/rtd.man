@@ -1,0 +1,166 @@
+.TH RTD "1" "March 2009" "RTS" "User Commands"
+.SH NAME
+rtd - real-time image display application
+
+.SH SYNOPSIS
+.B rtd
+\fIoptions filename\fR
+
+.SH DESCRIPTION
+The rtd application is used to display FITS images in real-time.
+The application is based on "rtdimage", a Tk image extension
+for displaying FITS images. 
+
+.SH OPTIONS
+.TP
+\fB\-file name\fR
+"name" specifies a FITS format file to load and
+display.
+.TP
+\fB\-subsample bool\fR
+If bool is true, subsampling is used when shrinking
+the image, i.e.: if the image is shrunk by 1/3, only
+every third pixel is displayed. Otherwise, the maximum
+value is taken from the group of pixels.
+.TP
+\fB\-sampmethod n\fR (experimental)
+If option 'subsample' is false, the following methods can be
+used for displaying a shrunk image (i.e. an image with a scale
+factor < 1):
+.IP "0"
+max value of all pixels in a NxN box (default)
+.IP 1
+min value of all pixels in a NxN box
+.IP 2
+mean value of all pixels in a NxN box
+.IP 3
+median value of all pixels in a NxN box
+.IP 4
+max value of pixels on a diagonal cross in a NxN box
+.IP 5
+min value of pixels on a diagonal cross in a NxN box
+.IP 6 
+mean value of pixels on a diagonal cross in a NxN box
+.IP 7
+median value of pixels on a diagonal cross in a NxN box
+.IP 8
+median value of pixels in a chess-board like box
+.IP 9
+median value of a 3x3 box
+.TP
+\fB\-usexshm bool\fR
+If bool is true (default), attempt to use X shared
+memory for the image display, if available. This
+improves performance considerably, but is only
+available when working on the system console.
+
+.TP
+\fB\-usexsync bool\fR
+If true, try to use X synchronisation.
+
+.TP
+\fB\-verbose bool\fR
+If bool is true, diagnostic messages are printed out
+to show what is going on internally (for debugging
+use).
+
+.TP
+\fB\-default_cmap\fR
+This option sets the default colormap file to use when
+starting up.  Only the root of the filename should be
+specified for this option, for example: "ramp" for a grey
+level colormap.  For a list of available colormap files, see
+the colormaps directory in the rtd release.
+
+.TP
+\fB\-min_colors n\fR
+.TP
+\fB\-max_colors n\fR
+Specify the min and max number of colors to allocate before
+using a private colormap.
+
+.TP
+\fB\-default_itt
+This option is similar to \-default_cmap, except it
+sets the default ITT (intensity transfer table) file
+to use at startup.  ITT files are also stored in the
+colormaps directory.
+
+.TP
+\fB\-xscale xs\fR
+.TP
+\fB\-yscale ys\fR
+Set the default scaling factors (default: 1).
+
+.TP
+\fB\-camera name\fR
+Set the camera name for real-time image events:
+default: taken from the RTD_CAMERA environment
+variable, if set, otherwise set to RTDSIMULATOR, for
+simulation test mode.
+
+.TP
+\fB\-zoom_factor number\fR
+Set the scale factor for the zoom window (default 5 x
+the original image).
+
+.TP
+\fB\-colorramp_height h\fR
+Set the height of the colorramp subwindow (default: 20).
+
+.TP
+\fB\-with_zoom_window bool\fR
+If bool is true (default), add a zoom window.
+
+.TP
+\fB\-with_pan_window bool\fR
+If bool is true (default), add a panning window.
+
+.TP
+\fB\-dozoom bool\fR
+If true, turn on zoom window.
+    
+.TP
+\fB\-disp_image_icon bool\fR
+If true, display a copy (view) of the image as an icon.
+
+.TP
+\fB\-drag_scroll bool\fR
+If true, set bindings to scroll with the middle mouse button.
+
+.TP
+\fB\-scrollbars bool\fR
+If true, display scrollbars to scroll the image.
+
+.TP
+\fB\-port port\fR
+ Default port for remote connections (0 means system chooses a
+ port).
+  
+.TP
+\fB\-debug bool\fR
+ Debugging flag: enables real-time simulation with testProg
+ (below).
+
+.TP
+\fB\-testprog path\fR
+For testing: name of test program used to generate real-time
+updates (tRtd).
+
+.TP
+\fB\-interval n\fR
+For testing: interval between updates in ms.
+
+.TP
+\fB\-with_perftest bool\fR
+If true, display performance tester utility in menu bar.
+
+.TP
+\fB\-with_warp bool\fR
+Option to warp the mouse pointer.
+
+.SH FILES
+$RTD_LIBRARY/../demos/rtd.tcl
+
+.SH SEE ALSO
+rtdServer(1),RtdClient(1),RtdCubeDisplay(1),skycat(1)

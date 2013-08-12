@@ -1,0 +1,32 @@
+.TH RTDCUBEDISPLAY "1" "March 2009" "RTDCUBEDISPLAY" "User Commands"
+.SH NAME
+rtdCubeDisplay - simple FITS cube display program
+.SH SYNOPSIS
+.B rtdCubeDisplay
+\fI\-f <filename> \-c <cameraname> [\-l] [\-t msec] [\-v]\fR
+.SH DESCRIPTION
+rtdCubeDisplay displays FITS cube images for the real-time display.
+By specifying a FITS cube file (option \-f) and a camera name (option \-c)
+the images are extracted from the file and an image event is sent to
+the rtdServer. In order to display the image a rtd widget application
+e.g. 'rtd' must register to the same camera name as specified above.
+For the 'rtd' application this is done by  setting the RTD_CAMERA
+environment.
+.TP
+\fB\-f <filename>\fR
+FITS cube images
+.TP
+\fB\-c <cameraname>\fR
+Camera name to identify real time source
+.TP
+\fB\-l\fR
+Loop indefinetly
+.TP
+\fB\-t msec\fR
+Delay time between cube images (in msec) default 500 ms
+.TP
+\fB\-v\fR
+Verbose mode
+.SH "SEE ALSO"
+rtd(1),rtdServer(1),rtcClient(1)
+
