@@ -1,0 +1,279 @@
+.TH SKYCAT "1" "March 2009" "SKYCAT" "User Commands"
+.SH NAME
+skycat - A tool for displaying astronomical images and catalogs
+
+.SH SYNOPSIS
+.B skycat 
+\fIfilename \-option value ...\fR
+
+.SH DESCRIPTION
+The ESO Skycat tool combines the image display capabilities of the RTD
+(Real-Time Display) with a set of classes for accessing astronomical
+catalogs locally and over the network using HTTP. The tool allows you
+to view FITS images from files or from the Digitized Sky Survey (DSS).
+
+.SH OPTIONS
+.TP
+\fB\-file filename\fR
+Specify a FITS file to display. '\-' means read the file from
+the standard input.  The '\-file' part is optional, so you can
+also simply specify a file name. Image compression and
+decompression is done automatically, based on the file name
+suffix: .gzfits or .gfits for GZIP compression, .hfits for
+H-compress, and .cfits for UNIX compression.
+.TP
+\fB\-cat bool\fR
+If bool is 1, include 'Data-Servers' menu in the menubar (This
+is the default). The 'Data-Servers' menu gives you access to
+the ESO Archive extensions for browsing astronomical catalogs,
+plotting objects in the image window and getting images over
+the network from the image servers, such as the Digitized Sky
+server.
+.TP
+\fB\-rtd bool\fR
+If bool is 1, include the Real-Time menu in the menubar
+(default is 0). The Real-Time menu gives you access to the VLT
+Real-Time Display features, such as camera control and rapid
+frames. To use these features, the rtdServer daemon must be
+running on the local host. A client application, linked with
+the Rtd image event library can then send images via shared
+memory to be displayed in rapid succession. 
+.TP
+\fB\-float_panel bool\fR
+If the option value is 1, the skycat info panel is put in a
+separate popup window, leaving more space for the image window
+(The default is off).
+.TP
+\fB\-panel_layout <saoimage | reverse | default>\fR
+With this option you can change the order of the zoom and pan
+windows in the layout. The default layout is: zoom window on
+the left, info panel in the center and pan window right. If
+"\-panel_layout saoimage" is specified, a layout similar to
+saoimage is used (info panel, pan window, zoom window). If
+"\-panel_layout reverse" is specified, the order of the windows
+is the reverse of the default.
+.TP
+\fB\-remote bool\fR
+If "\-remote 1" is specified and a skycat process is already
+running, the existing skycat process is sent a message and
+asked to open a new window and the new skycat process exits
+immediately. This has the advantage of sharing the image
+colormap and using fewer system resources, however it depends
+on being able to use the Tcl send mechanism. For security
+reasons, Tcl send will not work if you are using "xhost" based
+X security. You need to use X-auth security. See the "Tcl/Tk
+Tools" book from O'Reilly for more on this topic.
+.TP
+\fB\-min_scale n\fR
+.TP
+\fB\-max_scale n\fR
+Specify the min and max scale values for the Magnification
+menu.  Negative values shrink the image, positive values zoom
+in closer. The default values are \-10 and 20.
+.TP
+\fB-port portnum\fR
+Specify a port number to use for the remote RTD socket
+interface. See the Rtd User's Guide for details on this socket
+based interface. By default, a port number is chosen
+automatically and written to the file ~/.rtd-remote.
+.TP
+\fB\-disp_image_icon bool\fR
+If bool is 1 (default), display a miniature version of the
+image in the tool's icon window.
+.TP
+\fB\-default_cmap <cmap>\fR
+Specify the default colormap. This should be one of the names
+listed in the 'Colors' popup window (default is 'real'). 
+.TP
+\fB\-default_itt <itt>\fR
+Specify the default intensity transfer table. This should be
+one of the names listed in the 'Colors' popup window (default
+is 'ramp').
+.TP
+\fB\-colorramp_height <pixels>\fR
+This option can be used to change the height of color bar (the
+widget at the bottom of the screen displaying the image
+colors).
+.TP
+\fB\-with_colorramp bool\fR
+If bool is true, display the color bar (default).
+.TP
+\fB\-with_zoom_window bool\fR
+If bool is true, display the zoom window (default).
+.TP
+\fB\-with_pan_window bool \fR
+If bool is true, display the pan window (default).
+.TP
+\fB\-dozoom bool\fR
+If bool is true, turn the zoom window on automatically
+(default).
+
+.SH MENU ITEMS
+.SS File menu
+.TP
+\fBOpen...\fR
+Open and display a (FITS) image file.
+.TP
+\fBReopen...\fR
+Reload the image display after the image has changed
+on disk.
+.TP
+\fBSave as...\fR
+Save the current image to a file.
+.TP
+\fBSave region as...\fR
+Save a section of the current image to a file.
+.TP
+\fBPrint...\fR
+Print the current image to a file or printer.
+.TP
+\fBClear\fR
+Clear the image display.
+.TP
+\fBNew Window\fR
+Display up a new main window.
+.TP
+\fBClose\fR
+Close the main window and exit if there are no more
+windows.
+.TP
+\fBExit\fR
+Exit the application.
+
+.SS View menu
+.TP
+\fBColors...\fR
+Display a window for manipulating the image colormap.
+.TP
+\fBCut Levels...\fR
+Display a window for manipulating the image cut levels.
+.TP
+\fBCuts...\fR
+Display a graph of pixel values along a line drawn
+interactively over the image.
+.TP
+\fBPick Object...\fR
+Select an object or star in the image and display
+statistics.
+.TP
+\fBFits Header...\fR
+Display the FITS header for the current image.
+.TP
+\fBPixel Table...\fR
+Display a table of pixel values surrounding the mouse
+cursor.
+.TP
+\fBMagnification\fR
+Set the magnification factor of the image display.
+.TP
+\fBHide Control Panel\fR
+Toggle the visibility of the upper control panel
+.TP
+\fBHide Popup Windows\fR
+Toggle the visibility of the popup windows.
+
+.SS Graphics menu
+.TP
+\fBToolbox\fR
+Display the line graphics toolbox.
+.TP
+\fBMode =>\fR
+Select the drawing mode.
+.TP
+\fBWidth =>\fR
+Set the line width for drawing.
+.TP
+\fBArrow =>\fR
+Select the arrow mode for lines.
+.TP
+\fBArrorShape =>\fR
+Select the arrow shape for lines.
+.TP
+\fBFill =>\fR
+Select the fill color for drawing.
+.TP
+\fBOutline =>\fR
+Select the outline color for drawing.
+.TP
+\fBStipple =>\fR
+Select the stipple pattern for filling objects.
+.TP
+\fBFont =>\fR
+Select the font to use for labels.
+.TP
+\fBSmooth =>\fR
+Set the smooth option for drawing polygons
+
+.TP
+\fBClear =>\fR
+Delete graphic objects.
+.TP
+\fBDelete =>\fR
+Delete selected graphic objects.
+.TP
+\fBHide Graphics\fR
+Toggle the visibility of the image line graphics
+
+.SS Data-Servers
+.TP
+\fBCatalogs =>\fR
+Select a catalog from the menu.
+.TP
+\fBImage Servers =>\fR
+Select an image server from the menu.
+.TP
+\fBArchives =>\fR
+Select an archive from the menu.
+.TP
+\fBLocal Catalogs =>\fR
+Select a local catalog from the menu.
+
+.SS Real-time menu (displayed when -rtd 1 is specified)
+.TP
+\fBAttach Camera\fR
+Attach the real-time camera - start receiving images.
+.TP
+\fBDetach Camera\fR
+Detach the real-time camera - stop receiving images.
+.TP
+\fBSet Camera...\fR
+Set the real-time camera name.
+.TP
+\fBRapid Frame	\fR
+Create a rapid frame by interactively drawing a
+rectangle on the image.
+
+.SS Help menu
+.TP
+\fBAbout Skycat...\fR
+Display a window with information about this Skycat
+version.
+.TP
+\fBHelp...\fR
+Display information about Skycat in netscape (if
+netscape is available).
+
+.SH ENVIRONMENT VARIABLES
+.TP 
+\fB$SKYCAT_CONFIG \fR
+If set, this is used as the URL to access the skycat
+configuration file, which contains the list of available
+catalogs and how to query them. By default, the configuration
+file is also searched for in $HOME/.skycat/skycat.cfg, and if
+that is not found, in the ESO default URL:
+http://archive.eso.org/skycat/skycat2.0.cfg.
+.TP
+\fB$SKYCAT_PLUGIN\fR
+If set, this variable should be a colon separated list of
+files or directories containing skycat plugins. A skycat
+plugin is a Tcl script that defines a Tcl proc to be called
+for each instance of the main window. The script is sourced
+before any windows are created and can also load shared
+libraries dynamically to add new features.  See the Skycat
+User's Guide (ftp://ftp.archive.eso.org/pub/skycat/docs) for
+more information.
+.SH FILES
+http://archive.eso.org/skycat/skycat2.0.cfg - default 
+configuration file.
+.SH SEE ALSO
+rtd(1)
