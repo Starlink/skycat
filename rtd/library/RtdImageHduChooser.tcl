@@ -17,6 +17,10 @@
 # pbiereic        11/10/08   Break image display loop after failure.
 # pbiereic        26/11/08   Using 'view update' for HDU images display.
 #                            Using a toplevel window for the HDU images display.
+# Peter W. Draper 20/01/14   Don't floor crpix based row calculations by
+#                            implicit integer division, leave that for round().
+#                            "Fix" idx calculation that was giving invalid
+#                            index. Use blt::blttable not blt::table.
 
 itk::usual RtdImageHduChooser {}
 
@@ -255,9 +259,13 @@ itcl::class rtd::RtdImageHduChooser {
 		set naxis2 $ext_($i,NAXIS2)
                 set row -1
                 set col -1
+
+                #  PWD: round after eval not during division, no point
+                #  otherwise. Images with padding (bias strips) are
+                #  larger than crpix separations.
                 catch {
-   		   set row [expr {round(($max_crpix2 - $crpix2)/$naxis2)}]
-		   set col [expr {round(($max_crpix1 - $crpix1)/$naxis1)}]
+   		   set row [expr round(($max_crpix2 - $crpix2)/double($naxis2))]
+                   set col [expr round(($max_crpix1 - $crpix1)/double($naxis1))]
                 }
 
 		if {$row<0 || $col<0 || [info exists check($row,$col)]} {
@@ -478,7 +486,11 @@ itcl::class rtd::RtdImageHduChooser {
 	set idx [expr {$hdu -1}]
 	if { $ext_(0,HDU) == 2 } {
 	    set idx [expr {$idx -1}]
+           if { $idx < 0 } {
+              set idx 0
 	}
+	}
+
 	set naxis1 $ext_($idx,NAXIS1)
 	if { $hdu > 0 && [$image_ width] != $naxis1 } {
 	    set hdu -1
@@ -487,7 +499,7 @@ itcl::class rtd::RtdImageHduChooser {
 	for {set i 0} {$i < $num_images_} {incr i} {
 	    set row [expr {$max_row_-$ext_($i,row)}]
 	    set col $ext_($i,col)
-	    blt::table $itk_component(imagetab) ${row},${col} $itk_component(imagetab).f$i -fill both
+	    blt::blttable $itk_component(imagetab) ${row},${col} $itk_component(imagetab).f$i -fill both
 	    if {"$ext_($i,HDU)" == $hdu} {
 		$wdg_($i,frame) configure -relief sunken -bg red
 	    }
