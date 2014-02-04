@@ -127,7 +127,7 @@ AC_SUBST(CLEANFILES)
 if test -f $TK_SRC_DIR/generic/tkCanvas.h ; then
 	AC_DEFINE(HAVE_TKCANVAS_H, 1, 
 		[See if we can include tkCanvas.h, an internal tk header])
-        TEA_ADD_INCLUDES([-I$TK_SRC_DIR/generic])
+        TEA_ADD_INCLUDES([-I$TK_SRC_DIR/generic,-I$TCL_SRC_DIR/generic])
 fi
 
 #--------------------------------------------------------------------
