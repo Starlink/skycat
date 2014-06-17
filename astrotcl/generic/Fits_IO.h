@@ -38,6 +38,7 @@
  *                           length.
  * pbiereic        12/08/07  added support for data types double and long long int
  * pbiereic        07/09/07  added support for tiled-image compressed files
+ * Peter W. Draper 06/06/14  Added getComments function.
  */
 
 #include <cstdio>
@@ -178,6 +179,9 @@ public:
 
     // find and return the comment for the given FITS keyword, or NULL if not found
     char* getComment(const char* keyword) const;
+
+    // find and return the next COMMENT value or NULL if not found
+    char* getComments() const;
 
     // same as get(const char*), but you supply the buffer to hold the result
     char* get(const char* keyword, char* buf, int bufsz) const;

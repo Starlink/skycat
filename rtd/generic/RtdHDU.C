@@ -363,7 +363,7 @@ int RtdImage::getHDU(FitsIO* fits, const char* filename, const char* entry)
 
     // PWD: add any comment cards so that context is preserved.
     const char *c;
-    while ( ( c = fits->getComment( "COMMENT*" ) ) != NULL ) {
+    while ( ( c = fits->getComments() ) != NULL ) {
         os << "#C" << c << endl;
     }
 

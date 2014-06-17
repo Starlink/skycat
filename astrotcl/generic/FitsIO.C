@@ -1408,6 +1408,7 @@ char* FitsIO::getComment(const char* keyword) const {
 	error(noHdrErrMsg);
 	return NULL;
     }
+
     int status = 0;
     char value[81];
     if (fits_read_key(fitsio_, TSTRING, (char*)keyword, value, buf_, &status) != 0) {
@@ -1415,6 +1416,26 @@ char* FitsIO::getComment(const char* keyword) const {
 	return NULL;
     }
     return buf_;
+}
+
+/*
+ *  find and return the comments of the comment cards. Call this repeatably
+ *  until no more comments are returned.
+ */
+char* FitsIO::getComments() const {
+    if (! fitsio_) {
+	error(noHdrErrMsg);
+	return NULL;
+    }
+
+    int status = 0;
+    if (fits_read_card(fitsio_, "COMMENT*", buf_, &status) != 0) {
+	cfitsio_error();
+	return NULL;
+    }
+
+    //  Skip COMMENT at start.
+    return buf_+8;
 }
 
 
