@@ -477,7 +477,7 @@ trtdRemote: trtdRemote.o
 
 tRtd: tRtd.o tRtdEvt.o tRtdEvtData.o
 	$(CXXCOMPILE) -o $@ $@.o tRtdEvt.o tRtdEvtData.o \
-	@rtd_BUILD_LIB_SPEC@ @TK_LIB_SPEC@ @TCL_LIB_SPEC@ ${LDFLAGS_DEFAULT} ${LIBS}
+	@rtd_BUILD_LIB_SPEC@  ${LDFLAGS_DEFAULT} @PKG_LIBS@ @TK_LIB_SPEC@ @TCL_LIB_SPEC@ @LIBS@
 
 #========================================================================
 # Run Tcl test cases
