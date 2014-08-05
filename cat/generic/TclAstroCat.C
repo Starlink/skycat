@@ -16,6 +16,7 @@
  *                 18/03/09   Added comments command.
  *                 20/07/09   Use object interface for building the query
  *                            table list. Old interface very slow in tcl8.5.
+ *                 05/08/14   Fix logic of !cat in show and sort commands.
  */
 static const char* const rcsId="@(#) $Id: TclAstroCat.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
@@ -1544,13 +1545,11 @@ int TclAstroCat::is_tcsCmd(int argc, char* argv[])
  */
 int TclAstroCat::symbolCmd(int argc, char* argv[])
 {
-    if (argc == 0) {
-	if (cat_)
-	    return appendListVal(cat_->symbol());
-    }
     if (! cat_)
 	return error("no catalog is open");
-
+    if (argc == 0) {
+        return appendListVal(cat_->symbol());
+    }
     cat_->entry()->symbol(argv[0]);
     return TCL_OK;
 }
@@ -1569,12 +1568,11 @@ int TclAstroCat::symbolCmd(int argc, char* argv[])
  */
 int TclAstroCat::searchcolsCmd(int argc, char* argv[])
 {
-    if (argc == 0) {
-	if (cat_)
-	    return appendListVal(cat_->searchCols());
-    }
-    else if (! cat_)
+    if (! cat_)
 	return error("no catalog is open");
+    if (argc == 0) {
+        return appendListVal(cat_->searchCols());
+    }
     cat_->entry()->searchCols(argv[0]);
     return TCL_OK;
 }
@@ -1594,12 +1592,11 @@ int TclAstroCat::searchcolsCmd(int argc, char* argv[])
  */
 int TclAstroCat::sortcolsCmd(int argc, char* argv[])
 {
-    if (argc == 0) {
-	if (cat_)
-	    return set_result(cat_->sortCols());
-    }
-    else if (! cat_)
+    if (! cat_)
 	return error("no catalog is open");
+    if (argc == 0) {
+        return set_result(cat_->sortCols());
+    }
     cat_->entry()->sortCols(argv[0]);
     return TCL_OK;
 }
@@ -1619,12 +1616,11 @@ int TclAstroCat::sortcolsCmd(int argc, char* argv[])
  */
 int TclAstroCat::sortorderCmd(int argc, char* argv[])
 {
-    if (argc == 0) {
-	if (cat_)
-	    return set_result(cat_->sortOrder());
-    }
-    else if (! cat_)
+    if (! cat_)
 	return error("no catalog is open");
+    if (argc == 0) {
+        return set_result(cat_->sortOrder());
+    }
     cat_->entry()->sortOrder(argv[0]);
     return TCL_OK;
 }
@@ -1644,12 +1640,11 @@ int TclAstroCat::sortorderCmd(int argc, char* argv[])
  */
 int TclAstroCat::showcolsCmd(int argc, char* argv[])
 {
-    if (argc == 0) {
-	if (cat_)
-	    return set_result(cat_->showCols());
-    }
-    else if (! cat_)
+    if (! cat_)
 	return error("no catalog is open");
+    if (argc == 0) {
+        return set_result(cat_->showCols());
+    }
     cat_->entry()->showCols(argv[0]);
     return TCL_OK;
 }
