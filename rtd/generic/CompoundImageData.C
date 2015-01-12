@@ -904,6 +904,10 @@ void CompoundImageData::initBlankPixel()
     for(int i = 0; i < numImages_; i++) {
 	images_[i]->initBlankPixel();
     }
+
+    /*  Use first image to set Compound values. */
+    blank_ = images_[0]->getBlank();
+    haveBlank_ = images_[0]->haveBlank();
 }
 
 /*
@@ -917,6 +921,7 @@ void CompoundImageData::initShortConversion()
 	scaledLowCut_ = images_[i]->scaledLowCut_;
 	scaledHighCut_ = images_[i]->scaledHighCut_;
     }
+    scaledBlankPixelValue_ = LOOKUP_BLANK;
 }
 
 
@@ -945,13 +950,3 @@ ImageData* CompoundImageData::copy()
 {
     return new CompoundImageData(*this);
 }
-
-/*
- * return a blank pixel value. Assume same for all images and cast to 
- * safest type (makes this call practically useless).
- */
-double CompoundImageData::getBlank() 
-{
-    return (double) images_[0]->getBlank();
-}
-

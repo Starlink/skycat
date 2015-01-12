@@ -38,7 +38,7 @@ protected:
     double minX_, minY_, maxX_, maxY_;
 
     // value of blank pixel, if known (if haveBlankPixel_ is nonzero)
-    float blank_;
+    double blank_;
 
 protected:
 
@@ -187,7 +187,7 @@ public:
 
     // return the blank value.
     int haveBlank() {return haveBlank_;}
-    double getBlank();
+    double getBlank() {return blank_;}
 };
 
 
