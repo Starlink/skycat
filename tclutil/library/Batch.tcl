@@ -142,7 +142,7 @@ itcl::class util::Batch {
     # interrupt the current search 
 
     public method interrupt {} {
-	catch {exec kill $bg_pid_}
+	catch {blt::kill $bg_pid_}
 	catch {file delete $itk_option(-tmpfile)}
 	catch {wait -nohang $bg_pid_}
    }
