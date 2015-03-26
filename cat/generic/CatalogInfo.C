@@ -140,6 +140,7 @@
  *                 20 Mar 09  Add support for comments. Note these are not
  *                            output as they are verbose and associated 
  *                            with local catalogues (so are volatile).
+ *                 26 Mar 15  Added xtype support (more VO).
  */
 static const char* const rcsId="@(#) $Id: CatalogInfo.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
@@ -482,6 +483,9 @@ int CatalogInfo::set_entry_value(CatalogInfoEntry* entry,
     } 
     else if (strcmp(keyword, "utype") == 0) {
 	entry->utype(value);
+    } 
+    else if (strcmp(keyword, "xtype") == 0) {
+	entry->xtype(value);
     } 
     else if (strcmp(keyword, "datatype") == 0) {
 	entry->datatype(value);
@@ -1221,6 +1225,8 @@ ostream& operator<<(ostream& os, const CatalogInfoEntry& e)
         os << "ucd: " << e.ucd() << endl;
     if (e.utype())
         os << "utype: " << e.utype() << endl;
+    if (e.xtype())
+        os << "xtype: " << e.xtype() << endl;
     if (e.datatype())
         os << "datatype: " << e.datatype() << endl;
 

@@ -17,6 +17,7 @@
  *                 20/07/09   Use object interface for building the query
  *                            table list. Old interface very slow in tcl8.5.
  *                 05/08/14   Fix logic of !cat in show and sort commands.
+ *                 26/03/15   Added xtype support (more VO).
  */
 static const char* const rcsId="@(#) $Id: TclAstroCat.C,v 1.1.1.1 2009/03/31 14:11:52 cguirao Exp $";
 
@@ -137,6 +138,7 @@ public:
     {"url",         &TclAstroCat::urlCmd,          0,  2},
     {"utype",       &TclAstroCat::utypeCmd,        0,  0},
     {"x_col",       &TclAstroCat::x_colCmd,        0,  0},
+    {"xtype",       &TclAstroCat::xtypeCmd,        0,  0},
     {"y_col",       &TclAstroCat::y_colCmd,        0,  0},
 };
 
@@ -1484,6 +1486,13 @@ int TclAstroCat::utypeCmd(int argc, char* argv[])
 {
     if (cat_)
 	return set_result(cat_->utype());
+    return TCL_OK;
+}
+
+int TclAstroCat::xtypeCmd(int argc, char* argv[])
+{
+    if (cat_)
+	return set_result(cat_->xtype());
     return TCL_OK;
 }
 

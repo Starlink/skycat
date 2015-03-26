@@ -16,6 +16,7 @@
  * Allan Brighton  26 Sep 95  Created
  * Peter W. Draper 18 Mar 09  Added commentsCmd and various commands for 
  *                            VO support.
+ *                 26 Mar 15  Added xtype support (more VO).
  */
 
 
@@ -124,6 +125,7 @@ public:
     virtual int unitCmd(int argc, char* argv[]);
     virtual int ucdCmd(int argc, char* argv[]);
     virtual int utypeCmd(int argc, char* argv[]);
+    virtual int xtypeCmd(int argc, char* argv[]);
     virtual int datatypeCmd(int argc, char* argv[]);
 
     virtual int commentsCmd(int argc, char* argv[]);

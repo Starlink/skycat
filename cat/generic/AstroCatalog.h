@@ -18,6 +18,7 @@
  *                 20 Mar 09  Added various accessors for meta-data
  *                            (VO and comments)
  *                 08 May 09  Added stc_col member
+ *                 26 Mar 15  Added xtype support (more VO).
  */
 
 
@@ -139,6 +140,7 @@ public:
     const char* unit() {return entry_->unit();}
     const char* ucd() {return entry_->ucd();}
     const char* utype() {return entry_->utype();}
+    const char* xtype() {return entry_->xtype();}
     const char* datatype() {return entry_->datatype();}
 
     // return or set comments associated with catalog

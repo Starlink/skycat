@@ -20,6 +20,7 @@
  *                 20 Mar 09  Added hooks for preserving comments extracted
  *                            from a local catalogue.
  *                 08 May 09  Added stc_col support.
+ *                 26 Mar 15  Added xtype support (more VO).
  */
 
 
@@ -142,6 +143,7 @@ private:
 	UNIT_,		        // units for all columns "unit1 \t unit2 \t \t unit4 \t..."
 	UCD_,		        // UCDs for all columns "ucd1 \t ucd2 \t \t ucd4 \t..."
 	UTYPE_,		        // utypes for all columns "utype1 \t utype2 \t \t utype4 \t..."
+	XTYPE_,		        // xtypes for all columns "xtype1 \t xtype2 \t \t xtype4 \t..."
         DATATYPE_,              // datatypes of columns, if interpreted
         COMMENTS_,              // comments associated with entry, if any
 
@@ -208,6 +210,7 @@ public:
     void unit(const char* s)      {setVal_(UNIT_, s);}
     void ucd(const char* s)       {setVal_(UCD_, s);}
     void utype(const char* s)     {setVal_(UTYPE_, s);}
+    void xtype(const char* s)     {setVal_(XTYPE_, s);}
     void datatype(const char* s)  {setVal_(DATATYPE_, s);}
     void comments(const char* s)  {setVal_(COMMENTS_, s);}
 
@@ -246,6 +249,7 @@ public:
     const char* unit() const      {return val_[UNIT_];}
     const char* ucd() const       {return val_[UCD_];}
     const char* utype() const     {return val_[UTYPE_];}
+    const char* xtype() const     {return val_[XTYPE_];}
     const char* datatype() const  {return val_[DATATYPE_];}
 
     const char* comments() const  {return val_[COMMENTS_];}
