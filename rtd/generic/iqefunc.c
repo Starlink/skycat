@@ -45,7 +45,6 @@
 #include   <string.h>
 
 #include "mpfit.h"
-#include "mutil.h" 
 
 static double  hsq2 = 0.7071067811865475244;    /* constant 0.5*sqrt(2) */
 
@@ -138,6 +137,11 @@ return 0;
 
 */
 
+static int compar_float(const void *a1, const void *a2) {
+    return (*(const float *)a1 < *(const float *)a2)?-1:
+	(*(const float *)a1 > *(const float *)a2)?1:0;
+}
+
 int iqebgv(pfm, pwm, mx, my, bgm, bgs, nbg)
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 .PURPOSE   Estimate background level for subimage
@@ -228,7 +232,7 @@ pw0 = pw1 = pw2 = pw3 = pws0 = pws1 = pws2 = pws3 = (float *) 0;
      mt = nt;
      while (n--) *pw++ = 1.0;
    }
-  hsort(mt, pfb);
+  qsort(pfb, mt, sizeof(float), compar_float);
   nt = mt;
 
 /* first estimate of mean and rms   */
@@ -442,6 +446,32 @@ amm[0] = pfm[nx+ny*mx] - bgv;
 return 0;
 }
  
+typedef struct {
+    float number;
+    int rank;
+} float_sort_s;
+
+static int compar_float_idx(const void *a1, const void *a2) {
+    float n1 = ((float_sort_s *)a1)->number;
+    float n2 = ((float_sort_s *)a2)->number;
+    return (n1 < n2)?-1:(n1 > n2)?1:0;
+}
+
+static void heapSortFloat(int array_size, float numbers[], int rank[]) {
+    int i;
+    float_sort_s *a = malloc(array_size * sizeof(float_sort_s));
+    for (i = 0; i < array_size; i++) {
+        a[i].number = numbers[i];
+        a[i].rank = i + 1;
+    }
+    qsort(a, array_size, sizeof(float_sort_s), compar_float_idx);
+    for (i = 0; i < array_size; i++) {
+        numbers[i] = a[i].number;
+        rank[i] = a[i].rank;
+    }
+    free(a);
+}
+
 void index9(arrin,indx)
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 .PURPOSE   compute indx[] so that arrin[indx[0..n[ - 1] is ascenting
@@ -454,7 +484,7 @@ int     indx[];
   int   n=9; 
   float b[9];
  
-  heap_copy(n, arrin, b); 
+  memcpy(b, arrin, n * sizeof(float));
 
   heapSortFloat(n, b, indx); 
 
