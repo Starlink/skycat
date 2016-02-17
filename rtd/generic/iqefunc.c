@@ -1,5 +1,5 @@
 /*===========================================================================
-  Copyright (C) 1995 European Southern Observatory (ESO)
+  Copyright (C) 1995-2009 European Southern Observatory (ESO)
  
   This program is free software; you can redistribute it and/or 
   modify it under the terms of the GNU General Public License as 
@@ -26,7 +26,6 @@
 ===========================================================================*/
 
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-.COPYRIGHT  (c)  1996  European Southern Observatory
 .IDENT      iqefunc.c
 .LANGUAGE   C
 .AUTHOR     P.Grosbol,  IPG/ESO
@@ -38,13 +37,11 @@
 .VERSION    1.1  1995-Jun-22 : Correct derivatives in 'g2efunc', PJG
 .VERSION    1.2  1996-Dec-03 : Code clean-up, PJG
 
-000427
-
+ 090630		last modif
 ------------------------------------------------------------------------*/
 
 #include   <stdlib.h>                 /* Standard ANSI-C library        */
 #include   <math.h>                   /* Mathematical definitions       */
-#include   <stdlib.h>
 
 static double  hsq2 = 0.7071067811865475244;    /* constant 0.5*sqrt(2) */
 
@@ -150,12 +147,18 @@ float      *bgm;
 float      *bgs;
 int        *nbg;
 {
-  int      n, m, ns, ms, nt, mt;
-  float    *pfb, *pwb, *pf, *pw;
-  float    *pf0, *pf1, *pf2, *pf3, *pfs0, *pfs1, *pfs2, *pfs3;
-  float    *pw0, *pw1, *pw2, *pw3, *pws0, *pws1, *pws2, *pws3;
-  double   val, fks, ba, bm, bs;
-  void     hsort();
+int      n, m, ns, ms, nt, mt;
+
+float    *pfb, *pwb, *pf, *pw;
+float    *pf0, *pf1, *pf2, *pf3, *pfs0, *pfs1, *pfs2, *pfs3;
+float    *pw0, *pw1, *pw2, *pw3, *pws0, *pws1, *pws2, *pws3;
+
+double   val, fks, ba, bm, bs;
+
+void     hsort();
+
+
+pw0 = pw1 = pw2 = pw3 = pws0 = pws1 = pws2 = pws3 = (float *) 0;
 
   *bgm = 0.0;
   *bgs = 0.0;
@@ -285,14 +288,20 @@ float      bgv;
 float      bgs;
 float      *amm;
 {
-int      n, nx, ny, nt, nxc, nyc, ndx, ndy, ioff;
+int      n, nx, ny, nt, nxc, nyc, ioff;
+int      ndx=0, ndy=0;
 int      k, ki, ks, kn, psize;
 int      estm9p();
+
 float    av, dx, dy;
 float    *pf, *pw;
+
 double   val, x, y, dv, xm, ym;
 double   am, ax, ay, axx, ayy, axy;
 
+
+
+pw = (float *) 0;
 dv = 5.0*bgs;
 xm = mx - 1.0;
 ym = my - 1.0;
@@ -893,22 +902,38 @@ double     *pchi;
 
 
 
+
   if (g2einit(val, wght, nx, ny)) return -1;
 
   pi = 4.0*atan(1.0);
+
   a1 = -1.0;
   mt = nx * ny;
   for (n=0; n<MA; n++) { lista[n] = n; cv[n] = 0.0; }
 
   *pchi = c2 = 0.0; a2 = 0.0; na = 0;
-  for (ni=0; ni<MITER; ni++) {
+
+  for (ni=0; ni<MITER; ni++) 
+     {
      for (n=0; n<MA; n++) apo[n] = ap[n];
+
      if (mrqmin(mt, ap, MA, lista, MA, cvm, alpha, pchi, g2efunc, &a1))
        return -2;
-     if (a1<a2 && fabs(*pchi-c2)<1.0e-5*c2) break;
-     if (a1<a2) { c2 = *pchi; na = 0; } else na++;
+
+     if (a1<a2)
+        {
+        if (fabs(*pchi-c2)<1.0e-5*c2) goto after_loop;
+
+        c2 = *pchi;
+        na = 0; 
+        } 
+     else 
+        {
+        na++;
+        if (5<na) goto after_loop;
+        }
      a2 = a1;
-     if (5<na) break;
+
      if (ap[0]<=0.0) ap[0] = 0.5 * apo[0];
      if (ap[2]<=0.0) ap[2] = 0.5 * apo[2];
      if (ap[4]<=0.0) ap[4] = 0.5 * apo[4];
@@ -916,6 +941,7 @@ double     *pchi;
      if (ap[1]<0.0 || nx<ap[1] || ap[3]<0.0 || ny<ap[3]) return -3;
    }
 
+after_loop:
   a1 = 0.0;
   if (mrqmin(mt, ap, MA, lista, MA, cvm, alpha, pchi, g2efunc, &a1))
     return -2;
@@ -925,4 +951,3 @@ double     *pchi;
 
   return ((MITER<=ni) ? -4 : ni);
 }
-
