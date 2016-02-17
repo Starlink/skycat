@@ -42,6 +42,10 @@
 
 #include   <stdlib.h>                 /* Standard ANSI-C library        */
 #include   <math.h>                   /* Mathematical definitions       */
+#include   <string.h>
+
+#include "mpfit.h"
+#include "mutil.h" 
 
 static double  hsq2 = 0.7071067811865475244;    /* constant 0.5*sqrt(2) */
 
@@ -154,9 +158,6 @@ float    *pf0, *pf1, *pf2, *pf3, *pfs0, *pfs1, *pfs2, *pfs3;
 float    *pw0, *pw1, *pw2, *pw3, *pws0, *pws1, *pws2, *pws3;
 
 double   val, fks, ba, bm, bs;
-
-void     hsort();
-
 
 pw0 = pw1 = pw2 = pw3 = pws0 = pws1 = pws2 = pws3 = (float *) 0;
 
@@ -441,6 +442,25 @@ amm[0] = pfm[nx+ny*mx] - bgv;
 return 0;
 }
  
+void index9(arrin,indx)
+/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+.PURPOSE   compute indx[] so that arrin[indx[0..n[ - 1] is ascenting
+.RETURN    none
+----------------------------------------------------------------------*/
+float   arrin[];
+int     indx[];
+{
+
+  int   n=9; 
+  float b[9];
+ 
+  heap_copy(n, arrin, b); 
+
+  heapSortFloat(n, b, indx); 
+
+}
+
+
 /*
 
 */
@@ -463,9 +483,6 @@ float      *dy;
 int      n, nt, ix, iy, idx[9];
 float    a, am;
 float    *pfb, *pwb, fb[9], wb[9];
-void     indexx();
-
-
 
 /* check if 3x3 region is fully within frame   */
 
@@ -505,12 +522,13 @@ else
       pfm += mx - 3;
       }
    }
-indexx(9, fb, idx);
 
 
 /* omit largest value and estimate mean     */
 
-wb[idx[8]] = 0.0;
+/* idx contains Fortran indices in C array*/
+index9(fb,idx);
+wb[idx[8] - 1] = 0.0;
 
 nt = 0;
 am = 0.0;
@@ -877,9 +895,53 @@ int        ma;
   return 0;
 }
 
-/*
-
-*/
+
+static int g2efunc2(int ndata, int npar, double *p, double *deviates,
+                    double **derivs, void *d)
+{
+    int i, j;
+    float * dyda = malloc(npar * sizeof(*dyda));
+    float fp[MA];
+    for (j = 0; j < MA; j++) {
+        fp[j] = p[j];
+    }
+
+    /* Compute function deviates */
+    for (i=0; i<ndata; i++) {
+        float z, err, val;
+        int st = g2efunc(i, &val, &z, &err, fp, dyda, npar);
+        if (st < 0) {
+            /* error */
+            free(dyda);
+            return st;
+        }
+        if (st > 0 || err == 0.) {
+            /* bad pixel */
+            deviates[i] = 0.;
+            if (derivs) {
+                int j;
+                for (j=0; j<npar; j++) {
+                    if (derivs[j]) {
+                        derivs[j][i] = 0.;
+                    }
+                }
+            }
+        }
+        else {
+            deviates[i] = (val - z) / err;
+            if (derivs) {
+                int j;
+                for (j=0; j<npar; j++) {
+                    if (derivs[j]) {
+                        derivs[j][i] = -dyda[j] / err;
+                    }
+                }
+            }
+        }
+    }
+    free(dyda);
+    return 0;
+}
 
 int g2efit(val, wght, nx, ny, ap, cv, pchi)
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -895,59 +957,44 @@ float      ap[MA];
 float      cv[MA];
 double     *pchi;
 {
-  int      mt, n, na, ni, lista[MA];
-  int      mrqmin();
-  float    apo[MA];
-  double   c2, a1, a2, pi, alpha[MA*MA], cvm[MA*MA];
+    int i;
+    int status;
+    double * a = malloc((MA) * sizeof(*a));
+    mp_par * pars = calloc(MA, sizeof(*pars));
+    mp_result result;
+
+    if (g2einit(val, wght, nx, ny)) return -1;
+
+    memset(&result, 0, sizeof(result));
+    for (i = 0; i < MA; i++) {
+        a[i] = ap[i];
+        pars[i].side = 3;
+    }
+    /* no negative sigma */
+    pars[2].limited[0] = 1;
+    pars[2].limits[0] = 0.;
+    pars[4].limited[0] = 1;
+    pars[4].limits[0] = 0.;
+
+    result.xerror = malloc(MA * sizeof(result.xerror[0]));
+
+    status = mpfit((mp_func)&g2efunc2, nx * ny, MA,
+                   a, pars, NULL, NULL, &result);
 
 
+    for (i = 0; i < MA; i++) {
+        ap[i] = a[i];
+        cv[i] = result.xerror[i];
+    }
+    ap[5] = fmod(ap[5], 4.0*atan(1.0));
+    *pchi = result.bestnorm;
 
-
-  if (g2einit(val, wght, nx, ny)) return -1;
-
-  pi = 4.0*atan(1.0);
-
-  a1 = -1.0;
-  mt = nx * ny;
-  for (n=0; n<MA; n++) { lista[n] = n; cv[n] = 0.0; }
-
-  *pchi = c2 = 0.0; a2 = 0.0; na = 0;
-
-  for (ni=0; ni<MITER; ni++) 
-     {
-     for (n=0; n<MA; n++) apo[n] = ap[n];
-
-     if (mrqmin(mt, ap, MA, lista, MA, cvm, alpha, pchi, g2efunc, &a1))
-       return -2;
-
-     if (a1<a2)
-        {
-        if (fabs(*pchi-c2)<1.0e-5*c2) goto after_loop;
-
-        c2 = *pchi;
-        na = 0; 
-        } 
-     else 
-        {
-        na++;
-        if (5<na) goto after_loop;
-        }
-     a2 = a1;
-
-     if (ap[0]<=0.0) ap[0] = 0.5 * apo[0];
-     if (ap[2]<=0.0) ap[2] = 0.5 * apo[2];
-     if (ap[4]<=0.0) ap[4] = 0.5 * apo[4];
-     ap[5] = fmod(ap[5], pi);
-     if (ap[1]<0.0 || nx<ap[1] || ap[3]<0.0 || ny<ap[3]) return -3;
-   }
-
-after_loop:
-  a1 = 0.0;
-  if (mrqmin(mt, ap, MA, lista, MA, cvm, alpha, pchi, g2efunc, &a1))
-    return -2;
-
-  ap[5] = fmod(ap[5]+pi, pi);
-  for (n=0; n<MA; n++) cv[n] = sqrt(cvm[n+n*MA]);
-
-  return ((MITER<=ni) ? -4 : ni);
+    free(a);
+    free(result.xerror);
+    free(pars);
+    
+    if (status <= 0) return -2;
+    if (ap[1]<0.0 || nx<ap[1] || ap[3]<0.0 || ny<ap[3]) return -3;
+    if (result.niter > MITER) return -4;
+    return result.niter;
 }
