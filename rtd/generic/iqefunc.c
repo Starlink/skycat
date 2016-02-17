@@ -1,5 +1,5 @@
 /*===========================================================================
-  Copyright (C) 1995 European Southern Observatory (ESO)
+  Copyright (C) 1995-2009 European Southern Observatory (ESO)
  
   This program is free software; you can redistribute it and/or 
   modify it under the terms of the GNU General Public License as 
@@ -26,7 +26,6 @@
 ===========================================================================*/
 
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-.COPYRIGHT  (c)  1996  European Southern Observatory
 .IDENT      iqefunc.c
 .LANGUAGE   C
 .AUTHOR     P.Grosbol,  IPG/ESO
@@ -38,13 +37,14 @@
 .VERSION    1.1  1995-Jun-22 : Correct derivatives in 'g2efunc', PJG
 .VERSION    1.2  1996-Dec-03 : Code clean-up, PJG
 
-000427
-
+ 090630		last modif
 ------------------------------------------------------------------------*/
 
 #include   <stdlib.h>                 /* Standard ANSI-C library        */
 #include   <math.h>                   /* Mathematical definitions       */
-#include   <stdlib.h>
+#include   <string.h>
+
+#include "mpfit.h"
 
 static double  hsq2 = 0.7071067811865475244;    /* constant 0.5*sqrt(2) */
 
@@ -137,6 +137,11 @@ return 0;
 
 */
 
+static int compar_float(const void *a1, const void *a2) {
+    return (*(const float *)a1 < *(const float *)a2)?-1:
+	(*(const float *)a1 > *(const float *)a2)?1:0;
+}
+
 int iqebgv(pfm, pwm, mx, my, bgm, bgs, nbg)
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 .PURPOSE   Estimate background level for subimage
@@ -150,12 +155,15 @@ float      *bgm;
 float      *bgs;
 int        *nbg;
 {
-  int      n, m, ns, ms, nt, mt;
-  float    *pfb, *pwb, *pf, *pw;
-  float    *pf0, *pf1, *pf2, *pf3, *pfs0, *pfs1, *pfs2, *pfs3;
-  float    *pw0, *pw1, *pw2, *pw3, *pws0, *pws1, *pws2, *pws3;
-  double   val, fks, ba, bm, bs;
-  void     hsort();
+int      n, m, ns, ms, nt, mt;
+
+float    *pfb, *pwb, *pf, *pw;
+float    *pf0, *pf1, *pf2, *pf3, *pfs0, *pfs1, *pfs2, *pfs3;
+float    *pw0, *pw1, *pw2, *pw3, *pws0, *pws1, *pws2, *pws3;
+
+double   val, fks, ba, bm, bs;
+
+pw0 = pw1 = pw2 = pw3 = pws0 = pws1 = pws2 = pws3 = (float *) 0;
 
   *bgm = 0.0;
   *bgs = 0.0;
@@ -224,7 +232,7 @@ int        *nbg;
      mt = nt;
      while (n--) *pw++ = 1.0;
    }
-  hsort(mt, pfb);
+  qsort(pfb, mt, sizeof(float), compar_float);
   nt = mt;
 
 /* first estimate of mean and rms   */
@@ -285,14 +293,20 @@ float      bgv;
 float      bgs;
 float      *amm;
 {
-int      n, nx, ny, nt, nxc, nyc, ndx, ndy, ioff;
+int      n, nx, ny, nt, nxc, nyc, ioff;
+int      ndx=0, ndy=0;
 int      k, ki, ks, kn, psize;
 int      estm9p();
+
 float    av, dx, dy;
 float    *pf, *pw;
+
 double   val, x, y, dv, xm, ym;
 double   am, ax, ay, axx, ayy, axy;
 
+
+
+pw = (float *) 0;
 dv = 5.0*bgs;
 xm = mx - 1.0;
 ym = my - 1.0;
@@ -432,6 +446,51 @@ amm[0] = pfm[nx+ny*mx] - bgv;
 return 0;
 }
  
+typedef struct {
+    float number;
+    int rank;
+} float_sort_s;
+
+static int compar_float_idx(const void *a1, const void *a2) {
+    float n1 = ((float_sort_s *)a1)->number;
+    float n2 = ((float_sort_s *)a2)->number;
+    return (n1 < n2)?-1:(n1 > n2)?1:0;
+}
+
+static void heapSortFloat(int array_size, float numbers[], int rank[]) {
+    int i;
+    float_sort_s *a = malloc(array_size * sizeof(float_sort_s));
+    for (i = 0; i < array_size; i++) {
+        a[i].number = numbers[i];
+        a[i].rank = i + 1;
+    }
+    qsort(a, array_size, sizeof(float_sort_s), compar_float_idx);
+    for (i = 0; i < array_size; i++) {
+        numbers[i] = a[i].number;
+        rank[i] = a[i].rank;
+    }
+    free(a);
+}
+
+void index9(arrin,indx)
+/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+.PURPOSE   compute indx[] so that arrin[indx[0..n[ - 1] is ascenting
+.RETURN    none
+----------------------------------------------------------------------*/
+float   arrin[];
+int     indx[];
+{
+
+  int   n=9; 
+  float b[9];
+ 
+  memcpy(b, arrin, n * sizeof(float));
+
+  heapSortFloat(n, b, indx); 
+
+}
+
+
 /*
 
 */
@@ -454,9 +513,6 @@ float      *dy;
 int      n, nt, ix, iy, idx[9];
 float    a, am;
 float    *pfb, *pwb, fb[9], wb[9];
-void     indexx();
-
-
 
 /* check if 3x3 region is fully within frame   */
 
@@ -496,12 +552,13 @@ else
       pfm += mx - 3;
       }
    }
-indexx(9, fb, idx);
 
 
 /* omit largest value and estimate mean     */
 
-wb[idx[8]] = 0.0;
+/* idx contains Fortran indices in C array*/
+index9(fb,idx);
+wb[idx[8] - 1] = 0.0;
 
 nt = 0;
 am = 0.0;
@@ -868,9 +925,53 @@ int        ma;
   return 0;
 }
 
-/*
-
-*/
+
+static int g2efunc2(int ndata, int npar, double *p, double *deviates,
+                    double **derivs, void *d)
+{
+    int i, j;
+    float * dyda = malloc(npar * sizeof(*dyda));
+    float fp[MA];
+    for (j = 0; j < MA; j++) {
+        fp[j] = p[j];
+    }
+
+    /* Compute function deviates */
+    for (i=0; i<ndata; i++) {
+        float z, err, val;
+        int st = g2efunc(i, &val, &z, &err, fp, dyda, npar);
+        if (st < 0) {
+            /* error */
+            free(dyda);
+            return st;
+        }
+        if (st > 0 || err == 0.) {
+            /* bad pixel */
+            deviates[i] = 0.;
+            if (derivs) {
+                int j;
+                for (j=0; j<npar; j++) {
+                    if (derivs[j]) {
+                        derivs[j][i] = 0.;
+                    }
+                }
+            }
+        }
+        else {
+            deviates[i] = (val - z) / err;
+            if (derivs) {
+                int j;
+                for (j=0; j<npar; j++) {
+                    if (derivs[j]) {
+                        derivs[j][i] = -dyda[j] / err;
+                    }
+                }
+            }
+        }
+    }
+    free(dyda);
+    return 0;
+}
 
 int g2efit(val, wght, nx, ny, ap, cv, pchi)
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -886,43 +987,44 @@ float      ap[MA];
 float      cv[MA];
 double     *pchi;
 {
-  int      mt, n, na, ni, lista[MA];
-  int      mrqmin();
-  float    apo[MA];
-  double   c2, a1, a2, pi, alpha[MA*MA], cvm[MA*MA];
+    int i;
+    int status;
+    double * a = malloc((MA) * sizeof(*a));
+    mp_par * pars = calloc(MA, sizeof(*pars));
+    mp_result result;
+
+    if (g2einit(val, wght, nx, ny)) return -1;
+
+    memset(&result, 0, sizeof(result));
+    for (i = 0; i < MA; i++) {
+        a[i] = ap[i];
+        pars[i].side = 3;
+    }
+    /* no negative sigma */
+    pars[2].limited[0] = 1;
+    pars[2].limits[0] = 0.;
+    pars[4].limited[0] = 1;
+    pars[4].limits[0] = 0.;
+
+    result.xerror = malloc(MA * sizeof(result.xerror[0]));
+
+    status = mpfit((mp_func)&g2efunc2, nx * ny, MA,
+                   a, pars, NULL, NULL, &result);
 
 
+    for (i = 0; i < MA; i++) {
+        ap[i] = a[i];
+        cv[i] = result.xerror[i];
+    }
+    ap[5] = fmod(ap[5], 4.0*atan(1.0));
+    *pchi = result.bestnorm;
 
-  if (g2einit(val, wght, nx, ny)) return -1;
-
-  pi = 4.0*atan(1.0);
-  a1 = -1.0;
-  mt = nx * ny;
-  for (n=0; n<MA; n++) { lista[n] = n; cv[n] = 0.0; }
-
-  *pchi = c2 = 0.0; a2 = 0.0; na = 0;
-  for (ni=0; ni<MITER; ni++) {
-     for (n=0; n<MA; n++) apo[n] = ap[n];
-     if (mrqmin(mt, ap, MA, lista, MA, cvm, alpha, pchi, g2efunc, &a1))
-       return -2;
-     if (a1<a2 && fabs(*pchi-c2)<1.0e-5*c2) break;
-     if (a1<a2) { c2 = *pchi; na = 0; } else na++;
-     a2 = a1;
-     if (5<na) break;
-     if (ap[0]<=0.0) ap[0] = 0.5 * apo[0];
-     if (ap[2]<=0.0) ap[2] = 0.5 * apo[2];
-     if (ap[4]<=0.0) ap[4] = 0.5 * apo[4];
-     ap[5] = fmod(ap[5], pi);
-     if (ap[1]<0.0 || nx<ap[1] || ap[3]<0.0 || ny<ap[3]) return -3;
-   }
-
-  a1 = 0.0;
-  if (mrqmin(mt, ap, MA, lista, MA, cvm, alpha, pchi, g2efunc, &a1))
-    return -2;
-
-  ap[5] = fmod(ap[5]+pi, pi);
-  for (n=0; n<MA; n++) cv[n] = sqrt(cvm[n+n*MA]);
-
-  return ((MITER<=ni) ? -4 : ni);
+    free(a);
+    free(result.xerror);
+    free(pars);
+    
+    if (status <= 0) return -2;
+    if (ap[1]<0.0 || nx<ap[1] || ap[3]<0.0 || ny<ap[3]) return -3;
+    if (result.niter > MITER) return -4;
+    return result.niter;
 }
-
