@@ -14,6 +14,9 @@
 # Allan Brighton  01 Jun 95  Created
 # Peter Biereichel 22/07/97  Added statistics
 # Peter W. Draper  24/04/03  Added high-lighting for maximum and minimums
+#                  30/10/17  Change RMS label to Std, the calculation is
+#                            sqrt(sumsq/N - meansq**2), so not the RMS.
+#                            Leaving the internals alone.
 
 itk::usual RtdImagePixTable {}
 
@@ -144,14 +147,19 @@ itcl::class rtd::RtdImagePixTable {
 	pack $sf -side top -fill both -expand 1 -before $itk_component(buttons)
 	set col 0
 	set row 1
-	foreach el {Min Max Ave RMS N} {
+	foreach el {Min Max Ave Std N} {
 	    set lel [string tolower $el]
+	    set uel [string toupper $el]
+            if {$uel == "STD"} {
+               #  Don't ask.
+               set uel "RMS"
+            }
 	    # LabelValue(n) widgets: pixtab_Min, pixtab_Max, pixtab_Ave, 
 	    # pixtab_RMS, pixtab_N
 	    itk_component add pixtab_$lel {
 		util::LabelValue $sf.$lel \
 		    -text "$el:" \
-		    -textvariable ${var}(PIXTAB_[string toupper $el]) \
+                    -textvariable ${var}(PIXTAB_${uel}) \
 		    -labelfont $itk_option(-labelfont) \
 		    -valuefont $itk_option(-valuefont) \
 		    -labelwidth $itk_option(-labelwidth) \
@@ -174,9 +182,9 @@ itcl::class rtd::RtdImagePixTable {
            -foreground $itk_option(-minhighlight)
 
 	add_short_help $itk_component(pixtab_min) {Min: Shows the min value of the pixel table}
-	add_short_help $itk_component(pixtab_max) {Min: Shows the max value of the pixel table}
-	add_short_help $itk_component(pixtab_ave) {Min: Shows the average value of the pixel table}
-	add_short_help $itk_component(pixtab_rms) {Min: Shows the RMS value of the pixel table}
+	add_short_help $itk_component(pixtab_max) {Max: Shows the max value of the pixel table}
+	add_short_help $itk_component(pixtab_ave) {Ave: Shows the average value of the pixel table}
+	add_short_help $itk_component(pixtab_rms) {Std: Shows the Standard deviation of the pixel table}
 	add_short_help $itk_component(pixtab_n) {N: Shows the number of pixels in the pixel table}
     }
 
