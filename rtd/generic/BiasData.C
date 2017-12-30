@@ -76,7 +76,7 @@ int BiasData::off()
 char* BiasData::file(int nr)
 {
     if (nr < 0 || nr >=MAXBIAS)
-	return '\0';
+	return 0;
     return &files_[nr][0];
 }
 

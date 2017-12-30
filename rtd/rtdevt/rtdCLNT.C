@@ -132,7 +132,7 @@ void rtdCLNT::Detach()
 
 int rtdCLNT::AttachedToCamera(char *camera)
 {
-    if (ReqName() == '\0')
+    if (ReqName() == 0)
 	return RTD_ERROR;  // not attached to any requestor
     if (strcmp(camera, CamName()) == 0)
 	return RTD_OK;     // that's it !

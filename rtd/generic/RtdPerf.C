@@ -226,18 +226,18 @@ void RtdPerf::reset()
     accGENtime_    = accTCLtime_ = accXtime_ = accFREQtime_ = 0.0;
 
     // Clear the Tcl variables.
-    Tcl_SetVar2(interp_, var, "PERF_COUNT",     '\0', TCL_GLOBAL_ONLY);
+    Tcl_SetVar2(interp_, var, "PERF_COUNT",     0, TCL_GLOBAL_ONLY);
 
-    Tcl_SetVar2(interp_, var, "PERF_FREQ",      '\0', TCL_GLOBAL_ONLY);
-    Tcl_SetVar2(interp_, var, "PERF_GEN",       '\0', TCL_GLOBAL_ONLY);
-    Tcl_SetVar2(interp_, var, "PERF_XFUNC",     '\0', TCL_GLOBAL_ONLY);
-    Tcl_SetVar2(interp_, var, "PERF_TCL",       '\0', TCL_GLOBAL_ONLY);
-    Tcl_SetVar2(interp_, var, "PERF_TOTAL",     '\0', TCL_GLOBAL_ONLY);
+    Tcl_SetVar2(interp_, var, "PERF_FREQ",      0, TCL_GLOBAL_ONLY);
+    Tcl_SetVar2(interp_, var, "PERF_GEN",       0, TCL_GLOBAL_ONLY);
+    Tcl_SetVar2(interp_, var, "PERF_XFUNC",     0, TCL_GLOBAL_ONLY);
+    Tcl_SetVar2(interp_, var, "PERF_TCL",       0, TCL_GLOBAL_ONLY);
+    Tcl_SetVar2(interp_, var, "PERF_TOTAL",     0, TCL_GLOBAL_ONLY);
 
-    Tcl_SetVar2(interp_, var, "PERF_FREQ_AVE",  '\0', TCL_GLOBAL_ONLY);
-    Tcl_SetVar2(interp_, var, "PERF_GEN_AVE",   '\0', TCL_GLOBAL_ONLY);
-    Tcl_SetVar2(interp_, var, "PERF_XFUNC_AVE", '\0', TCL_GLOBAL_ONLY);
-    Tcl_SetVar2(interp_, var, "PERF_TCL_AVE",   '\0', TCL_GLOBAL_ONLY);
-    Tcl_SetVar2(interp_, var, "PERF_TOTAL_AVE", '\0', TCL_GLOBAL_ONLY);
+    Tcl_SetVar2(interp_, var, "PERF_FREQ_AVE",  0, TCL_GLOBAL_ONLY);
+    Tcl_SetVar2(interp_, var, "PERF_GEN_AVE",   0, TCL_GLOBAL_ONLY);
+    Tcl_SetVar2(interp_, var, "PERF_XFUNC_AVE", 0, TCL_GLOBAL_ONLY);
+    Tcl_SetVar2(interp_, var, "PERF_TCL_AVE",   0, TCL_GLOBAL_ONLY);
+    Tcl_SetVar2(interp_, var, "PERF_TOTAL_AVE", 0, TCL_GLOBAL_ONLY);
 }
 
