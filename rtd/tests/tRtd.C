@@ -87,7 +87,7 @@ static rtdShm shmMain;
 static rtdShm shmRapid;
 
 // the "big" data buffer
-static char data[MAX_NX * MAX_NY * 4];
+static char bigdata[MAX_NX * MAX_NY * 4];
 
 /* 
  * Main:
@@ -119,12 +119,12 @@ main(int argc, char** argv)
     signal(SIGHUP,  cleanup);
 
     // create the object which handles the main image
-    mainObj = new tRtdEvt((char *)"Main", &shmMain, (char *)&data, &opt, 
+    mainObj = new tRtdEvt((char *)"Main", &shmMain, (char *)&bigdata, &opt, 
 			  opt.main_width, opt.main_height, 0);
 
     // create the object which handles the rapid frame
     if (opt.rapid_id != 0 && ! opt.useFits)
-	rapidObj = new tRtdEvt((char *)"Rapid", &shmRapid, (char *)&data, &opt, 
+	rapidObj = new tRtdEvt((char *)"Rapid", &shmRapid, (char *)&bigdata, &opt, 
 			       opt.rapid_width, opt.rapid_height, opt.rapid_id);
 
     // Loop until tRtdEvt gets aborted by the user

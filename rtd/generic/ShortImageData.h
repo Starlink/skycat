@@ -45,7 +45,7 @@ private:
     }
 
     // return X image pixel value for raw image value
-    byte lookup(short s) {
+    BYTE lookup(short s) {
         return lookup_[convertToUshort(s)];
     }
     unsigned long llookup(short s) {

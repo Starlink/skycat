@@ -22,7 +22,7 @@
 #include <cstring>
 #include <cstdlib>
 
-typedef unsigned char byte;
+typedef unsigned char BYTE;
 
 
 /* 

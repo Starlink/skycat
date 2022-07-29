@@ -110,7 +110,7 @@ inline DATA_TYPE CLASS_NAME::getVal(DATA_TYPE* p, int idx)
 	switch (bias->type) {
 	case BYTE_IMAGE:
 	case X_IMAGE:
-	    return (DATA_TYPE)NTOH(*(p + idx)) - (DATA_TYPE)((byte)(*((byte *)bias->ptr     + biasIdx)));
+	    return (DATA_TYPE)NTOH(*(p + idx)) - (DATA_TYPE)((BYTE)(*((BYTE *)bias->ptr     + biasIdx)));
 	case USHORT_IMAGE:
 	    return (DATA_TYPE)NTOH(*(p + idx)) - (DATA_TYPE)((ushort)(*((ushort *)bias->ptr + biasIdx)));
 	case SHORT_IMAGE:
@@ -143,7 +143,7 @@ inline DATA_TYPE CLASS_NAME::getVal(DATA_TYPE* p, int idx)
 	switch (bias->type) {
 	case BYTE_IMAGE:
 	case X_IMAGE:
-	    return (DATA_TYPE)NTOH(*(p + idx)) - (DATA_TYPE)((byte)(*((byte *)bias->ptr             + biasIdx)));
+	    return (DATA_TYPE)NTOH(*(p + idx)) - (DATA_TYPE)((BYTE)(*((BYTE *)bias->ptr             + biasIdx)));
 	case USHORT_IMAGE:
 	    return (DATA_TYPE)NTOH(*(p + idx)) - (DATA_TYPE)((ushort)SWAP16(*((ushort *)bias->ptr   + biasIdx)));
 	case SHORT_IMAGE:
@@ -544,7 +544,7 @@ void CLASS_NAME::rawToXImage(int x0, int y0, int x1, int y1,
     // source/dest images
     register DATA_TYPE* rawImage = (DATA_TYPE*)image_.dataPtr();
     register int src;
-    register byte* dest = xImageData_;
+    register BYTE* dest = xImageData_;
 
     initGetVal();  // init flag for speeding up bias subtraction
 
@@ -637,8 +637,8 @@ void CLASS_NAME::rawToXImage(int x0, int y0, int x1, int y1,
 void CLASS_NAME::grow(int x0, int y0, int x1, int y1,
 		      int dest_x, int dest_y)
 {
-    register byte *p, *q;
-    register byte c;
+    register BYTE *p, *q;
+    register BYTE c;
     register int i, j, n, m;
     register int xs = xScale_, ys = yScale_;
 
@@ -649,8 +649,8 @@ void CLASS_NAME::grow(int x0, int y0, int x1, int y1,
     // source/dest images
     register DATA_TYPE* rawImage = (DATA_TYPE*)image_.dataPtr();
     register int src;
-    register byte* dest = xImageData_;
-    register byte* end = xImageData_ + xImageSize_;
+    register BYTE* dest = xImageData_;
+    register BYTE* end = xImageData_ + xImageSize_;
 
     initGetVal();  // init flag for speeding up bias subtraction
 
@@ -1141,8 +1141,8 @@ void CLASS_NAME::shrink(int x0, int y0, int x1, int y1, int dest_x, int dest_y)
     // source/dest images
     DATA_TYPE* rawImage = (DATA_TYPE*)image_.dataPtr();
     int src;
-    byte* dest = xImageData_;
-    byte* end = xImageData_ + xImageSize_ - 1;
+    BYTE* dest = xImageData_;
+    BYTE* end = xImageData_ + xImageSize_ - 1;
 
     DATA_TYPE maxval = 0;
 

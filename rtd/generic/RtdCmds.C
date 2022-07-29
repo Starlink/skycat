@@ -419,7 +419,7 @@ int RtdImage::biasimageCmd(int argc, char* argv[])
 /*
  * Implement the "bitpix" subcommand - returns the
  * BITPIX field of the image header to indicate the
- * type of the image (8 - byte, 16 = short, etc).
+ * type of the image (8 - UBYTE, 16 = short, etc).
  */
 int RtdImage::bitpixCmd(int argc, char* argv[])
 {
@@ -2998,7 +2998,7 @@ int RtdImage::typeCmd(int argc, char* argv[])
     case LONG_IMAGE:
 	return set_result("long");
     case BYTE_IMAGE:
-	return set_result("byte");
+	return set_result("BYTE");
     case X_IMAGE:
 	return set_result("XImage");
     default:

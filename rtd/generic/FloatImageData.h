@@ -44,7 +44,7 @@ private:
     // Convert the given float image value to byte, scaling to short
     // first and then using the short value as an index in the color
     // lookup table.
-    inline byte lookup(float f) {return lookup_[(ushort)scaleToShort(f)];}
+    inline BYTE lookup(float f) {return lookup_[(ushort)scaleToShort(f)];}
     inline unsigned long llookup(float f) {return lookup_[(ushort)scaleToShort(f)];}
 
     // return NTOH converted value evtl. subtracted with corresponding bias value

@@ -310,7 +310,7 @@ int RtdCamera::updateGlobals()
 
 int RtdCamera::checkType(int type)
 {
-    if (type == BYTE || type == XIMAGE || type == SHORT  || type == USHORT || 
+    if (type == UBYTE || type == XIMAGE || type == SHORT  || type == USHORT || 
         type == INT  || type == FLOAT  || type == DOUBLE || type == LONG64)
         return RTD_OK;
     return RTD_ERROR;

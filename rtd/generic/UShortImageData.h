@@ -37,7 +37,7 @@ private:
     ushort convertToUshort(int l);
 
     // return X image pixel value for raw image value
-    inline byte lookup(ushort s) {
+    inline BYTE lookup(ushort s) {
         return lookup_[convertToUshort(s)];
     }
     inline unsigned long llookup(ushort s) {

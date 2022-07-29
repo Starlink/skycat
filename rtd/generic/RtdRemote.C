@@ -440,7 +440,7 @@ int RtdRemote::clientEvent(Client* clientPtr)
 
 #ifdef DEBUG
     if (verbose_)
-	printf("RtdRemote: Bytes readable: %d\n",readable);
+	printf("RtdRemote: bytes readable: %d\n",readable);
 #endif
 
     if (readable <= 0) {

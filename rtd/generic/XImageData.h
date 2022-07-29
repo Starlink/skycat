@@ -24,40 +24,40 @@
 
 
 
-// This class is used for images where the raw data is made up of bytes
+// This class is used for images where the raw data is made up of bytes.
 
 class XImageData : public ImageData {
 private:
     // value of blank pixel, if known (if haveBlankPixel_ is nonzero)
-    byte blank_;
+    BYTE blank_;
 
     // get value as unsigned short
-    inline ushort convertToUshort(byte b) {
+    inline ushort convertToUshort(BYTE b) {
 	return (ushort)b;
     }
 
 
     // return X image pixel value for raw image value
-    inline byte lookup(byte b) {
+    inline BYTE lookup(BYTE b) {
 	if ( !haveBlank_ ) return b;
 	if ( b != blank_ ) return b;
 	return blank_;
     } 
-    inline unsigned long llookup(byte b) {
+    inline unsigned long llookup(BYTE b) {
 	if ( !haveBlank_ ) return b;
 	if ( b != blank_ ) return b;
 	return blank_;
     }
 
     // return NTOH converted value evtl. subtracted with corresponding bias value
-    byte getVal(byte* p, int idx);
+    BYTE getVal(BYTE* p, int idx);
 
-    int getXsamples(byte *rawImage, int idx, int wbox, byte *samples);
-    int getBsamples(byte *rawImage, int idx, int wbox, byte *samples);
-    int getCsamples(byte *rawImage, int idx, int wbox, byte *samples);
-    byte getMedian(byte *samples, int n);
-    byte getBoxVal(byte *rawImage, int idx, int wbox, byte *samples, int xs);
-    byte getRMS(byte *samples, int n);
+    int getXsamples(BYTE *rawImage, int idx, int wbox, BYTE *samples);
+    int getBsamples(BYTE *rawImage, int idx, int wbox, BYTE *samples);
+    int getCsamples(BYTE *rawImage, int idx, int wbox, BYTE *samples);
+    BYTE getMedian(BYTE *samples, int n);
+    BYTE getBoxVal(BYTE *rawImage, int idx, int wbox, BYTE *samples, int xs);
+    BYTE getRMS(BYTE *samples, int n);
 
 protected:
     // no conversion necessary

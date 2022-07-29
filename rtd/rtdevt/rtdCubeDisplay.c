@@ -245,7 +245,7 @@ main(int argc, char *argv[])
     switch (type)
     {
     case 8:
-        shmImageType = BYTE;
+        shmImageType = UBYTE;
         typeSize = 1; break;
     case -16:
         shmImageType = USHORT;

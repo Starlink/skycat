@@ -54,7 +54,7 @@
 #define isnan(x) ((x) != (x))
 #endif
 
-typedef unsigned char byte;	// type of XImage data (no longer ...)
+typedef unsigned char BYTE;	// type of XImage data (no longer ...)
 struct ImageDataParams;		// forward ref
 struct ImageDataHistogram;      // forward ref
 
@@ -111,7 +111,7 @@ protected:
 
     // pointers to the caller's XImage and data, which this class writes to
     ImageDisplay* xImage_;
-    byte* xImageData_;
+    BYTE* xImageData_;
 
     // this represents the contents of the image file or other source
     // (uses reference counting so we can share this with other views)

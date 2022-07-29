@@ -33,31 +33,31 @@ private:
     long blank_;
 
     // get value as unsigned short
-    inline ushort convertToUshort(byte b) {
+    inline ushort convertToUshort(BYTE b) {
 	return (ushort)b;
     }
 
     // return X image pixel value for raw image value
-    inline byte lookup(byte b) {
+    inline BYTE lookup(BYTE b) {
 	if ( !haveBlank_ ) return lookup_[(ushort)b];
 	if ( b != blank_ ) return lookup_[(ushort)b];
 	return lookup_[128];
     } 
-    inline unsigned long llookup(byte b) {
+    inline unsigned long llookup(BYTE b) {
 	if ( !haveBlank_ ) return lookup_[(ushort)b];
 	if ( b != blank_ ) return lookup_[(ushort)b];
 	return lookup_[128];
     }
 
     // return NTOH converted value evtl. subtracted with corresponding bias value
-    byte getVal(byte* p, int idx);
+    BYTE getVal(BYTE* p, int idx);
 
-    int getXsamples(byte *rawImage, int idx, int wbox, byte *samples);
-    int getBsamples(byte *rawImage, int idx, int wbox, byte *samples);
-    int getCsamples(byte *rawImage, int idx, int wbox, byte *samples);
-    byte getMedian(byte *samples, int n);
-    byte getBoxVal(byte *rawImage, int idx, int wbox, byte *samples, int xs);
-    byte getRMS(byte *samples, int n);
+    int getXsamples(BYTE *rawImage, int idx, int wbox, BYTE *samples);
+    int getBsamples(BYTE *rawImage, int idx, int wbox, BYTE *samples);
+    int getCsamples(BYTE *rawImage, int idx, int wbox, BYTE *samples);
+    BYTE getMedian(BYTE *samples, int n);
+    BYTE getBoxVal(BYTE *rawImage, int idx, int wbox, BYTE *samples, int xs);
+    BYTE getRMS(BYTE *samples, int n);
 
 protected:
     // convert cut values to short range

@@ -64,7 +64,7 @@ int ByteImageData::parseBlank(const char* value) {
  * except that they work on a different raw data type
  */
 #define CLASS_NAME ByteImageData
-#define DATA_TYPE byte
+#define DATA_TYPE BYTE
 #define NTOH(x) (x)
 #include "ImageTemplates.icc"
 #undef CLASS_NAME

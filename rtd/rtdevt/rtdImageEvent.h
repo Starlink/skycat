@@ -81,7 +81,7 @@ extern "C" {
  * Image types (also corresponds to FITS BITPIX field)
  */
     typedef enum rtdIMAGE_TYPE {
-	BYTE = 		8, 	/* 8 bit images */ 
+	UBYTE = 		8, 	/* 8 bit images */ 
 	XIMAGE = 	-8, 	/* prescaled ximage */
 	SHORT = 	16, 	/* 16 bit signed */ 
 	USHORT = 	-16, 	/* 16 bit unsigned */ 
@@ -97,7 +97,7 @@ extern "C" {
     typedef struct {
 	char 	version;	/* protocol version (filled by rtdSendImageInfo) */
 	char 	frameId;	/* Frame Id */
-	char 	dataType; 	/* BYTE, SHORT, FLOAT etc. */
+	char 	dataType; 	/* UBYTE, SHORT, FLOAT etc. */
 	char 	bytePerPixel; 	/* No. of bytes used per pixel */
 	int 	shmId; 		/* ID for the shared memory block */
 	short 	frameX; 	/* X Coord. for upper left corner */

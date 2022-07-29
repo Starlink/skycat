@@ -51,7 +51,7 @@ private:
     }
 
     // return X image pixel value for raw image value
-    inline byte lookup(FITS_LONG l) {
+    inline BYTE lookup(FITS_LONG l) {
 	return lookup_[convertToUshort(l)];
     }
     inline unsigned long llookup(FITS_LONG l) {

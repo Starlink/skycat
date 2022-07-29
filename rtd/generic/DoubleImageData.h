@@ -40,7 +40,7 @@ private:
     // Convert the given double image value to byte, scaling to short
     // first and then using the short value as an index in the color
     // lookup table.
-    inline byte lookup( double f ) {
+    inline BYTE lookup( double f ) {
         return lookup_[(ushort)scaleToShort(f)];
     }
     inline unsigned long llookup( double f ) {
