@@ -173,15 +173,15 @@ itcl::class util::LabelEntryScale {
     #  Add a binding to all widgets related to scale. If a binding exists
     #  already this one will be appended to it.
     public method bindscale {sequence script} {
-       bind $itk_component(scale) $sequence +"$script"
-       bind $itk_component(left) $sequence +"$script"
-       bind $itk_component(right) $sequence +"$script"
+       bind $itk_component(scale) $sequence +[list {*}$script]
+       bind $itk_component(left) $sequence +[list {*}$script]
+       bind $itk_component(right) $sequence +[list {*}$script]
     }
 
     #  Add a binding to all widgets related to entry field. If a binding
     #  exists already this one will be appended to it.
     public method bindentry {sequence script} {
-       bind $itk_component(entry) $sequence +"$script"
+       bind $itk_component(entry) $sequence +[list {*}$script]
     }
 
     
