@@ -795,9 +795,9 @@ itcl::class skycat::SkySearch {
     itk_option define -id id Id "" {
 	# in SkyCat.tcl, we passed the name of the SkyCatCtrl Itcl image widget as -id.
 	set skycat_ $itk_option(-id)
-	set canvas_ [$skycat_ get_canvas]
-	set image_ [$skycat_ get_image]
-	set draw_ [$skycat_ component draw]
+	set canvas_ [{*}$skycat_ get_canvas]
+	set image_ [{*}$skycat_ get_image]
+	set draw_ [{*}$skycat_ component draw]
     }
 
     # font used in canvas to mark objects
