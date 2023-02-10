@@ -396,7 +396,7 @@ itcl::class skycat::SkyCat {
 		 -width 6i \
 		 -justify center \
 		 -borderwidth 2 -relief groove] \
-	    [ProgressBar $w.progress \
+	    [util::ProgressBar $w.progress \
 		 -from 0 -to 10 -value 0 \
 		 -borderwidth 2 -relief groove] \
 	    -side top -fill x -padx 1m -pady 2m

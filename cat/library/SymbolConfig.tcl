@@ -86,7 +86,7 @@ itcl::class cat::SymbolConfig {
 	$right_ set_contents $columns
 	
 	pack \
-	    [set symbol_ [LabelMenu $f.symbol \
+	    [set symbol_ [util::LabelMenu $f.symbol \
 			   -text "Symbol:" \
 			   -relief raised \
 			   -borderwidth 3 \
@@ -94,7 +94,7 @@ itcl::class cat::SymbolConfig {
 			   -anchor $itk_option(-anchor) \
 			   -valuefont $itk_option(-valuefont) \
 			   -labelfont $itk_option(-labelfont)]] \
-	    [set color_ [LabelMenu $f.color \
+	    [set color_ [util::LabelMenu $f.color \
 			   -text "Color:" \
 			   -relief raised \
 			   -borderwidth 3 \
@@ -102,7 +102,7 @@ itcl::class cat::SymbolConfig {
 			   -anchor $itk_option(-anchor) \
 			   -valuefont $itk_option(-valuefont) \
 			   -labelfont $itk_option(-labelfont)]] \
-	    [set ratio_ [LabelEntry $f.ratio \
+	    [set ratio_ [util::LabelEntry $f.ratio \
 			   -text "Ratio:" \
 			   -state disabled \
 			    -command [code $this apply] \
@@ -110,7 +110,7 @@ itcl::class cat::SymbolConfig {
 			   -anchor $itk_option(-anchor) \
 			   -valuefont $itk_option(-valuefont) \
 			   -labelfont $itk_option(-labelfont)]] \
-	    [set angle_ [LabelEntry $f.angle \
+	    [set angle_ [util::LabelEntry $f.angle \
 			   -text "Angle:" \
 			   -state disabled \
 			   -command [code $this apply] \
@@ -118,28 +118,28 @@ itcl::class cat::SymbolConfig {
 			   -anchor $itk_option(-anchor) \
 			   -valuefont $itk_option(-valuefont) \
 			   -labelfont $itk_option(-labelfont)]] \
-	    [set label_ [LabelEntry $f.label \
+	    [set label_ [util::LabelEntry $f.label \
 			   -text "Label:" \
 			   -labelwidth $itk_option(-labelwidth) \
 			   -command [code $this apply] \
 			   -anchor $itk_option(-anchor) \
 			   -valuefont $itk_option(-valuefont) \
 			   -labelfont $itk_option(-labelfont)]] \
-	    [set cond_  [LabelEntry $f.cond \
+	    [set cond_  [util::LabelEntry $f.cond \
 			   -text "Condition:" \
 			   -labelwidth $itk_option(-labelwidth) \
 			   -command [code $this apply] \
 			   -anchor $itk_option(-anchor) \
 			   -valuefont $itk_option(-valuefont) \
 			   -labelfont $itk_option(-labelfont)]] \
-	    [set size_ [LabelEntry $f.size \
+	    [set size_ [util::LabelEntry $f.size \
 			   -text "Size:" \
 			   -labelwidth $itk_option(-labelwidth) \
 			   -command [code $this apply] \
 			   -anchor $itk_option(-anchor) \
 			   -valuefont $itk_option(-valuefont) \
 			   -labelfont $itk_option(-labelfont)]] \
-	    [set units_ [LabelMenu $f.units \
+	    [set units_ [util::LabelMenu $f.units \
 			   -text "Units:" \
 			   -relief raised \
 			   -borderwidth 3 \

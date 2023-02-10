@@ -134,7 +134,7 @@ itcl::class rtd::RtdImageFitsHeader {
 	}
 	
 	itk_component add search {
-	    LabelEntry $itk_component(buttons).search \
+	    util::LabelEntry $itk_component(buttons).search \
 		    -text Search -valuewidth 10 \
 		    -command [code $this search]
 	}

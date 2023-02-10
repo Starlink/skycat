@@ -71,7 +71,7 @@ itcl::class rtd::tRtd {
 	    set wdg $optf.tRtd$opt
 	    set var ${rtdimage_}(tRtd$opt)
 	    itk_component add $opt {
-		LabelValue $wdg \
+		util::LabelValue $wdg \
 			-textvariable $var \
 			-text $text \
 			-relief groove \

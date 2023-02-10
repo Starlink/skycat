@@ -90,7 +90,7 @@ itcl::class cat::AstroCat {
 	make_short_help
 
 	# create an object for running interruptable batch queries
-	Batch $w_.batch \
+	util::Batch $w_.batch \
 	    -command [code $this preview_done] \
 	    -debug $itk_option(-debug)
 
@@ -1013,7 +1013,7 @@ itcl::class cat::AstroCat {
 
     protected method add_progress_bar {} {
 	# add a progress bar at the botton
-	pack [ProgressBar $w_.progress] \
+	pack [util::ProgressBar $w_.progress] \
 	    -side top -fill x
     }
     

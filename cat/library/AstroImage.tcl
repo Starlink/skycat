@@ -50,7 +50,7 @@ itcl::class cat::AstroImage {
 	make_short_help
 
 	# create an object for running interruptable batch image requests
-	Batch $w_.batch \
+	util::Batch $w_.batch \
 	    -command [code $this request_done] \
 	    -debug $itk_option(-debug)
 
@@ -186,7 +186,7 @@ itcl::class cat::AstroImage {
 	blt::blttable $f
 
 	blt::blttable $f \
-	    [set name_ [LabelEntry $f.name \
+	    [set name_ [util::LabelEntry $f.name \
 		 -text "Object Name:" \
 		 -command [code $this getimage] \
 		 -labelwidth $itk_option(-labelwidth) \
@@ -195,7 +195,7 @@ itcl::class cat::AstroImage {
 		 -valuefont $itk_option(-valuefont) \
 		 -labelfont $itk_option(-labelfont)]] \
 	    0,0 -fill x -pady 1m \
-	    [set equinox_ [LabelEntry $f.equinox \
+	    [set equinox_ [util::LabelEntry $f.equinox \
 		 -text "Equinox:" \
 		 -autoselect 1 \
 		 -value "J2000" \
@@ -206,7 +206,7 @@ itcl::class cat::AstroImage {
 		 -valuefont $itk_option(-valuefont) \
 		 -labelfont $itk_option(-labelfont)]] \
 	    0,1 -fill x -pady 1m \
-	    [set ra_ [LabelEntry $f.ra \
+	    [set ra_ [util::LabelEntry $f.ra \
 		 -text "a:" \
 		 -autoselect 1 \
 		 -command [code $this getimage] \
@@ -216,7 +216,7 @@ itcl::class cat::AstroImage {
 		 -valuefont $itk_option(-valuefont) \
 		 -labelfont $itk_option(-wcsfont)]] \
 	    1,0 -fill x -pady 1m \
-	    [set dec_ [LabelEntry $f.dec \
+	    [set dec_ [util::LabelEntry $f.dec \
 		 -text "d:" \
 		 -autoselect 1 \
 		 -command [code $this getimage] \
@@ -226,7 +226,7 @@ itcl::class cat::AstroImage {
 		 -valuefont $itk_option(-valuefont) \
 		 -labelfont $itk_option(-wcsfont)]] \
 	    1,1 -fill x -pady 1m \
-	    [set width_ [LabelEntry $f.width \
+	    [set width_ [util::LabelEntry $f.width \
 		 -text "Width in" \
 		 -command [code $this getimage] \
 		 -labelwidth [expr $itk_option(-labelwidth)-3] \
@@ -235,7 +235,7 @@ itcl::class cat::AstroImage {
 		 -valuefont $itk_option(-valuefont) \
 		 -labelfont $itk_option(-labelfont)]] \
 	    2,0 -fill x -pady 1m \
-	    [set height_ [LabelEntry $f.height \
+	    [set height_ [util::LabelEntry $f.height \
 		 -text "Height in" \
 		 -command [code $this getimage] \
 		 -labelwidth [expr $itk_option(-labelwidth)-3] \
@@ -246,7 +246,7 @@ itcl::class cat::AstroImage {
 	    2,1 -fill x -pady 1m \
 	    [set setf [frame $f.setf]] \
 	    3,1 -anchor e -fill x -pady 1m \
-	    [set copyright_ [LabelValue $f.copyright \
+	    [set copyright_ [util::LabelValue $f.copyright \
 		 -anchor w -relief flat \
 		 -labelwidth 0 -valuewidth 0 \
 		 -valuefont $itk_option(-labelfont)]] \
@@ -308,7 +308,7 @@ itcl::class cat::AstroImage {
 
 	# ProgressBar(n) widget, to display the progress of a query
 	itk_component add progress {
-	    ProgressBar $w_.progress
+	    util::ProgressBar $w_.progress
 	}
 	pack $itk_component(progress) -side bottom -fill x
     }

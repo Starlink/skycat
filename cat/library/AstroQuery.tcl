@@ -42,7 +42,7 @@ itcl::class cat::AstroQuery {
 	set_short_help
 
 	# create an object for running interruptable batch queries
-	Batch $w_.batch \
+	util::Batch $w_.batch \
 	    -command [code $this query_done] \
 	    -debug $itk_option(-debug)
 
@@ -95,7 +95,7 @@ itcl::class cat::AstroQuery {
 	    
 	    add_search_option \
 		[set name_ \
-		     [LabelEntry $f.name \
+		     [util::LabelEntry $f.name \
 			  -text "Object Name:" \
 			  -command $itk_option(-searchcommand) \
 			  -labelwidth $itk_option(-labelwidth) \
@@ -103,7 +103,7 @@ itcl::class cat::AstroQuery {
 			  -valuefont $itk_option(-valuefont) \
 			  -labelfont $itk_option(-labelfont)]] \
 		[set equinox_ \
-		     [LabelEntry $f.equinox \
+		     [util::LabelEntry $f.equinox \
 			  -text "Equinox:" \
 			  -value "J2000" \
 			  -autoselect 1 \
@@ -115,7 +115,7 @@ itcl::class cat::AstroQuery {
 
 	    add_search_option \
 		[set ra_ \
-		     [LabelEntry $f.ra \
+		     [util::LabelEntry $f.ra \
 			  -text "a:" \
 			  -autoselect 1 \
 			  -command $itk_option(-searchcommand) \
@@ -124,7 +124,7 @@ itcl::class cat::AstroQuery {
 			  -valuefont $itk_option(-valuefont) \
 			  -labelfont $itk_option(-wcsfont)]] \
 		[set dec_ \
-		     [LabelEntry $f.dec \
+		     [util::LabelEntry $f.dec \
 			  -text "d:" \
 			  -autoselect 1 \
 			  -command $itk_option(-searchcommand) \
@@ -136,7 +136,7 @@ itcl::class cat::AstroQuery {
 	    # if we are using image coords, display x and y
 	    add_search_option \
 		[set x_ \
-		     [LabelEntry $f.x \
+		     [util::LabelEntry $f.x \
 			  -text "X:" \
 			  -autoselect 1 \
 			  -command $itk_option(-searchcommand) \
@@ -145,7 +145,7 @@ itcl::class cat::AstroQuery {
 			  -valuefont $itk_option(-valuefont) \
 			  -labelfont $itk_option(-labelfont)]] \
 		[set y_ \
-		     [LabelEntry $f.y \
+		     [util::LabelEntry $f.y \
 			  -text "Y:" \
 			  -autoselect 1 \
 			  -command $itk_option(-searchcommand) \
@@ -159,14 +159,14 @@ itcl::class cat::AstroQuery {
 	    if {$iscat_} {
 		# add min and max radius items (for catalogs)
 		add_search_option \
-		    [set rad1_ [LabelEntry $f.rad1 \
+		    [set rad1_ [util::LabelEntry $f.rad1 \
 				    -text "Min Radius:" \
 				    -command $itk_option(-searchcommand) \
 				    -labelwidth $itk_option(-labelwidth) \
 				    -anchor $itk_option(-anchor) \
 				    -valuefont $itk_option(-valuefont) \
 				    -labelfont $itk_option(-labelfont)]] \
-		    [set rad2_ [LabelEntry $f.rad2 \
+		    [set rad2_ [util::LabelEntry $f.rad2 \
 				    -text "Max Radius:" \
 				    -command $itk_option(-searchcommand) \
 				    -labelwidth $itk_option(-labelwidth) \
@@ -176,14 +176,14 @@ itcl::class cat::AstroQuery {
 	    } else {
 		# add width and height items (for image servers)
 		add_search_option \
-		    [set width_ [LabelEntry $f.width \
+		    [set width_ [util::LabelEntry $f.width \
 				    -text "Width:" \
 				    -command $itk_option(-searchcommand) \
 				    -labelwidth $itk_option(-labelwidth) \
 				    -anchor $itk_option(-anchor) \
 				    -valuefont $itk_option(-valuefont) \
 				    -labelfont $itk_option(-labelfont)]] \
-		    [set height_ [LabelEntry $f.height \
+		    [set height_ [util::LabelEntry $f.height \
 				    -text "Height:" \
 				    -command $itk_option(-searchcommand) \
 				    -labelwidth $itk_option(-labelwidth) \
@@ -217,7 +217,7 @@ itcl::class cat::AstroQuery {
 		continue
 	    }
 	    lappend search_cols_ $col
-	    set min_values_($col) [LabelEntry $f.min$n \
+	    set min_values_($col) [util::LabelEntry $f.min$n \
 				       -text "$minStr:" \
 				       -command $itk_option(-searchcommand) \
 				       -labelwidth $itk_option(-labelwidth) \
@@ -226,7 +226,7 @@ itcl::class cat::AstroQuery {
 				       -labelfont $itk_option(-labelfont)]
 
 	    if {"$maxStr" != ""} {
-		set max_values_($col) [LabelEntry $f.max$n \
+		set max_values_($col) [util::LabelEntry $f.max$n \
 					   -text "$maxStr:" \
 					   -command $itk_option(-searchcommand) \
 					   -labelwidth $itk_option(-labelwidth) \
@@ -254,7 +254,7 @@ itcl::class cat::AstroQuery {
 	if {$search_opts_row_ > 0} {
 	    if {$iscat_} {
 		add_search_option \
-		    [set maxnum_ [LabelEntry $f.maxnum \
+		    [set maxnum_ [util::LabelEntry $f.maxnum \
 				      -text "Max Objects:" \
 				      -command $itk_option(-searchcommand) \
 				      -labelwidth $itk_option(-labelwidth) \
@@ -278,7 +278,7 @@ itcl::class cat::AstroQuery {
 	set s [$astrocat copyright]
 	if {"$s" != "" && [winfo exists $search_opts_]} {
 	    blt::blttable $search_opts_ \
-		[LabelValue $search_opts_.copyright \
+		[util::LabelValue $search_opts_.copyright \
 		     -anchor w -relief flat \
 		     -labelwidth 0 -valuewidth 0 \
 		     -value $s \

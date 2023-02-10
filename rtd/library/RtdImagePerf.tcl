@@ -81,7 +81,7 @@ itcl::class rtd::RtdImagePerf {
 		"Total time spent per image event (msec)"
 
 	itk_component add count {
-	    LabelValue $w.count \
+	    util::LabelValue $w.count \
 		    -textvariable ${var}(PERF_COUNT) \
 		    -text "Image counter:\t\t" \
 		    -labelfont $itk_option(-labelfont) \

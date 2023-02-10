@@ -224,7 +224,7 @@ itcl::class rtd::RtdImageBias {
 	foreach el "Low High" {
 	    set s [string tolower $el]
 	    itk_component add $s {
-		LabelEntry $w_.$s \
+		util::LabelEntry $w_.$s \
 			-text "$el:" \
 			-command [code $this set_cut_levels] \
 			-labelfont $itk_option(-labelfont) \

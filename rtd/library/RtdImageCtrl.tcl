@@ -316,7 +316,7 @@ itcl::class rtd::RtdImageCtrl {
 
 	# LabelEntry for grid size
 	itk_component add gridsize  {
-	    LabelEntry $gridf.gridsize \
+	    util::LabelEntry $gridf.gridsize \
 		-value 60 \
 		-relief sunken \
 		-anchor w \

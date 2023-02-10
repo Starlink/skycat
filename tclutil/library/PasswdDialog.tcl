@@ -24,13 +24,13 @@ itcl::class util::PasswdDialog {
 	
 	# LabelEntry widget for the username.
 	itk_component add username {
-	    LabelEntry $itk_component(ext).username \
+	    util::LabelEntry $itk_component(ext).username \
 		-text "User ID:" \
 		-labelwidth 10
 	}
 	# LabelEntry widget for the password
 	itk_component add passwd {
-	    LabelEntry $itk_component(ext).passwd \
+	    util::LabelEntry $itk_component(ext).passwd \
 		-text "Password:" \
 		-labelwidth 10 \
 		-show *
