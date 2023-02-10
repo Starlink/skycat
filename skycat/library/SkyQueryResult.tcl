@@ -66,7 +66,7 @@ itcl::class skycat::SkyQueryResult {
     # The argument is the catalog config entry.
     
     public method save_with_image {entry} {
-	set image [$skycat get_image]
+	set image [{*}$skycat get_image]
 
 	# make sure file exists
 	set file [$image cget -file]
@@ -171,7 +171,7 @@ itcl::class skycat::SkyQueryResult {
     # or 0 if it does not exist.
     
     protected method save_config_info_to_fits_table {extname entry} {
-	set image [$skycat get_image]
+	set image [{*}$skycat get_image]
 
 	# Look for an existing $catinfo table
 	set headings [$image hdu listheadings]

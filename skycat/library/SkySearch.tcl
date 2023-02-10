@@ -641,7 +641,7 @@ itcl::class skycat::SkySearch {
 
     public proc add_history {skycat filename} {
 	set catalog $history_catalog_
-	set image [$skycat get_image]
+	set image [{*}$skycat get_image]
 	
 	# check if the directory for the catalog exists
 	set dir [file dirname $catalog]
@@ -740,7 +740,7 @@ itcl::class skycat::SkySearch {
 	    return
 	}
 	set catalog $history_catalog_
-	set image [$skycat get_image]
+	set image [{*}$skycat get_image]
 	if {[catch {$astrocat_ open $catalog}]} {
 	    # no catalog yet
 	    return

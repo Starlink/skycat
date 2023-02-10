@@ -33,7 +33,7 @@ itcl::class skycat::SkyQuery {
     protected method add_search_options {} {
 	AstroQuery::add_search_options
 	
-	if {[$astrocat iswcs] || [$astrocat ispix]} {
+	if {[{*}$astrocat iswcs] || [{*}$astrocat ispix]} {
 	    frame $search_opts_.buttons
 	    pack \
 		[set setfromimg \
@@ -64,9 +64,9 @@ itcl::class skycat::SkyQuery {
 
     public method set_from_image {} {
 	if {$iscat_} {
-	    set_pos_radius [get_image_center_radius [$astrocat iswcs]]
+	    set_pos_radius [get_image_center_radius [{*}$astrocat iswcs]]
 	} else {
-	    set_pos_width_height [get_image_center_width_height [$astrocat iswcs]]
+	    set_pos_width_height [get_image_center_width_height [{*}$astrocat iswcs]]
 	}
     }
 
@@ -141,9 +141,9 @@ itcl::class skycat::SkyQuery {
 
     public method select_area {} {
 	if {$iscat_} {
-	    set_pos_radius [select_image_area [$astrocat iswcs]]
+	    set_pos_radius [select_image_area [{*}$astrocat iswcs]]
 	} else {
-	    set_pos_width_height [select_image_area [$astrocat iswcs]]
+	    set_pos_width_height [select_image_area [{*}$astrocat iswcs]]
 	}
     }
 
@@ -250,7 +250,7 @@ itcl::class skycat::SkyQuery {
     # name of SkyCat itcl widget
     public variable skycat {} {
 	if {"$skycat" != ""} {
-	    set image_ [$skycat get_image]
+	    set image_ [{*}$skycat get_image]
 	}
     }
 

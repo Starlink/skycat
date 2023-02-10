@@ -31,7 +31,7 @@ itcl::class cat::AstroQuery {
 
     protected method init {} {
 	# set flag to handle image servers differently
-	if {"[$astrocat servtype]" == "imagesvr"} {
+	if {"[{*}$astrocat servtype]" == "imagesvr"} {
 	    set iscat_ 0
 	} else {
 	    set iscat_ 1
@@ -55,7 +55,7 @@ itcl::class cat::AstroQuery {
     # update the search option entries after they have been edited
 
     public method update_search_options {} {
-	if {"$search_col_info_" != "[$astrocat searchcols]"} {
+	if {"$search_col_info_" != "[{*}$astrocat searchcols]"} {
 	    add_search_options
 	    add_copyright
 	    set_default_values
@@ -91,7 +91,7 @@ itcl::class cat::AstroQuery {
 	set search_opts_row_ 0
 
 	# if we are using world coords, display name, equinox, ra, dec
-	if {[$astrocat iswcs]} {
+	if {[{*}$astrocat iswcs]} {
 	    
 	    add_search_option \
 		[set name_ \
@@ -132,7 +132,7 @@ itcl::class cat::AstroQuery {
 			  -anchor $itk_option(-anchor) \
 			  -valuefont $itk_option(-valuefont) \
 			  -labelfont $itk_option(-wcsfont)]]
-	} elseif {[$astrocat ispix]} {
+	} elseif {[{*}$astrocat ispix]} {
 	    # if we are using image coords, display x and y
 	    add_search_option \
 		[set x_ \
@@ -155,7 +155,7 @@ itcl::class cat::AstroQuery {
 			  -labelfont $itk_option(-labelfont)]]
 	}
 
-	if {[$astrocat iswcs] || [$astrocat ispix]} {
+	if {[{*}$astrocat iswcs] || [{*}$astrocat ispix]} {
 	    if {$iscat_} {
 		# add min and max radius items (for catalogs)
 		add_search_option \
@@ -196,7 +196,7 @@ itcl::class cat::AstroQuery {
 	# display search columns from config entry. If the max value is missing,
 	# assume just one value, otherwise a range: min..max
 	set n 0
-	set search_col_info_ [$astrocat searchcols]
+	set search_col_info_ [{*}$astrocat searchcols]
 	catch {unset min_values_}
 	catch {unset max_values_}
 	set search_cols_ {}
@@ -244,7 +244,7 @@ itcl::class cat::AstroQuery {
 	# if the url contains a string such as mag=%m1,%m2, make sure the
 	# user knows the defaults (maybe the servers should be changed?)
 	if {[info exists min_values_(mag)]} {
-	    if {[string first {%m2} [$astrocat url]] != -1} {
+	    if {[string first {%m2} [{*}$astrocat url]] != -1} {
 		$min_values_(mag) config -value 0
 		$max_values_(mag) config -value 99
 	    }
@@ -275,7 +275,7 @@ itcl::class cat::AstroQuery {
     # add copyright info to the search panel, if present
 
     protected method add_copyright {} {
-	set s [$astrocat copyright]
+	set s [{*}$astrocat copyright]
 	if {"$s" != "" && [winfo exists $search_opts_]} {
 	    blt::blttable $search_opts_ \
 		[util::LabelValue $search_opts_.copyright \
@@ -309,7 +309,7 @@ itcl::class cat::AstroQuery {
     # add short help texts to widgets
     
     protected method set_short_help {} {
-	if {[$astrocat iswcs]} {
+	if {[{*}$astrocat iswcs]} {
 	    add_short_help $name_ {object name: resolved via name server, if given}
 	    add_short_help $equinox_ {World Coordinates equinox, default J2000}
 	    add_short_help $ra_ {World Coordinates: right ascension (RA)}
@@ -322,7 +322,7 @@ itcl::class cat::AstroQuery {
 		add_short_help $width_ {Width in arcmin of image to get}
 		add_short_help $height_ {Height in arcmin of image to get}
 	    }
-	} elseif {[$astrocat ispix]} {
+	} elseif {[{*}$astrocat ispix]} {
 	    add_short_help $x_ {Image coordinates: X value}
 	    add_short_help $y_ {Image coordinates: Y value}
 	    if {$iscat_} {
@@ -381,14 +381,14 @@ itcl::class cat::AstroQuery {
 	    set cmd "$astrocat getimage"
 	}
 
-	if {[$astrocat iswcs] || [$astrocat ispix]} {
+	if {[{*}$astrocat iswcs] || [{*}$astrocat ispix]} {
 	    set equinox ""
-	    if {[$astrocat iswcs]} {
+	    if {[{*}$astrocat iswcs]} {
 		set name [$name_ get]
 		set x [$ra_ get]
 		set y [$dec_ get]
 		set equinox [$equinox_ get]
-	    } elseif {[$astrocat ispix]} {
+	    } elseif {[{*}$astrocat ispix]} {
 		set name ""
 		set x [$x_ get]
 		set y [$y_ get]
@@ -421,8 +421,8 @@ itcl::class cat::AstroQuery {
 		if {"$maxnum" != ""} {
 		    lappend cmd "-nrows" $maxnum
 		}
-		if {"[set sort_cols [$astrocat sortcols]]" != ""} {
-		    lappend cmd "-sort" $sort_cols "-sortorder" [$astrocat sortorder] 
+		if {"[set sort_cols [{*}$astrocat sortcols]]" != ""} {
+		    lappend cmd "-sort" $sort_cols "-sortorder" [{*}$astrocat sortorder] 
 		}
 	    } else {
 		if {"$width" != "" || "$height" != ""} {
@@ -488,15 +488,15 @@ itcl::class cat::AstroQuery {
     protected method do_query {cmd} {
 	if {$iscat_} {
 	    return [list [eval $cmd] \
-			[$astrocat headings] \
-			[$astrocat entry get] \
-			[$astrocat querypos] \
-			[$astrocat more]]
+			[{*}$astrocat headings] \
+			[{*}$astrocat entry get] \
+			[{*}$astrocat querypos] \
+			[{*}$astrocat more]]
 	} else {
 	    return [list [eval $cmd] \
 			{}\
-			[$astrocat entry get] \
-			[$astrocat querypos] \
+			[{*}$astrocat entry get] \
+			[{*}$astrocat querypos] \
 			0]
 	}
     }
@@ -536,15 +536,15 @@ itcl::class cat::AstroQuery {
 		
 	    # update the catalog config entry with the entry data from the subprocess
 	    # (may have been modified by info in the query result header)
-	    $astrocat entry update $entry
+	    {*}$astrocat entry update $entry
 
 	    if {[llength $pos] >= 2} {
-		if {[$astrocat iswcs]} {
+		if {[{*}$astrocat iswcs]} {
 		    $name_ config -value ""
 		    lassign $pos ra dec equinox
 		    $ra_ config -value $ra
 		    $dec_ config -value $dec
-		} elseif {[$astrocat ispix]} {
+		} elseif {[{*}$astrocat ispix]} {
 		    lassign $pos x y
 		    $x_ config -value $x
 		    $y_ config -value $y
@@ -567,7 +567,7 @@ itcl::class cat::AstroQuery {
 
     public method set_default_values {} {
 	# set the center coords and default radius
-	if {[$astrocat iswcs]} {
+	if {[{*}$astrocat iswcs]} {
 	    $name_ config -value ""
 	    $ra_ config -value ""
 	    $dec_ config -value ""
@@ -580,7 +580,7 @@ itcl::class cat::AstroQuery {
 		$width_ config -value 10.0
 		$height_ config -value 10.0
 	    }
-	} elseif {[$astrocat ispix]}  {
+	} elseif {[{*}$astrocat ispix]}  {
 	    $x_ config -value ""
 	    $y_ config -value ""
 	    if {$iscat_} {
@@ -600,7 +600,7 @@ itcl::class cat::AstroQuery {
     # to display coordinates by typing in a different value in the panel.
 
     public method get_catalog_equinox {} {
-	if {[$astrocat iswcs]} {
+	if {[{*}$astrocat iswcs]} {
 	    set equinox [$equinox_ get]
 	    if {"$equinox" == ""} {
 		set equinox J2000
@@ -617,7 +617,7 @@ itcl::class cat::AstroQuery {
 
     public method set_pos_radius {list} {
 	set n [llength $list]
-	if {[$astrocat iswcs] && $n == 4} {
+	if {[{*}$astrocat iswcs] && $n == 4} {
 	    # using world coords 
 	    lassign $list ra dec equinox radius
 	    $ra_ config -value $ra
@@ -625,7 +625,7 @@ itcl::class cat::AstroQuery {
 	    $equinox_ config -value $equinox
 	    $rad1_ config -value 0.0
 	    $rad2_ config -value $radius
-	} elseif {[$astrocat ispix] && $n == 3}  {
+	} elseif {[{*}$astrocat ispix] && $n == 3}  {
 	    # using image coords
 	    lassign $list x y radius
 	    $x_ config -value $x
@@ -645,7 +645,7 @@ itcl::class cat::AstroQuery {
 
     public method set_pos_width_height {list} {
 	set n [llength $list]
-	if {[$astrocat iswcs] || $n == 5} {
+	if {[{*}$astrocat iswcs] || $n == 5} {
 	    # using world coords 
 	    lassign $list ra dec equinox width height name
 	    $ra_ config -value $ra
@@ -654,7 +654,7 @@ itcl::class cat::AstroQuery {
 	    catch {$width_ config -value [format "%.2f" $width]}
 	    catch {$height_ config -value [format "%.2f" $height]}
 	    $name_ config -value $name
-	} elseif {[$astrocat ispix] || $n == 4}  {
+	} elseif {[{*}$astrocat ispix] || $n == 4}  {
 	    # using image coords
 	    lassign $list x y width height
 	    $x_ config -value $x
@@ -671,10 +671,10 @@ itcl::class cat::AstroQuery {
     # or {x y radius} for image pixel coords.
 
     public method get_pos_radius {} {
-	if {[$astrocat iswcs]} {
+	if {[{*}$astrocat iswcs]} {
 	    # using world coords 
 	    return [list [$ra_ get] [$dec_ get] [$equinox_ get] [$rad2_ get]]
-	} elseif {[$astrocat ispix]}  {
+	} elseif {[{*}$astrocat ispix]}  {
 	    # using image coords
 	    return [list [$x_ get] [$y_ get] [$rad2_ get]]
 	}
@@ -683,7 +683,7 @@ itcl::class cat::AstroQuery {
     # Return the value in the equinox entry, of 2000 if there isn't one.
 
     public method get_equinox {} {
-	if {[$astrocat iswcs]} {
+	if {[{*}$astrocat iswcs]} {
 	    # using world coords 
 	    return [$equinox_ get]
 	} else  {

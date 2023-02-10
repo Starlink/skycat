@@ -70,8 +70,8 @@ itcl::class cat::QueryResult {
 		$w reset
 	    }
 	}
-	$astrocat showcols {}
-	$astrocat sortcols {}
+	{*}$astrocat showcols {}
+	{*}$astrocat sortcols {}
     }
    
   
@@ -272,11 +272,11 @@ itcl::class cat::QueryResult {
     public method update_options {} {
 	# sort cols
 	config \
-	    -sort_cols [$astrocat sortcols] \
-	    -sort_order [$astrocat sortorder]
+	    -sort_cols [{*}$astrocat sortcols] \
+	    -sort_order [{*}$astrocat sortorder]
 
 	# show/hide cols
-	set show_cols [$astrocat showcols]
+	set show_cols [{*}$astrocat showcols]
 	if {[llength $show_cols]} {
 	    set_options $headings_ Show 0
 	    set_options $show_cols Show 1

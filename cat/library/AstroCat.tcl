@@ -507,7 +507,7 @@ itcl::class cat::AstroCat {
     public proc update_catalog_menus {} {
 	foreach i [array names catalog_menu_info_] {
 	    if {[winfo exists [utilNamespaceTail $i]]} {
-		eval $catalog_menu_info_($i)
+		{*}$catalog_menu_info_($i)
 	    }
 	}
     }
