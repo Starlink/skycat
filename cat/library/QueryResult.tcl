@@ -36,7 +36,7 @@ itcl::class cat::QueryResult {
 	    info_dialog "Please make a query first so that the column names are known" $w_
 	    return
 	}
-	TableList::sort_dialog
+	util::TableList::sort_dialog
     }
 
     
@@ -58,7 +58,7 @@ itcl::class cat::QueryResult {
 	    info_dialog "Please make a query first so that the column names are known" $w_
 	    return
 	}
-	TableList::layout_dialog
+	util::TableList::layout_dialog
     }
 
 
@@ -184,7 +184,7 @@ itcl::class cat::QueryResult {
 
     public method enter_new_object {{command ""}} {
 	catch {delete object $w_.ef}
-	EnterObject $w_.ef \
+	cat::EnterObject $w_.ef \
 	    -title {Please enter the data for the object below:} \
 	    -labels $headings_ \
 	    -center 0 \
@@ -258,7 +258,7 @@ itcl::class cat::QueryResult {
 	    return;
 	}
 
-	EnterObject $w_.ef \
+	cat::EnterObject $w_.ef \
 	    -title {Please enter the data for the object below:} \
 	    -labels $headings_ \
 	    -values $values \

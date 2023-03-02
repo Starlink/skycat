@@ -93,7 +93,7 @@ itcl::class skycat::SkyCat {
     
     protected method init {} {
 	global ::skycat_version
-	Rtd::init
+	rtd::Rtd::init
 
 	load_toplevel_geometry
 	wm title $w_ "Skycat - version $skycat_version ($itk_option(-number))"
@@ -221,7 +221,7 @@ itcl::class skycat::SkyCat {
     protected method add_realtime_menu {} {
 	# add/remove some menus
 	if {$itk_option(-rtd)} {
-	    Rtd::add_realtime_menu
+	    rtd::Rtd::add_realtime_menu
 	} else {
 	    # hide the realtime status
 	    #[[$itk_component(image) component info] component cameraStatus] config \
@@ -263,7 +263,7 @@ itcl::class skycat::SkyCat {
 
     protected method setXdefaults {} {
 	# read rtd defaults
-	Rtd::setXdefaults
+	rtd::Rtd::setXdefaults
 
 	# read cat lib defaults
 	cat::setXdefaults
@@ -326,7 +326,7 @@ itcl::class skycat::SkyCat {
 	# SkyCatCtrl(n) widget (derived from RtdImageCtrl), for displaying
 	# image and control panel
 	itk_component add image {
-	    SkyCatCtrl $image_ \
+	    skycat::SkyCatCtrl $image_ \
 		-usexshm $itk_option(-usexshm) \
 		-shm_header $itk_option(-shm_header) \
 		-shm_data $itk_option(-shm_data) \
@@ -588,7 +588,7 @@ itcl::class skycat::SkyCat {
 	foreach w $list {
 	    lappend names "[incr n]  [$w cget -catalog]"
 	}
-	set w [ChoiceDialog .d \
+	set w [util::ChoiceDialog .d \
 		   -text "Please specify which $what to use:" \
 		   -cols 1 \
 		   -messagewidth 3i \

@@ -57,7 +57,7 @@ itcl::class util::GraphPrint {
     # use PrintDialog::ok to get the fd (CanvasPrint::ok returns filename)
 
     public method ok {args} {
-	PrintDialog::ok $args
+	util::PrintDialog::ok $args
     }
 
     # Public data

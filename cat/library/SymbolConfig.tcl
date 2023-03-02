@@ -45,7 +45,7 @@ itcl::class cat::SymbolConfig {
     protected method add_table {} {
 	# table listing overview at top
 	pack [set table_ \
-		  [TableList $w_.table \
+		  [util::TableList $w_.table \
 		       -height 3 \
 		       -exportselection 0 \
 		       -headings {Columns Symbol Color Ratio Angle Label Condition Size Units}]] \
@@ -63,7 +63,7 @@ itcl::class cat::SymbolConfig {
 	    -side top -fill x -expand 1 -ipady 2m
 	    
 	pack \
-	    [LabelWidget $f.cols.label \
+	    [util::LabelWidget $f.cols.label \
 		 -text "Columns:" \
 		 -labelwidth $itk_option(-labelwidth) \
 		 -anchor $itk_option(-anchor) \
@@ -71,7 +71,7 @@ itcl::class cat::SymbolConfig {
 	    -side left
 
 	pack \
-	    [DoubleList $f.cols.dlist \
+	    [util::DoubleList $f.cols.dlist \
 		 -updown 0 \
 		 -height 2 \
 		 -width 12 \
@@ -437,7 +437,7 @@ itcl::class cat::SymbolConfig {
     # add a short help window and set the help texts
     
     protected method make_short_help {} {
-	TopLevelWidget::make_short_help
+	util::TopLevelWidget::make_short_help
 
 	add_short_help $table_ {Table listing symbols to plot, one symbol per row, click to select}
 	add_short_help $symbol_ {Symbol to use to plot stars or other objects}

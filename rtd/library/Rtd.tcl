@@ -212,7 +212,7 @@ itcl::class rtd::Rtd {
 
     protected method add_menubar {} {
 	# menu bar
-	TopLevelWidget::add_menubar
+	util::TopLevelWidget::add_menubar
 
 	# add menubuttons and menus
 	add_file_menu
@@ -556,7 +556,7 @@ itcl::class rtd::Rtd {
     # add the short help window and add some help texts for the menu buttons
 
     protected method make_short_help {} {
-	TopLevelWidget::make_short_help
+	util::TopLevelWidget::make_short_help
     }
 
     
@@ -621,7 +621,7 @@ itcl::class rtd::Rtd {
 	} else {
 	    set s3 "Camera:\t\tdetached"
 	}
-        DialogWidget $w_.rtd_status \
+        util::DialogWidget $w_.rtd_status \
 		-messagewidth 6i \
 		-justify left \
 		-text "$t1\n\n$s1\n$s2\n$s3" \
@@ -653,7 +653,7 @@ itcl::class rtd::Rtd {
 	foreach el "Tclx Itcl Itk Tkx BLT" {
 	    set t8 "$t8$el[package versions $el] "
 	}
-        DialogWidget $w_.rtd_about \
+        util::DialogWidget $w_.rtd_about \
 		-messagewidth 12i \
 		-justify left \
 		-text "$t1\n$t2\n$t3\n$t4\n$t5\n$t6\n$t7\n$t8" \

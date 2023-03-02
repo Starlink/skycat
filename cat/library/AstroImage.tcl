@@ -72,7 +72,7 @@ itcl::class cat::AstroImage {
     # add the menu bar
 
     protected method add_menubar {} {
-	TopLevelWidget::add_menubar
+	util::TopLevelWidget::add_menubar
 
 	set m [add_menubutton File]
 
@@ -330,7 +330,7 @@ itcl::class cat::AstroImage {
     # add a short help window and set the help texts
     
     protected method make_short_help {} {
-	TopLevelWidget::make_short_help
+	util::TopLevelWidget::make_short_help
 
 	add_short_help name_ {SIMBAD object name: resolved via SIMBAD server, if given}
 	add_short_help $equinox_ {World Coordinates equinox, default J2000}
@@ -528,7 +528,7 @@ itcl::class cat::AstroImage {
 	}
 
 	set instances_($i) \
-	    [AstroImage $instname \
+	    [cat::AstroImage $instname \
 		 -image $image -debug $debug -imagesvr $name -transient 0]
     }
     

@@ -31,7 +31,7 @@ itcl::class skycat::SkyQueryResult {
 
     public method enter_new_object {{command ""}} {
 	catch {delete object $w_.ef}
-	EnterObject $w_.ef \
+	cat::EnterObject $w_.ef \
 	    -title {Please enter the data for the object below:} \
 	    -labels $headings_ \
 	    -center 0 \
@@ -53,7 +53,7 @@ itcl::class skycat::SkyQueryResult {
 	    return;
 	}
 
-	EnterObject $w_.ef \
+	cat::EnterObject $w_.ef \
 	    -title {Please enter the data for the object below:} \
 	    -image $skycat \
 	    -labels $headings_ \

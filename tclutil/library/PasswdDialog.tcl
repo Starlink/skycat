@@ -47,7 +47,7 @@ itcl::class util::PasswdDialog {
     # called after options have been evaluated
 
     protected method init {} {
-	DialogWidget::init
+	util::DialogWidget::init
 	bind [$itk_component(username) component entry] <Return> \
 	    "focus [$itk_component(passwd) component entry]; break"
 	bind [$itk_component(passwd) component entry] <Return> \

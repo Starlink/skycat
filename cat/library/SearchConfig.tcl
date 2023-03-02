@@ -46,7 +46,7 @@ itcl::class cat::SearchConfig {
     protected method add_tables {} {
 
 	pack [set dtab \
-		  [DoubleTableList $w_.dtab \
+		  [util::DoubleTableList $w_.dtab \
 		       -selectmode extended \
 		       -command [code $this update_selection] \
 		       -updown 1]] \
@@ -239,7 +239,7 @@ itcl::class cat::SearchConfig {
     # add a short help window and set the help texts
     
     protected method make_short_help {} {
-	TopLevelWidget::make_short_help
+	util::TopLevelWidget::make_short_help
 
 	add_short_help $left_ {List of search columns to display as entries in catalog window}
 	add_short_help $right_ {List of other column names, select+click arrow buttons to move}

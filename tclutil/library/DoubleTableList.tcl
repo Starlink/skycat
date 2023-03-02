@@ -50,7 +50,7 @@ itcl::class util::DoubleTableList {
 
 	# right table (see TableList(n))
 	itk_component add right {
-	    TableList $w_.right
+	    util::TableList $w_.right
 	} {
 	    rename -title -righttitle rightTitle RightTitle
 	    rename -info -rightinfo rightInfo RightInfo

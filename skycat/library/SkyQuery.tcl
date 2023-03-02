@@ -31,7 +31,7 @@ itcl::class skycat::SkyQuery {
     # (redefined from parent class AstroCat to add buttons)
 
     protected method add_search_options {} {
-	AstroQuery::add_search_options
+	cat::AstroQuery::add_search_options
 	
 	if {[{*}$astrocat iswcs] || [{*}$astrocat ispix]} {
 	    frame $search_opts_.buttons
@@ -240,7 +240,7 @@ itcl::class skycat::SkyQuery {
     # (redefined from parent class AstroCat to set values from the image)
 
     public method set_default_values {} {
-	AstroQuery::set_default_values
+	cat::AstroQuery::set_default_values
 	set_from_image
     }
 

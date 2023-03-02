@@ -35,7 +35,7 @@ itcl::class rtd::RtdImageBias {
     # Method to add the menu bar to the top of the dialogue.
     
     protected method add_menubar {} {
-        TopLevelWidget::add_menubar
+        util::TopLevelWidget::add_menubar
 	
         # File menu
         set m [add_menubutton File]

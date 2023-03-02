@@ -182,7 +182,7 @@ itcl::class cat::AstroCat {
     # add the menu bar
 
     protected method add_menubar {} {
-	TopLevelWidget::add_menubar
+	util::TopLevelWidget::add_menubar
 
 	set m [add_menubutton File "Display File menu"]
 	set file_menu_ $m
@@ -468,7 +468,7 @@ itcl::class cat::AstroCat {
 
     public proc proxies {} {
 	global ::env
-	utilReUseWidget ProxyDialog .proxy \
+	utilReUseWidget cat::ProxyDialog .proxy \
 	    -configfile $env(HOME)/.skycat/proxies
     }
 
@@ -897,7 +897,7 @@ itcl::class cat::AstroCat {
     protected method add_search_options {} {
 	# AstroQuery(n) widget for displaying catalog search options.
 	itk_component add searchopts {
-	    set searchopts_ [AstroQuery $w_.searchopts \
+	    set searchopts_ [cat::AstroQuery $w_.searchopts \
 				 -relief groove \
 				 -borderwidth 2 \
 				 -debug $itk_option(-debug) \
@@ -916,7 +916,7 @@ itcl::class cat::AstroCat {
     protected method add_result_table {} {
 	# QueryResult(n) widget to display catalog query results
 	itk_component add results {
-	    set results_ [QueryResult $w_.results \
+	    set results_ [cat::QueryResult $w_.results \
 			      -astrocat [code $w_.cat] \
 			      -title "Search Results" \
 			      -hscroll 1 \
@@ -1036,7 +1036,7 @@ itcl::class cat::AstroCat {
     # add a short help window and set the help texts
     
     protected method make_short_help {} {
-	TopLevelWidget::make_short_help
+	util::TopLevelWidget::make_short_help
 
 	add_short_help $results_ \
 	    {Query results: {bitmap b1} = select object, \
@@ -1514,7 +1514,7 @@ itcl::class cat::AstroCat {
 			      || "$type" == "text/x-starbase" \
 			      || "$type" == "text/plain" \
 			      || "$type" == ""} {
-		    PreviewPlot $w_.pplot[incr count_] \
+		    cat::PreviewPlot $w_.pplot[incr count_] \
 			-file $filename \
 			-name $object_name_ \
 			-shorthelpwin $this \

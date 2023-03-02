@@ -74,7 +74,7 @@ itcl::class rtd::RtdImageCtrl {
     # the options have been evaluated
 
     protected method init {} {
-	RtdImage::init
+	rtd::RtdImage::init
 	
 	feedback "control panel..."
 	make_control_panel
@@ -129,7 +129,7 @@ itcl::class rtd::RtdImageCtrl {
 	    # The RTD control panel, may be put in a frame or optionally 
 	    # in a popup window
 	    itk_component add panel {
-		set panel [TopLevelWidget $w_.panel]
+		set panel [util::TopLevelWidget $w_.panel]
 	    }
 	    wm withdraw $panel
 
@@ -428,7 +428,7 @@ itcl::class rtd::RtdImageCtrl {
     # (1 is no scale, -2 = 50%, 2 = 200% etc...)
     
     public method scale {x y} {
-	RtdImage::scale $x $y
+	rtd::RtdImage::scale $x $y
 	if {[info exists itk_component(zoom)]} {
 	    $itk_component(zoom) scale
 	}
@@ -448,7 +448,7 @@ itcl::class rtd::RtdImageCtrl {
     # (for real-time updates, see camera command)
 
     protected method new_image_cmd {} {
-	RtdImage::new_image_cmd
+	rtd::RtdImage::new_image_cmd
 
         # display HDU list, if there are multiple HDUs
         update_fits_hdus
@@ -663,7 +663,7 @@ itcl::class rtd::RtdImageCtrl {
     # access it (extend parent class version)
 
     public method clear {} {
-	RtdImage::clear
+	rtd::RtdImage::clear
 	$itk_component(info) config -state disabled
 	if {[winfo exists $w_.cut]} {
 	    destroy $w_.cut

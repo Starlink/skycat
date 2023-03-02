@@ -887,7 +887,7 @@ itcl::class rtd::RtdImage {
     # Methods for the playing and recording of images.
 
     public method record {camera} {
-        utilReUseWidget RtdRecorderTool $w_.rec \
+        utilReUseWidget rtd::RtdRecorderTool $w_.rec \
             -target_image $this \
             -server_camera $camera \
             -shorthelpwin $itk_option(-shorthelpwin)

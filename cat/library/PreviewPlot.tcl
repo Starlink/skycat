@@ -166,7 +166,7 @@ itcl::class cat::PreviewPlot {
     # make a hard copy of the graph display
 
     public method print {} {
-	utilReUseWidget GraphPrint $w_.print -graph $graph_
+	utilReUseWidget util::GraphPrint $w_.print -graph $graph_
     }
 
 
@@ -193,7 +193,7 @@ itcl::class cat::PreviewPlot {
     # add a short help window and set the help texts
     
     protected method make_short_help {} {
-	TopLevelWidget::make_short_help
+	util::TopLevelWidget::make_short_help
 
 	add_short_help $graph_ {Graph: drag {bitmap dragb1} to zoom in,  press {bitmap b3} to zoom back out}
 	add_short_help $w_.buttons.print "Print: display a dialog window to print the graph \
