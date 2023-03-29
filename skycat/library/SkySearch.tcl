@@ -159,7 +159,7 @@ itcl::class skycat::SkySearch {
     # display the given image file
 
     public method display_image_file {filename} {
-	$skycat_ config -file $filename
+	    {*}$skycat_ config -file $filename
     }
 
 
@@ -221,7 +221,7 @@ itcl::class skycat::SkySearch {
 	    -height [get_display_height]
 
 	# enable the options panel, since we now have an image
-	catch {[[$skycat_] component info] configure -state normal}
+	catch {[[{*}$skycat_] component info] configure -state normal}
 
 	return 0
     }
@@ -243,7 +243,7 @@ itcl::class skycat::SkySearch {
 	    -height [get_display_height]
 	
 	# enable the options panel, since we now have an image
-	catch {[[$skycat_] component info] configure -state normal}
+	catch {[[{*}$skycat_] component info] configure -state normal}
 
 	return 0
     }
@@ -259,7 +259,7 @@ itcl::class skycat::SkySearch {
 	    } msg]} {
 		return
 	    }
-	    catch {$skycat_ picked_wcs_object $ix $iy $ra $dec}
+	    catch {{*}$skycat_ picked_wcs_object $ix $iy $ra $dec}
     }
 
     

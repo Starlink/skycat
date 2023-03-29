@@ -177,7 +177,7 @@ itcl::class skycat::SkyQuery {
 	}
 
 	# get canvas coords of selected area
-	set list [$skycat select_area]
+       set list [{*}$skycat select_area]
 	if {[llength $list] != 4} {
 	    return
 	}
