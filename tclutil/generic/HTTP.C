@@ -925,7 +925,7 @@ int HTTP::post(const char* url, const char* data)
     }
 
     // generate the HTTP POST command
-    sprintf(req, "POST %s HTTP/1.0\nContent-type: text/plain\nContent-length: %d\n\n%s", 
+    sprintf(req, "POST %s HTTP/1.0\r\nContent-type: text/plain\r\nContent-length: %d\r\n\r\n%s", 
 	    args, (int) strlen(data), data);
 
     int n = strlen(req);
