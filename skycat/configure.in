@@ -27,7 +27,7 @@
 # so you can encode the package version directly into the source files.
 #-----------------------------------------------------------------------
 
-AC_INIT([skycat], [3.1.2])
+AC_INIT([skycat], [3.1.4])
 
 #--------------------------------------------------------------------
 # Do application specific checks (see aclocal.m4)

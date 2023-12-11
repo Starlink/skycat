@@ -679,20 +679,20 @@ int HTTP::get(const char* url)
 
     // generate the request
     ostringstream os;
-    os << "GET " << args << " HTTP/1.0\n";
+    os << "GET " << args << " HTTP/1.0\r\n";
 
     // add the user-agent
     if (! user_agent_)
 	userAgent(default_user_agent_);
-    os << "User-Agent: " << user_agent_ << endl;
+    os << "User-Agent: " << user_agent_ << "\r\n";
 
     // If we have authorization info (encoded username:passwd), include it
     // in the request
     if (auth_info_ != NULL) 
-	os << "Authorization: Basic " << auth_info_ << endl;
+	os << "Authorization: Basic " << auth_info_ << "\r\n";
 
     // add newline after request and null terminate
-    os << endl;
+    os << "\r\n";
     strncpy(req, os.str().c_str(), sizeof(req));
     
     // send the request
@@ -901,7 +901,7 @@ int HTTP::post(const char* url, const char* data)
     }
 
     // generate the HTTP POST command
-    sprintf(req, "POST %s HTTP/1.0\nContent-type: text/plain\nContent-length: %d\n\n%s", 
+    sprintf(req, "POST %s HTTP/1.0\r\nContent-type: text/plain\r\nContent-length: %d\r\n\r\n%s", 
 	    args, strlen(data), data);
 
     int n = strlen(req);
