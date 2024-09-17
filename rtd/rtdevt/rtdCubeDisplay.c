@@ -161,7 +161,7 @@ static void cleanup()
     exit(0);
 }
 
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     char               c,camera[RTD_NAMELEN],reqName[RTD_NAMELEN],fileName[256];
     int                count,fileoffset,typeSize=0;
