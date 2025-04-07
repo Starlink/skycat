@@ -334,7 +334,7 @@ int localSockListen(int& sock, int& port)
 	return sys_error("socket");
 
     // Bind the listen address to the socket. 
-    if (bind(sock, (struct sockaddr *)&addr, addrSize) == -1) 
+    if (::bind(sock, (struct sockaddr *)&addr, addrSize) == -1)
 	return sys_error("bind");
 
     // note the port number (in case it was 0 and is generated)
