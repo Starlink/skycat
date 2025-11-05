@@ -27,7 +27,7 @@ itcl::class cat::EnterObject {
     # called after options have been evaluated
 
     protected method init {} {
-	EntryForm::init
+	util::EntryForm::init
 	wm title $w_ "Enter Object ($itk_option(-number))"
 
 	if {"$itk_option(-image)" != ""} {

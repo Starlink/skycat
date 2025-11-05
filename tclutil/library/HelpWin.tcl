@@ -69,7 +69,7 @@ itcl::class util::HelpWin {
 
    private method create_ {} {
       if { ![winfo exists $Top_] } {
-         set Top_ [TopLevelWidget .\#auto]
+         set Top_ [util::TopLevelWidget .\#auto]
 
          #  Set the top-level window title.
          wm title $Top_ {Help}
@@ -83,7 +83,7 @@ itcl::class util::HelpWin {
          }
 
          #  Add the text widget.
-         set ScrollText_ [ScrollText $Top_.text]
+         set ScrollText_ [util::ScrollText $Top_.text]
          set_font_ "[lindex $fonts_ 0]"
 
          #  Create the control button.

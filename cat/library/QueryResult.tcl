@@ -36,7 +36,7 @@ itcl::class cat::QueryResult {
 	    info_dialog "Please make a query first so that the column names are known" $w_
 	    return
 	}
-	TableList::sort_dialog
+	util::TableList::sort_dialog
     }
 
     
@@ -58,7 +58,7 @@ itcl::class cat::QueryResult {
 	    info_dialog "Please make a query first so that the column names are known" $w_
 	    return
 	}
-	TableList::layout_dialog
+	util::TableList::layout_dialog
     }
 
 
@@ -70,8 +70,8 @@ itcl::class cat::QueryResult {
 		$w reset
 	    }
 	}
-	$astrocat showcols {}
-	$astrocat sortcols {}
+	{*}$astrocat showcols {}
+	{*}$astrocat sortcols {}
     }
    
   
@@ -184,7 +184,7 @@ itcl::class cat::QueryResult {
 
     public method enter_new_object {{command ""}} {
 	catch {delete object $w_.ef}
-	EnterObject $w_.ef \
+	cat::EnterObject $w_.ef \
 	    -title {Please enter the data for the object below:} \
 	    -labels $headings_ \
 	    -center 0 \
@@ -258,7 +258,7 @@ itcl::class cat::QueryResult {
 	    return;
 	}
 
-	EnterObject $w_.ef \
+	cat::EnterObject $w_.ef \
 	    -title {Please enter the data for the object below:} \
 	    -labels $headings_ \
 	    -values $values \
@@ -272,11 +272,11 @@ itcl::class cat::QueryResult {
     public method update_options {} {
 	# sort cols
 	config \
-	    -sort_cols [$astrocat sortcols] \
-	    -sort_order [$astrocat sortorder]
+	    -sort_cols [{*}$astrocat sortcols] \
+	    -sort_order [{*}$astrocat sortorder]
 
 	# show/hide cols
-	set show_cols [$astrocat showcols]
+	set show_cols [{*}$astrocat showcols]
 	if {[llength $show_cols]} {
 	    set_options $headings_ Show 0
 	    set_options $show_cols Show 1

@@ -67,7 +67,7 @@ itcl::class rtd::RtdImageFitsHeader {
     # add the menubar at the top of the window
 
     protected method add_menubar {} {
-	TopLevelWidget::add_menubar
+	util::TopLevelWidget::add_menubar
 
 	# add menubuttons and menus
 
@@ -134,7 +134,7 @@ itcl::class rtd::RtdImageFitsHeader {
 	}
 	
 	itk_component add search {
-	    LabelEntry $itk_component(buttons).search \
+	    util::LabelEntry $itk_component(buttons).search \
 		    -text Search -valuewidth 10 \
 		    -command [code $this search]
 	}
@@ -190,7 +190,7 @@ itcl::class rtd::RtdImageFitsHeader {
 		$w config -table $tbl
                 wm deiconify $w
             } else {
-                TableListPrint $w -table $tbl -printcmd [$tbl cget -printcmd]
+                util::TableListPrint $w -table $tbl -printcmd [$tbl cget -printcmd]
             }
         }
     }

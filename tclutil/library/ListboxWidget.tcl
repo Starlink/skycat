@@ -80,7 +80,7 @@ itcl::class util::ListboxWidget {
 	}
 	
 	catch {destroy $w_.form}
-	EntryForm $w_.form \
+	util::EntryForm $w_.form \
 	    -title "Edit Value" \
 	    -labels "Value" \
 	    -values [list $sel] \

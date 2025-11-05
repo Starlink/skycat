@@ -83,7 +83,7 @@ itcl::class cat::CatalogInfo {
     # add the menu bar
 
     protected method add_menubar {} {
-	TopLevelWidget::add_menubar
+	util::TopLevelWidget::add_menubar
 	set m [add_menubutton File "Display File menu"]
 	set file_menu_ $m
 	
@@ -492,7 +492,7 @@ itcl::class cat::CatalogInfo {
     # add a short help window and set the help texts
     
     protected method make_short_help {} {
-	TopLevelWidget::make_short_help
+	util::TopLevelWidget::make_short_help
 
 	add_short_help $tree_ \
 	    "Catalog list: {bitmap b1} = open and display catalog server contents, \

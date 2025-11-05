@@ -141,7 +141,7 @@ itcl::class rtd::RtdImagePopup {
 
     protected method add_menubar {} {
 	# menu bar
-	TopLevelWidget::add_menubar
+	util::TopLevelWidget::add_menubar
 
 	set image $itk_component(image)
 	

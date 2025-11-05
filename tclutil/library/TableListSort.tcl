@@ -53,7 +53,7 @@ itcl::class util::TableListSort {
     protected method make_dlist_window {} {
 	# DoubleList(n) widget to display sort keys to use or not use.
 	itk_component add dlist {
-	    DoubleList $w_.dlist \
+	    util::DoubleList $w_.dlist \
 		-selectmode extended \
 		-updown 1 \
 		-lefttitle {Sort Keys} \

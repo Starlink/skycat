@@ -31,7 +31,7 @@ itcl::class skycat::SkyQueryResult {
 
     public method enter_new_object {{command ""}} {
 	catch {delete object $w_.ef}
-	EnterObject $w_.ef \
+	cat::EnterObject $w_.ef \
 	    -title {Please enter the data for the object below:} \
 	    -labels $headings_ \
 	    -center 0 \
@@ -53,7 +53,7 @@ itcl::class skycat::SkyQueryResult {
 	    return;
 	}
 
-	EnterObject $w_.ef \
+	cat::EnterObject $w_.ef \
 	    -title {Please enter the data for the object below:} \
 	    -image $skycat \
 	    -labels $headings_ \
@@ -66,7 +66,7 @@ itcl::class skycat::SkyQueryResult {
     # The argument is the catalog config entry.
     
     public method save_with_image {entry} {
-	set image [$skycat get_image]
+	set image [{*}$skycat get_image]
 
 	# make sure file exists
 	set file [$image cget -file]
@@ -171,7 +171,7 @@ itcl::class skycat::SkyQueryResult {
     # or 0 if it does not exist.
     
     protected method save_config_info_to_fits_table {extname entry} {
-	set image [$skycat get_image]
+	set image [{*}$skycat get_image]
 
 	# Look for an existing $catinfo table
 	set headings [$image hdu listheadings]

@@ -19,7 +19,7 @@ itk::usual ScrollText {}
 itcl::class util::ScrollText {
                        
    #  Inheritances:
-   inherit FrameWidget
+   inherit util::FrameWidget
 
    #  Constructor.
    constructor {args} {

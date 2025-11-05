@@ -46,7 +46,7 @@ itcl::class cat::SearchConfig {
     protected method add_tables {} {
 
 	pack [set dtab \
-		  [DoubleTableList $w_.dtab \
+		  [util::DoubleTableList $w_.dtab \
 		       -selectmode extended \
 		       -command [code $this update_selection] \
 		       -updown 1]] \
@@ -74,7 +74,7 @@ itcl::class cat::SearchConfig {
 	    -side top -padx 2m -pady 2m -ipadx 2m -ipady 2m -fill x
 
 	pack \
-	    [set col_ [LabelEntry $f.col \
+	    [set col_ [util::LabelEntry $f.col \
 			   -text "Column name:" \
 			   -relief groove \
 			   -disabledforeground black \
@@ -83,14 +83,14 @@ itcl::class cat::SearchConfig {
 			   -anchor $itk_option(-anchor) \
 			   -valuefont $itk_option(-valuefont) \
 			   -labelfont $itk_option(-labelfont)]] \
-	    [set min_ [LabelEntry $f.min \
+	    [set min_ [util::LabelEntry $f.min \
 			   -text "Label for min value:" \
 			   -command [code $this set_row] \
 			   -labelwidth $itk_option(-labelwidth) \
 			   -anchor $itk_option(-anchor) \
 			   -valuefont $itk_option(-valuefont) \
 			   -labelfont $itk_option(-labelfont)]] \
-	    [set max_ [LabelEntry $f.max \
+	    [set max_ [util::LabelEntry $f.max \
 			   -text "Label for max value:" \
 			   -command [code $this set_row] \
 			   -labelwidth $itk_option(-labelwidth) \
@@ -239,7 +239,7 @@ itcl::class cat::SearchConfig {
     # add a short help window and set the help texts
     
     protected method make_short_help {} {
-	TopLevelWidget::make_short_help
+	util::TopLevelWidget::make_short_help
 
 	add_short_help $left_ {List of search columns to display as entries in catalog window}
 	add_short_help $right_ {List of other column names, select+click arrow buttons to move}

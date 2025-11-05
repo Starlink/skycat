@@ -387,7 +387,7 @@ itcl::class rtd::RtdImageHduChooser {
 
 	for {set i 0} {$i < $num_images_} {incr i} {
 	    set f [frame $itk_component(imagetab).f$i -borderwidth 1 -relief raised]
-	    set im [RtdImage $f.im \
+	    set im [rtd::RtdImage $f.im \
 			-graphics 0 \
 			-displaymode 0 \
 			-usexshm 0 \

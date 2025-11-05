@@ -52,7 +52,7 @@ itcl::class util::TableListConfig {
     protected method make_list_window {} {
 	# DoubleList widget for choosing columns to show or hide.
 	itk_component add dlist {
-	    DoubleList $w_.dlist \
+	    util::DoubleList $w_.dlist \
 		-lefttitle {Show} \
 		-righttitle {Don't Show} \
 		-updown 1 \

@@ -45,7 +45,7 @@ itcl::class cat::SymbolConfig {
     protected method add_table {} {
 	# table listing overview at top
 	pack [set table_ \
-		  [TableList $w_.table \
+		  [util::TableList $w_.table \
 		       -height 3 \
 		       -exportselection 0 \
 		       -headings {Columns Symbol Color Ratio Angle Label Condition Size Units}]] \
@@ -63,7 +63,7 @@ itcl::class cat::SymbolConfig {
 	    -side top -fill x -expand 1 -ipady 2m
 	    
 	pack \
-	    [LabelWidget $f.cols.label \
+	    [util::LabelWidget $f.cols.label \
 		 -text "Columns:" \
 		 -labelwidth $itk_option(-labelwidth) \
 		 -anchor $itk_option(-anchor) \
@@ -71,7 +71,7 @@ itcl::class cat::SymbolConfig {
 	    -side left
 
 	pack \
-	    [DoubleList $f.cols.dlist \
+	    [util::DoubleList $f.cols.dlist \
 		 -updown 0 \
 		 -height 2 \
 		 -width 12 \
@@ -86,7 +86,7 @@ itcl::class cat::SymbolConfig {
 	$right_ set_contents $columns
 	
 	pack \
-	    [set symbol_ [LabelMenu $f.symbol \
+	    [set symbol_ [util::LabelMenu $f.symbol \
 			   -text "Symbol:" \
 			   -relief raised \
 			   -borderwidth 3 \
@@ -94,7 +94,7 @@ itcl::class cat::SymbolConfig {
 			   -anchor $itk_option(-anchor) \
 			   -valuefont $itk_option(-valuefont) \
 			   -labelfont $itk_option(-labelfont)]] \
-	    [set color_ [LabelMenu $f.color \
+	    [set color_ [util::LabelMenu $f.color \
 			   -text "Color:" \
 			   -relief raised \
 			   -borderwidth 3 \
@@ -102,7 +102,7 @@ itcl::class cat::SymbolConfig {
 			   -anchor $itk_option(-anchor) \
 			   -valuefont $itk_option(-valuefont) \
 			   -labelfont $itk_option(-labelfont)]] \
-	    [set ratio_ [LabelEntry $f.ratio \
+	    [set ratio_ [util::LabelEntry $f.ratio \
 			   -text "Ratio:" \
 			   -state disabled \
 			    -command [code $this apply] \
@@ -110,7 +110,7 @@ itcl::class cat::SymbolConfig {
 			   -anchor $itk_option(-anchor) \
 			   -valuefont $itk_option(-valuefont) \
 			   -labelfont $itk_option(-labelfont)]] \
-	    [set angle_ [LabelEntry $f.angle \
+	    [set angle_ [util::LabelEntry $f.angle \
 			   -text "Angle:" \
 			   -state disabled \
 			   -command [code $this apply] \
@@ -118,28 +118,28 @@ itcl::class cat::SymbolConfig {
 			   -anchor $itk_option(-anchor) \
 			   -valuefont $itk_option(-valuefont) \
 			   -labelfont $itk_option(-labelfont)]] \
-	    [set label_ [LabelEntry $f.label \
+	    [set label_ [util::LabelEntry $f.label \
 			   -text "Label:" \
 			   -labelwidth $itk_option(-labelwidth) \
 			   -command [code $this apply] \
 			   -anchor $itk_option(-anchor) \
 			   -valuefont $itk_option(-valuefont) \
 			   -labelfont $itk_option(-labelfont)]] \
-	    [set cond_  [LabelEntry $f.cond \
+	    [set cond_  [util::LabelEntry $f.cond \
 			   -text "Condition:" \
 			   -labelwidth $itk_option(-labelwidth) \
 			   -command [code $this apply] \
 			   -anchor $itk_option(-anchor) \
 			   -valuefont $itk_option(-valuefont) \
 			   -labelfont $itk_option(-labelfont)]] \
-	    [set size_ [LabelEntry $f.size \
+	    [set size_ [util::LabelEntry $f.size \
 			   -text "Size:" \
 			   -labelwidth $itk_option(-labelwidth) \
 			   -command [code $this apply] \
 			   -anchor $itk_option(-anchor) \
 			   -valuefont $itk_option(-valuefont) \
 			   -labelfont $itk_option(-labelfont)]] \
-	    [set units_ [LabelMenu $f.units \
+	    [set units_ [util::LabelMenu $f.units \
 			   -text "Units:" \
 			   -relief raised \
 			   -borderwidth 3 \
@@ -437,7 +437,7 @@ itcl::class cat::SymbolConfig {
     # add a short help window and set the help texts
     
     protected method make_short_help {} {
-	TopLevelWidget::make_short_help
+	util::TopLevelWidget::make_short_help
 
 	add_short_help $table_ {Table listing symbols to plot, one symbol per row, click to select}
 	add_short_help $symbol_ {Symbol to use to plot stars or other objects}

@@ -35,7 +35,7 @@ itcl::class rtd::RtdImageBias {
     # Method to add the menu bar to the top of the dialogue.
     
     protected method add_menubar {} {
-        TopLevelWidget::add_menubar
+        util::TopLevelWidget::add_menubar
 	
         # File menu
         set m [add_menubutton File]
@@ -224,7 +224,7 @@ itcl::class rtd::RtdImageBias {
 	foreach el "Low High" {
 	    set s [string tolower $el]
 	    itk_component add $s {
-		LabelEntry $w_.$s \
+		util::LabelEntry $w_.$s \
 			-text "$el:" \
 			-command [code $this set_cut_levels] \
 			-labelfont $itk_option(-labelfont) \

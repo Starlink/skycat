@@ -108,11 +108,11 @@ itcl::class rtd::RtdImagePrint {
 	    -command [code $this toggle_fit_pagesize]
 	checkbutton $w_.pagesize.footer -text "Footer text" \
 	    -variable $w_.footer
-	LabelEntry $w_.pagesize.width \
+	util::LabelEntry $w_.pagesize.width \
 	    -text "Page width " \
 	    -value $itk_option(-pagewidth) \
 	    -valuewidth 6
-	LabelEntry $w_.pagesize.height \
+	util::LabelEntry $w_.pagesize.height \
 	    -text "Page height" \
 	    -value $itk_option(-pageheight) \
 	    -valuewidth 6

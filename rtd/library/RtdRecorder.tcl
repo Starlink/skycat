@@ -311,7 +311,7 @@ itcl::class rtd::RtdRecorderTool {
     # Method to add the menu bar to the top of the dialogue.
     protected method add_menubar {} {
 	global ::$w_.cmode ::$w_.pbspeed
-	TopLevelWidget::add_menubar
+	util::TopLevelWidget::add_menubar
 
 	# File menu
 	set m [add_menubutton File]
@@ -514,7 +514,7 @@ itcl::class rtd::RtdRecorderTool {
 	set height [expr {int($y1-$y0+1)}]
 	set subimage_ 1
 
-	RtdImageFrame $w_.subimage \
+	rtd::RtdImageFrame $w_.subimage \
 	    -target_image $target_image_ \
 	    -xoffset $xoffset \
 	    -yoffset $yoffset \
@@ -537,7 +537,7 @@ itcl::class rtd::RtdRecorderTool {
     # Set the maximum allowed file size in recording images
 
     public method set_max_filesize {} {
-	utilReUseWidget InputDialog $w_.maxfsize \
+	utilReUseWidget util::InputDialog $w_.maxfsize \
 	    -title "Maximum File Size" \
 	    -text "Set maximum recording file size in Mb (currently $maxFile_ Mb)" \
 	    -modal 1 \

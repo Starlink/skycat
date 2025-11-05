@@ -36,7 +36,7 @@ itcl::class util::InputDialog {
     # called after options have been evaluated
 
     protected method init {} {
-	DialogWidget::init
+	util::DialogWidget::init
 	bind $itk_component(entry) <Return> \
 		"$itk_component(button$itk_option(-default)) flash; set $variable_ $itk_option(-default)"
     }

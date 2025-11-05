@@ -35,7 +35,7 @@ itcl::class skycat::SkySearch {
     # called after options have been evaluated
 
     protected method init {} {
-	AstroCat::init
+	cat::AstroCat::init
 
 	# these are the supported plot symbols
 	foreach i "circle square plus cross triangle diamond ellipse compass line arrow" {
@@ -159,7 +159,7 @@ itcl::class skycat::SkySearch {
     # display the given image file
 
     public method display_image_file {filename} {
-	$skycat_ config -file $filename
+	    {*}$skycat_ config -file $filename
     }
 
 
@@ -221,7 +221,7 @@ itcl::class skycat::SkySearch {
 	    -height [get_display_height]
 
 	# enable the options panel, since we now have an image
-	catch {[[$skycat_] component info] configure -state normal}
+	catch {[[{*}$skycat_] component info] configure -state normal}
 
 	return 0
     }
@@ -243,7 +243,7 @@ itcl::class skycat::SkySearch {
 	    -height [get_display_height]
 	
 	# enable the options panel, since we now have an image
-	catch {[[$skycat_] component info] configure -state normal}
+	catch {[[{*}$skycat_] component info] configure -state normal}
 
 	return 0
     }
@@ -259,7 +259,7 @@ itcl::class skycat::SkySearch {
 	    } msg]} {
 		return
 	    }
-	    catch {$skycat_ picked_wcs_object $ix $iy $ra $dec}
+	    catch {{*}$skycat_ picked_wcs_object $ix $iy $ra $dec}
     }
 
     
@@ -290,7 +290,7 @@ itcl::class skycat::SkySearch {
     # (redefined from parent class AstroCat to add Plot button)
 
     protected method add_dialog_buttons {} {
-	AstroCat::add_dialog_buttons
+	cat::AstroCat::add_dialog_buttons
 	# only do this for catalogs, not for image servers...
 	if {$iscat_} {
 	    pack \
@@ -314,7 +314,7 @@ itcl::class skycat::SkySearch {
     # (redefined from parent class AstroCat)
     
     protected method make_short_help {} {
-	AstroCat::make_short_help
+	cat::AstroCat::make_short_help
 	add_short_help $w_.plot \
 	    {{bitmap b1} = Plot the listed objects again in the image}
 	add_short_help $w_.filter \
@@ -342,7 +342,7 @@ itcl::class skycat::SkySearch {
 	# SkyQuery(n) widget (derived from AstroQuery(n)) for displaying
 	# search options.
 	itk_component add searchopts {
-	    set searchopts_ [SkyQuery $w_.searchopts \
+	    set searchopts_ [skycat::SkyQuery $w_.searchopts \
 				 -relief groove \
 				 -borderwidth 2 \
 				 -debug $itk_option(-debug) \
@@ -364,7 +364,7 @@ itcl::class skycat::SkySearch {
     protected method add_result_table {} {
 	# SkyQueryResult(n) widget to display the results of a catalog query.
 	itk_component add results {
-	    set results_ [SkyQueryResult $w_.results \
+	    set results_ [skycat::SkyQueryResult $w_.results \
 			      -astrocat [code $w_.cat] \
 			      -skycat $skycat_ \
 			      -title "Search Results" \
@@ -393,7 +393,7 @@ itcl::class skycat::SkySearch {
     # (redefined from parent class AstroCat)
 
     public method set_state {state} {
-	AstroCat::set_state $state
+	cat::AstroCat::set_state $state
 	if {$iscat_} {
 	    if {[llength [$w_.cat symbol]] == 0} {
 		set state disabled
@@ -459,7 +459,7 @@ itcl::class skycat::SkySearch {
     # clas to also select the plot symbol.
 
     protected method select_result_row {} {
-	AstroCat::select_result_row
+	cat::AstroCat::select_result_row
 
 	# clear symbol selection
 	deselect_symbol $w_.selected
@@ -628,7 +628,7 @@ itcl::class skycat::SkySearch {
     
     
     public method clear {} {
-	AstroCat::clear
+	cat::AstroCat::clear
 
 	# remove any catalog symbols (since table is also empty now)
 	delete_objects
@@ -641,7 +641,7 @@ itcl::class skycat::SkySearch {
 
     public proc add_history {skycat filename} {
 	set catalog $history_catalog_
-	set image [$skycat get_image]
+	set image [{*}$skycat get_image]
 	
 	# check if the directory for the catalog exists
 	set dir [file dirname $catalog]
@@ -740,7 +740,7 @@ itcl::class skycat::SkySearch {
 	    return
 	}
 	set catalog $history_catalog_
-	set image [$skycat get_image]
+	set image [{*}$skycat get_image]
 	if {[catch {$astrocat_ open $catalog}]} {
 	    # no catalog yet
 	    return
@@ -795,9 +795,9 @@ itcl::class skycat::SkySearch {
     itk_option define -id id Id "" {
 	# in SkyCat.tcl, we passed the name of the SkyCatCtrl Itcl image widget as -id.
 	set skycat_ $itk_option(-id)
-	set canvas_ [$skycat_ get_canvas]
-	set image_ [$skycat_ get_image]
-	set draw_ [$skycat_ component draw]
+	set canvas_ [{*}$skycat_ get_canvas]
+	set image_ [{*}$skycat_ get_image]
+	set draw_ [{*}$skycat_ component draw]
     }
 
     # font used in canvas to mark objects

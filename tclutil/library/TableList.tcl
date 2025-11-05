@@ -308,7 +308,7 @@ itcl::class util::TableList {
 	}
 	
 	catch {destroy $w_.form}
-	EntryForm $w_.form \
+	util::EntryForm $w_.form \
 	    -title "Edit Values" \
 	    -labels $headings_ \
 	    -values $sel \
@@ -611,7 +611,7 @@ itcl::class util::TableList {
 	}
 	busy {
 	    set w [format {%s.tblcfg} [utilGetTopLevel $w_]]
-	    utilReUseWidget TableListConfig $w \
+	    utilReUseWidget util::TableListConfig $w \
 		-table $this \
 		-command $itk_option(-layoutcommand) \
 		-transient 1
@@ -662,7 +662,7 @@ itcl::class util::TableList {
 	    if {[winfo exists $w]} {
 		wm deiconify $w
 	    } else {
-		TableListPrint $w -table $this -printcmd $itk_option(-printcmd)
+		util::TableListPrint $w -table $this -printcmd $itk_option(-printcmd)
 	    }
 	}
    }

@@ -37,7 +37,7 @@ itcl::class skycat::SkyCatCtrl {
     # the options have been evaluated
 
     protected method init {} {
-	RtdImageCtrl::init
+	rtd::RtdImageCtrl::init
 	# make sure at least an empty history catalog is created
 	add_history {}
     }
@@ -91,7 +91,7 @@ itcl::class skycat::SkyCatCtrl {
 	global ::about_skycat ::skycat_library
 	set skycat_logo [image create photo -file $skycat_library/skycat-logo.xpm]
 
-	DialogWidget $w_.about \
+	util::DialogWidget $w_.about \
 	    -image $skycat_logo \
 	    -messagewidth 6i \
 	    -justify center \
@@ -120,7 +120,7 @@ itcl::class skycat::SkyCatCtrl {
     # This method is called by the image code whenever a new image is loaded.
 
     protected method new_image_cmd {} {
- 	RtdImageCtrl::new_image_cmd
+	rtd::RtdImageCtrl::new_image_cmd
 	
 	# check for saved line graphics
 	after idle [code $this load_graphics_from_image]
@@ -205,7 +205,7 @@ itcl::class skycat::SkyCatCtrl {
     
     protected method load_fits_ {} {
 	check_save
-	RtdImage::load_fits_
+	rtd::RtdImage::load_fits_
 	update_title
 	apply_history $itk_option(-file)
 	component colorramp update_colors
@@ -222,7 +222,7 @@ itcl::class skycat::SkyCatCtrl {
     # (redefined from parent class to set filename_, used in check_save).
     
     public method save_as {{dir "."} {pattern "*"} {x0 ""} {y0 ""} {x1 ""} {y1 ""}} {
-	set file [RtdImage::save_as $dir $pattern $x0 $y0 $x1 $y1]
+	set file [rtd::RtdImage::save_as $dir $pattern $x0 $y0 $x1 $y1]
 	if {"$x0" == ""} {
 	    set filename_ $file
 	}
@@ -488,7 +488,7 @@ itcl::class skycat::SkyCatCtrl {
     public method clear {} {
 	check_save
 	set filename_ {}
-	RtdImageCtrl::clear
+	rtd::RtdImageCtrl::clear
 	update_title
     }
 

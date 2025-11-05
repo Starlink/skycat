@@ -57,7 +57,7 @@ itcl::class util::EntryForm {
 	if {$itk_option(-scroll)} {
 	    # Canvas used to add a scrollbar
 	    itk_component add canvas {
-		CanvasWidget $w_.canvas
+		util::CanvasWidget $w_.canvas
 	    }
 	    set canvas [$w_.canvas component canvas]
 	    pack $w_.canvas -side top -fill both -expand 1 \

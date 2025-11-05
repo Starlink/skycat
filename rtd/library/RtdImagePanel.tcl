@@ -291,7 +291,7 @@ itcl::class rtd::RtdImagePanel {
 	if {$itk_option(-showcut)} {
 	    # LabelEntry(n) widget for the low cut level
 	    itk_component add low {
-		LabelEntry $w_.low \
+		util::LabelEntry $w_.low \
 		    -text "Low:" \
 		    -command [code $this set_cut_levels] \
 		    -labelfont $itk_option(-labelfont) \
@@ -306,7 +306,7 @@ itcl::class rtd::RtdImagePanel {
 	    }
 	    # LabelEntry(n) widget for the high cut level
 	    itk_component add high {
-		LabelEntry $w_.high \
+		util::LabelEntry $w_.high \
 		    -text "High:" \
 		    -command [code $this set_cut_levels] \
 		    -labelfont $itk_option(-labelfont) \

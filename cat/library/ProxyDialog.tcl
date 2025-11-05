@@ -47,13 +47,13 @@ itcl::class cat::ProxyDialog {
 	pack [set f [frame $w_.proxyf]] \
 	    -side top -anchor w -fill x -pady 2m
 	
-	pack [LabelEntry $w_.proxy \
+	pack [util::LabelEntry $w_.proxy \
 		  -text "HTTP Proxy server:" \
 		  -anchor e \
                   -valuewidth 32] \
 	    -side left -fill x -in $f
 
-	pack [LabelEntry $w_.port \
+	pack [util::LabelEntry $w_.port \
 		 -text "Port:" \
 		 -anchor e \
 		 -valuewidth 8] \
@@ -68,7 +68,7 @@ itcl::class cat::ProxyDialog {
                          server is needed (separate names by space or comma):"] \
 	    -side top -anchor w -pady 3m
 	
-	pack [LabelEntry $w_.noproxy \
+	pack [util::LabelEntry $w_.noproxy \
 		  -text "No proxy for:" \
 		  -anchor e] \
 	    -side top -fill x -anchor w -pady 2m
