@@ -147,7 +147,7 @@ itcl::class cat::QueryResult {
     # remove the currently selected rows from a local catalog file
 
     public method remove_selected {} {
-	set file [$astrocat longname]
+       set file [{*}$astrocat longname]
 	set info [get_selected]
 
 	if {[llength $info] == 0} {
@@ -159,7 +159,7 @@ itcl::class cat::QueryResult {
 	    return
 	}
 
-	if {[catch {$astrocat remove $file $info $equinox $headings_} msg]} {
+       if {[catch {{*}$astrocat remove $file $info $equinox $headings_} msg]} {
 	    error_dialog $msg $w_
 	    return
 	}
@@ -171,7 +171,7 @@ itcl::class cat::QueryResult {
     # If iflag is 1, insert rows in the existing file.
 
     public method save_to_file {file info headings {iflag 0}} {
-	if {[catch {$astrocat save $file $iflag $info $equinox $headings} msg]} {
+       if {[catch {{*}$astrocat save $file $iflag $info $equinox $headings} msg]} {
 	    error_dialog "error saving rows to file: $msg" $w_
 	    return 1
 	}
@@ -196,7 +196,7 @@ itcl::class cat::QueryResult {
     # and return 0 if OK
 
     public method check_row {data} {
-	if {[catch {$astrocat checkrow $data} msg]} {
+       if {[catch {{*}$astrocat checkrow $data} msg]} {
 	    error_dialog $msg
 	    return 1
 	}
@@ -215,9 +215,9 @@ itcl::class cat::QueryResult {
 	}
 
 	# see if this id already exists...
-	set id [lindex $info [$astrocat id_col]]
-	set row [lindex [$astrocat query -id $id] 0]
-	set file [$astrocat longname]
+       set id [lindex $info [{*}$astrocat id_col]]
+       set row [lindex [{*}$astrocat query -id $id] 0]
+       set file [{*}$astrocat longname]
 	set append 1
 	if {[llength $row]} {
 	    if {"$row" == "$info"} {
